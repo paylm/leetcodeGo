@@ -228,6 +228,9 @@ func (head *LinkNode) ReverseList() *LinkNode {
 //合并链表,b合并到a
 func merge(a, b *LinkNode) {
 	ap, bp := a, b
+	fmt.Println("---merge---")
+	ap.PrintLinkNode()
+	bp.PrintLinkNode()
 	for {
 		if ap == nil {
 			break
@@ -240,7 +243,9 @@ func merge(a, b *LinkNode) {
 		ap = ap.Next
 		bp = bp.Next
 		atemp.Next = btemp
-		btemp.Next = ap
+		if ap != nil {
+			btemp.Next = ap
+		}
 	}
 }
 
