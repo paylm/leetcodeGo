@@ -225,6 +225,25 @@ func (head *LinkNode) ReverseList() *LinkNode {
 	return pre
 }
 
+//合并链表,b合并到a
+func merge(a, b *LinkNode) {
+	ap, bp := a, b
+	for {
+		if ap == nil {
+			break
+		}
+		if bp == nil {
+			break
+		}
+		atemp := ap
+		btemp := bp
+		ap = ap.Next
+		bp = bp.Next
+		atemp.Next = btemp
+		btemp.Next = ap
+	}
+}
+
 /***
 
 给定一个单链表 L：L0→L1→…→Ln-1→Ln ，
@@ -247,7 +266,23 @@ func reorderList(head *LinkNode) {
 	if head == nil {
 		return
 	}
-	pre, current := head, head.Next
+	//计算截截一半链表
+	slowP, fastP, spliP := head, head, head
+	for {
+		if fastP == nil {
+			break
+		}
+		if fastP.Next == nil {
+			break
+		}
+		spliP = slowP
+		slowP = slowP.Next
+		fastP = fastP.Next.Next
+	}
+	spliP.Next = nil //截断链表
+	slowP.PrintLinkNode()
+	//此时慢指针刚走到一半
+	pre, current := slowP, slowP.Next
 	pre.Next = nil
 	for {
 		if current == nil {
@@ -261,23 +296,8 @@ func reorderList(head *LinkNode) {
 		pre = temp
 	}
 	pre.PrintLinkNode()
-	// 此时pre 是反向链表
-	hn, pn := head, pre
-	for {
 
-		if hn == pn {
-			hn.Next = nil
-
-			break
-		}
-		htemp := hn
-		ptemp := pn
-		hn = hn.Next
-		pn = pn.Next
-
-		htemp.Next = ptemp
-		ptemp.Next = hn
-	}
+	merge(head, pre) //合并链表
 }
 
 func main() {
@@ -338,4 +358,33 @@ func main() {
 	fmt.Println("----重排链表------")
 	//reorderList(l3)
 	//l3.PrintLinkNode()
+
+	l6 := NewLinkNode(61)
+	l6.Add(NewLinkNode(62))
+	l6.Add(NewLinkNode(63))
+	l6.Add(NewLinkNode(64))
+	l6.Add(NewLinkNode(65))
+	l7 := NewLinkNode(71)
+	l7.Add(NewLinkNode(72))
+	l7.Add(NewLinkNode(73))
+	l7.Add(NewLinkNode(74))
+	l7.Add(NewLinkNode(75))
+	merge(l6, l7)
+	l6.PrintLinkNode()
+	fmt.Println("---------reorderList--------")
+	l8 := NewLinkNode(81)
+	l8.Add(NewLinkNode(82))
+	l8.Add(NewLinkNode(83))
+	l8.Add(NewLinkNode(84))
+	l8.Add(NewLinkNode(85))
+	l8.Add(NewLinkNode(86))
+	reorderList(l8)
+
+	test1 := NewLinkNode(100)
+	ts := []int{101, 102, 103, 104, 105, 106, 107, 108, 109, 110}
+	for _, v := range ts {
+		test1.Add(NewLinkNode(v))
+	}
+	reorderList(test1)
+	test1.PrintLinkNode()
 }
