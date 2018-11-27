@@ -239,6 +239,8 @@ func (head *LinkNode) ReverseList() *LinkNode {
 
 给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
 
+
+思路：找到中结点，反转此部分，再拼接
 ***/
 func reorderList(head *LinkNode) {
 
