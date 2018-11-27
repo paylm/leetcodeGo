@@ -205,6 +205,78 @@ func (n *LinkNode) countLoopLenght() int {
 	fmt.Println("此链表无环")
 	return 0
 }
+func (head *LinkNode) ReverseList() *LinkNode {
+	if head == nil {
+		return nil
+	}
+	pre, current := head, head.Next
+	pre.Next = nil
+	for {
+		if current == nil {
+			fmt.Println("reverse done")
+			break
+		}
+		fmt.Printf("%d->", current.Val)
+		temp := current
+		current = current.Next
+		temp.Next = pre
+		pre = temp
+	}
+	return pre
+}
+
+/***
+
+给定一个单链表 L：L0→L1→…→Ln-1→Ln ，
+将其重新排列后变为： L0→Ln→L1→Ln-1→L2→Ln-2→…
+
+你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+
+示例 1:
+
+给定链表 1->2->3->4, 重新排列为 1->4->2->3.
+示例 2:
+
+给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+
+***/
+func reorderList(head *LinkNode) {
+
+	if head == nil {
+		return
+	}
+	pre, current := head, head.Next
+	pre.Next = nil
+	for {
+		if current == nil {
+			fmt.Println("reverse done")
+			break
+		}
+		//fmt.Printf("%d->", current.Val)
+		temp := current
+		current = current.Next
+		temp.Next = pre
+		pre = temp
+	}
+	pre.PrintLinkNode()
+	// 此时pre 是反向链表
+	hn, pn := head, pre
+	for {
+
+		if hn == pn {
+			hn.Next = nil
+
+			break
+		}
+		htemp := hn
+		ptemp := pn
+		hn = hn.Next
+		pn = pn.Next
+
+		htemp.Next = ptemp
+		ptemp.Next = hn
+	}
+}
 
 func main() {
 	fmt.Println("vim-go")
@@ -250,4 +322,18 @@ func main() {
 
 	l2.Add(NewLinkNode(66))
 	l2.countLoopLenght()
+
+	l3 := NewLinkNode(3)
+	l3.Add(NewLinkNode(4))
+	l3.Add(NewLinkNode(5))
+	l3.Add(NewLinkNode(6))
+	l3.Add(NewLinkNode(7))
+	l3.PrintLinkNode()
+	l3r := l3.ReverseList()
+	l3r.PrintLinkNode()
+	l3.PrintLinkNode()
+
+	fmt.Println("----重排链表------")
+	//reorderList(l3)
+	//l3.PrintLinkNode()
 }
