@@ -31,14 +31,15 @@ func QuickSort(arr []int, start int, end int) {
 			}
 		}
 		if j > i {
-			fmt.Printf("change location , i=%d,j=%d \n", i, j)
+			fmt.Printf("change location , i=%d,j=%d ,arr:= %v \n", i, j, arr)
 			temp := arr[i]
 			arr[i] = arr[j]
 			arr[j] = temp
 		}
 	}
+	fmt.Println("end for :", arr)
 	arr[i] = k
-	fmt.Println(arr)
+	fmt.Println("递归:", arr)
 	//return
 	QuickSort(arr, start, i-1)
 	QuickSort(arr, i+1, end)
