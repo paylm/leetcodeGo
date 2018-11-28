@@ -306,6 +306,7 @@ func reorderList(head *LinkNode) {
 }
 
 //移除重复元素
+// 前提列表已排序
 func removeDuplicates(head *LinkNode) {
 	if head == nil {
 		return
@@ -326,6 +327,7 @@ func removeDuplicates(head *LinkNode) {
 }
 
 //移除重复元素(递归版)
+// 前提列表已排序
 func deleteDuplicates(head *LinkNode) {
 	if head == nil {
 		return
@@ -338,6 +340,114 @@ func deleteDuplicates(head *LinkNode) {
 	} else {
 		deleteDuplicates(current)
 	}
+}
+
+//移除重复元素
+// 链表未排序(hash 方法 空间复杂度O(n))
+func removeDuplicatesUnSort(head *LinkNode) {
+	if head == nil {
+		return
+	}
+	lMaps := make(map[int]int)
+	current, pre := head, head
+	for {
+		if current == nil {
+			break
+		}
+		if _, ok := lMaps[current.Val]; ok {
+			pre.Next = current.Next
+		} else {
+			pre = current
+			lMaps[current.Val] = 1
+		}
+		current = current.Next
+	}
+}
+
+/**
+交换元素
+1) x and y may or may not be adjacent.
+2) Either x or y may be a head node.
+3) Either x or y may be last node.
+4) x and/or y may not be present in linked list.
+**/
+func swapNodes(head *LinkNode, x int, y int) {
+	if head == nil {
+		return
+	}
+	if x == y {
+		return
+	}
+	current := head
+	//found x and y location
+	preX, preY := head, head
+	var pX *LinkNode
+	var pY *LinkNode
+	for {
+		if current == nil {
+			break
+		}
+
+		if current.Val == x {
+			pX = current
+			//break
+		}
+		if current.Val == y {
+			pY = current
+			//break
+		}
+
+		if pX == nil {
+			preX = current
+		}
+		if pY == nil {
+			preY = current
+		}
+		current = current.Next
+	}
+
+	fmt.Printf("preX:%d,preY:%d\n", preX.Val, preY.Val)
+	if pX == nil || pY == nil {
+		return
+	}
+
+	if head == pX { //? 待处理
+		temp := pY.Next
+		head = pY
+		pY.Next = pX.Next
+		preY.Next = pX
+		pX.Next = temp
+		return
+	}
+
+	//x或y 都不在首部
+	YNext := pY.Next
+	preX.Next = pY
+	pY.Next = pX.Next
+	preY.Next = pX
+	pX.Next = YNext
+
+}
+
+/**
+* 把链表最后一个节点移至最前
+ */
+func moveToFront(head *LinkNode) *LinkNode {
+	if head == nil {
+		return head
+	}
+	last, secLast := head, head
+	for {
+		if last.Next == nil {
+			break
+		}
+		secLast = last
+		last = last.Next
+	}
+
+	secLast.Next = nil
+	last.Next = head
+	return last
 }
 
 func main() {
@@ -430,13 +540,22 @@ func main() {
 
 	fmt.Println("--------  del Duble val --------")
 	l9 := NewLinkNode(90)
-	l9.Add(NewLinkNode(90))
-	l9.Add(NewLinkNode(90))
+
 	l9.Add(NewLinkNode(91))
 	l9.Add(NewLinkNode(91))
+	l9.Add(NewLinkNode(90))
+	l9.Add(NewLinkNode(90))
 	l9.Add(NewLinkNode(92))
+	l9.Add(NewLinkNode(93))
 	l9.PrintLinkNode()
 	//removeDuplicates(l9)
-	deleteDuplicates(l9)
+	//deleteDuplicates(l9)
+	removeDuplicatesUnSort(l9)
 	l9.PrintLinkNode()
+	fmt.Println(" ----- swap -----")
+	fmt.Println(l9)
+	//swapNodes(l9, 90, 92)
+	l10 := moveToFront(l9)
+	l10.PrintLinkNode()
+	//fmt.Println(l9)
 }
