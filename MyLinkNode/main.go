@@ -305,6 +305,41 @@ func reorderList(head *LinkNode) {
 	merge(head, pre) //合并链表
 }
 
+//移除重复元素
+func removeDuplicates(head *LinkNode) {
+	if head == nil {
+		return
+	}
+	current, pre := head, head
+	for {
+		if current == nil {
+			break
+		}
+
+		if current.Val == pre.Val {
+			pre.Next = current.Next
+		} else {
+			pre = current
+		}
+		current = current.Next
+	}
+}
+
+//移除重复元素(递归版)
+func deleteDuplicates(head *LinkNode) {
+	if head == nil {
+		return
+	}
+	current := head.Next
+	if current != nil && head.Val == current.Val {
+		head.Next = current.Next
+		//fmt.Println("skip->", current.Val)
+		deleteDuplicates(head)
+	} else {
+		deleteDuplicates(current)
+	}
+}
+
 func main() {
 	fmt.Println("vim-go")
 	arr := [...]int{2, 3, 5, 7, 8, 9, 10}
@@ -392,4 +427,16 @@ func main() {
 	}
 	reorderList(test1)
 	test1.PrintLinkNode()
+
+	fmt.Println("--------  del Duble val --------")
+	l9 := NewLinkNode(90)
+	l9.Add(NewLinkNode(90))
+	l9.Add(NewLinkNode(90))
+	l9.Add(NewLinkNode(91))
+	l9.Add(NewLinkNode(91))
+	l9.Add(NewLinkNode(92))
+	l9.PrintLinkNode()
+	//removeDuplicates(l9)
+	deleteDuplicates(l9)
+	l9.PrintLinkNode()
 }
