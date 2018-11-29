@@ -88,6 +88,28 @@ func countLink(last *LinkNode) int {
 	}
 }
 
+func exchangeHead(last *LinkNode) *LinkNode {
+	//交换head 和last
+	if last == nil {
+		return nil
+	}
+	head := last.Next
+	secLast, p := last, last.Next
+	for {
+		if p == last {
+			break
+		}
+		secLast = p
+		p = p.Next
+	}
+	temp := last
+	temp.Next = head.Next
+	last = head
+	secLast.Next = last
+	last.Next = temp
+	return last
+}
+
 func main() {
 	var emptyLink *LinkNode
 	last := addToEmpty(emptyLink, 3)
@@ -98,6 +120,9 @@ func main() {
 	//fmt.Println(l2)
 	traverse(l2)
 	addEnd(l2, 1)
+	addEnd(l2, 7)
 	traverse(l2)
 	fmt.Println("环长度:", countLink(l2))
+	l3 := exchangeHead(l2)
+	traverse(l3)
 }
