@@ -18,7 +18,7 @@ type Queue struct {
 	size   int
 }
 
-//通过
+//通过双链表实现Queue
 type LQueue struct {
 	Head     *DNode
 	Last     *DNode
