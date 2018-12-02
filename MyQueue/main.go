@@ -7,6 +7,7 @@ import (
 type MyQueue interface {
 	pop() interface{}
 	push(v interface{})
+	empty() bool //队列是否为空
 	show()
 }
 
@@ -54,6 +55,13 @@ func (q *Queue) pop() interface{} {
 	}
 
 	return q.s2.pop()
+}
+
+func (q *Queue) empty() bool {
+	if q.size == 0 {
+		return true
+	}
+	return false
 }
 
 func (q *Queue) push(v interface{}) {
@@ -117,14 +125,20 @@ func (lq *LQueue) push(v interface{}) {
 	lq.lenght++
 }
 
+func (lq *LQueue) empty() bool {
+	if lq.lenght == 0 {
+		return true
+	}
+
+	return false
+}
+
 func (lq *LQueue) show() {
 	fmt.Println(lq)
 	lq.Head.traverse()
 }
 
-func main() {
-	fmt.Println("MyQueue")
-
+func test() {
 	q1 := NewQueue()
 	q1.push(1)
 	q1.push(3)
@@ -144,6 +158,10 @@ func main() {
 	fmt.Println(q1.pop())
 	fmt.Println(q1.pop())
 	q1.show()
+}
+
+func main() {
+	fmt.Println("MyQueue")
 	fmt.Println("-------队列q2-------")
 	q2 := NewQueue()
 	q2.push(1)
