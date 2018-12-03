@@ -62,7 +62,7 @@ func createRouter() map[string][]string {
 }
 
 //通过bfs 算法从route找到终点
-func DFS(route map[string][]string, root string, dst string) bool {
+func BFS(route map[string][]string, root string, dst string) bool {
 	fmt.Println("查找节点:", dst)
 	searchQueue := []string{root}
 	if len(searchQueue) == 0 {
@@ -97,7 +97,7 @@ func DFS(route map[string][]string, root string, dst string) bool {
 }
 
 //通过bfs 算法从route找到终点
-func DFSwithPath(route map[string][]string, root string, dst string) (bool, *Node) {
+func BFSwithPath(route map[string][]string, root string, dst string) (bool, *Node) {
 	fmt.Println("查找节点:", dst)
 	searchQueue := []string{root}
 	var zR *Node
@@ -139,9 +139,9 @@ func DFSwithPath(route map[string][]string, root string, dst string) (bool, *Nod
 func main() {
 	fmt.Println("vim-go")
 	r := createRouter()
-	fmt.Println(DFS(r, "A", "Z"))
-	fmt.Println(DFS(r, "A", "C1"))
-	ok, zR := DFSwithPath(r, "A", "Z")
+	fmt.Println(BFS(r, "A", "Z"))
+	fmt.Println(BFS(r, "A", "C1"))
+	ok, zR := BFSwithPath(r, "A", "Z")
 	fmt.Println(ok, zR)
 	if ok {
 		traverse(zR)
