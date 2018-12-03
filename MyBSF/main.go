@@ -62,13 +62,14 @@ func createRouter() map[string][]string {
 }
 
 //通过bfs 算法从route找到终点
-func DFS(route map[string][]string, dst string) bool {
+func DFS(route map[string][]string, root string, dst string) bool {
 	fmt.Println("查找节点:", dst)
-	searchQueue := route["root"]
+	searchQueue := []string{root}
 	if len(searchQueue) == 0 {
 		return false
 	}
 	searched := make(map[string]bool)
+	searched[root] = true
 	for {
 		if len(searchQueue) < 1 {
 			break
@@ -86,7 +87,7 @@ func DFS(route map[string][]string, dst string) bool {
 			if _, ok := searched[x]; !ok {
 				searchQueue = append(searchQueue, x)
 			} //else {
-			//	fmt.Printf("%s has checked , skip\n", x)
+			//fmt.Printf("%s has checked , skip\n", x)
 			//}
 			searched[x] = true
 		}
@@ -96,24 +97,26 @@ func DFS(route map[string][]string, dst string) bool {
 }
 
 //通过bfs 算法从route找到终点
-func DFSwithPath(route map[string][]string, dst string) (bool, *Node) {
+func DFSwithPath(route map[string][]string, root string, dst string) (bool, *Node) {
 	fmt.Println("查找节点:", dst)
-	searchQueue := route["root"]
+	searchQueue := []string{root}
 	var zR *Node
 	if len(searchQueue) == 0 {
 		return false, zR
 	}
-	searched := make(map[string]bool)
+	searched := make(map[string]*Node)
+	pNode := NewNode(root)
+	searched[root] = pNode
 	for {
 		if len(searchQueue) < 1 {
 			break
 		}
 		path := searchQueue[0]
+		zR = searched[path]
 		searchQueue = searchQueue[1:]
 		//fmt.Printf("current search point %s\n", path)
 		if path == dst {
 			fmt.Println("已找到节点:", dst)
-
 			return true, zR
 		}
 
@@ -121,11 +124,12 @@ func DFSwithPath(route map[string][]string, dst string) (bool, *Node) {
 			//fmt.Println(x, searched[x])
 			if _, ok := searched[x]; !ok {
 				searchQueue = append(searchQueue, x)
-				zR = addNextNode(zR, path)
+				xZr := addNextNode(zR, x)
+				searched[x] = xZr
 			} //else {
 			//	fmt.Printf("%s has checked , skip\n", x)
 			//}
-			searched[x] = true
+			//searched[x] = true
 		}
 		//fmt.Println("queue:", searchQueue)
 	}
@@ -135,12 +139,11 @@ func DFSwithPath(route map[string][]string, dst string) (bool, *Node) {
 func main() {
 	fmt.Println("vim-go")
 	r := createRouter()
-	fmt.Println(DFS(r, "Z"))
-
-	ok, zR := DFSwithPath(r, "C2")
+	fmt.Println(DFS(r, "A", "Z"))
+	fmt.Println(DFS(r, "A", "C1"))
+	ok, zR := DFSwithPath(r, "A", "Z")
 	fmt.Println(ok, zR)
 	if ok {
-
 		traverse(zR)
 	}
 }
