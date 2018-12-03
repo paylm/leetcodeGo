@@ -41,15 +41,14 @@ func traverse(last *Node) {
 }
 
 /**测试数据
- A { B C D }
- B { B1 B2 B3 }
- C { C1 ,C2 }
- D { B1 , C1 ,D1 }
- D1 { Z }
- //起点为A，终点为Z
+A { B C D }
+B { B1 B2 B3 }
+C { C1 ,C2 }
+D { B1 , C1 ,D1 }
+D1 { Z }
+//起点为A，终点为Z
 
 **/
-
 func createRouter() map[string][]string {
 	r := make(map[string][]string)
 	r["root"] = []string{"A"}
@@ -61,15 +60,18 @@ func createRouter() map[string][]string {
 	return r
 }
 
-//通过bfs 算法从route找到终点
-func BFS(route map[string][]string, root string, dst string) bool {
-	fmt.Println("查找节点:", dst)
+//通过dfs 算法从route找到终点
+func DFS(route map[string][]string, searched map[string]bool, root string, dst string) bool {
+	fmt.Println("stack info :", searched)
 	searchQueue := []string{root}
 	if len(searchQueue) == 0 {
 		return false
 	}
-	searched := make(map[string]bool)
 	searched[root] = true
+	defer func() {
+		fmt.Println("out stack:", root)
+		delete(searched, root)
+	}()
 	for {
 		if len(searchQueue) < 1 {
 			break
@@ -86,18 +88,18 @@ func BFS(route map[string][]string, root string, dst string) bool {
 			//fmt.Println(x, searched[x])
 			if _, ok := searched[x]; !ok {
 				searchQueue = append(searchQueue, x)
+				searched[x] = true
+				DFS(route, searched, x, dst)
 			} //else {
 			//fmt.Printf("%s has checked , skip\n", x)
 			//}
-			searched[x] = true
 		}
-		//fmt.Println("queue:", searchQueue)
 	}
 	return false
 }
 
 //通过bfs 算法从route找到终点
-func BFSwithPath(route map[string][]string, root string, dst string) (bool, *Node) {
+func DFSwithPath(route map[string][]string, root string, dst string) (bool, *Node) {
 	fmt.Println("查找节点:", dst)
 	searchQueue := []string{root}
 	var zR *Node
@@ -139,9 +141,10 @@ func BFSwithPath(route map[string][]string, root string, dst string) (bool, *Nod
 func main() {
 	fmt.Println("vim-go")
 	r := createRouter()
-	fmt.Println(BFS(r, "A", "Z"))
-	fmt.Println(BFS(r, "A", "C1"))
-	ok, zR := BFSwithPath(r, "A", "Z")
+	searched := make(map[string]bool)
+	fmt.Println(DFS(r, searched, "A", "Z"))
+	//fmt.Println(DFS(r, "A", "C1"))
+	ok, zR := DFSwithPath(r, "A", "Z")
 	fmt.Println(ok, zR)
 	if ok {
 		traverse(zR)
