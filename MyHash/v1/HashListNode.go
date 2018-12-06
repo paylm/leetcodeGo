@@ -5,12 +5,6 @@ import (
 	"fmt"
 )
 
-type HashMap interface {
-	Insert(k, v int)
-	Search(k int) (error, int)
-	Del(k int)
-}
-
 type HashList struct {
 	Cap  int
 	Data []*ListNode

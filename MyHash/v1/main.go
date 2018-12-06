@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+type HashMap interface {
+	Insert(k, v int)
+	Search(k int) (error, int)
+	Del(k int)
+}
+
 const MAX int = 200
 
 func abs(x int) int {
