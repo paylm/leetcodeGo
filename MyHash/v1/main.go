@@ -55,6 +55,56 @@ func test1() {
 	fmt.Println(7, search(&has, 7))
 }
 
+func testHm() {
+	var m HashMap
+	m = NewHashList(10)
+	m.Insert(4, 4)
+	m.Insert(8, 8)
+	m.Insert(-8, -8)
+	m.Insert(18, 18)
+	m.Insert(14, 14)
+	m.Insert(0, 0)
+
+	fmt.Println(m.Search(4))
+	fmt.Println(m.Search(8))
+	fmt.Println(m.Search(-8))
+	fmt.Println(m.Search(-18))
+	fmt.Println(m.Search(-28))
+	fmt.Println(m)
+}
+
+func testHm2() {
+	var m HashMap
+	m = NewHashList(10)
+	i := -10
+	for {
+		if i > 20 {
+			break
+		}
+		m.Insert(i, i*10)
+		i++
+	}
+
+	fmt.Println(m.Search(4))
+	fmt.Println(m.Search(-4))
+	fmt.Println(m.Search(14))
+	fmt.Println(m.Search(8))
+	fmt.Println(m.Search(-8))
+	fmt.Println(m.Search(-18))
+	fmt.Println(m.Search(-28))
+	fmt.Println(m)
+
+	m.Del(-4)
+	m.Del(-1)
+
+	m.Del(-8)
+	m.Del(0)
+	fmt.Println(m.Search(-4))
+	fmt.Println(m)
+}
+
 func main() {
-	test1()
+	//test1()
+	testHm()
+	testHm2()
 }
