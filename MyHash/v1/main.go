@@ -6,6 +6,7 @@ type HashMap interface {
 	Insert(k, v int)
 	Search(k int) (error, int)
 	Del(k int)
+	HmPrint()
 }
 
 const MAX int = 200
@@ -107,10 +108,33 @@ func testHm2() {
 	m.Del(0)
 	fmt.Println(m.Search(-4))
 	fmt.Println(m)
+	m.HmPrint()
+}
+
+func testHm3() {
+	var m HashMap
+	m = NewHashAddr(10)
+	m.Insert(1, 1)
+	m.Insert(-1, 1)
+	m.Insert(3, 3)
+	m.Insert(0, 100)
+	m.Insert(11, 11)
+	m.Insert(-11, -11)
+	m.Insert(5, 5)
+	fmt.Println(m)
+	m.HmPrint()
+	fmt.Println(m.Search(1))
+	fmt.Println(m.Search(4))
+	fmt.Println(m.Search(11))
+	m.Del(11)
+	fmt.Println(m.Search(11))
+	m.Del(5)
+	fmt.Println(m)
 }
 
 func main() {
 	//test1()
 	testHm()
 	testHm2()
+	testHm3()
 }

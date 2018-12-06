@@ -125,3 +125,19 @@ func (h *HashList) Search(k int) (error, int) {
 
 	return errors.New(fmt.Sprintf("%d has delete error", k)), -1
 }
+
+func (h *HashList) HmPrint() {
+	for i, v := range h.Data {
+		if v == nil {
+			continue
+		}
+		current := v
+		for {
+			if current == nil {
+				break
+			}
+			fmt.Printf("i:%d,k:%d,v:%d\n", i, current.Key, current.Val)
+			current = current.Next
+		}
+	}
+}
