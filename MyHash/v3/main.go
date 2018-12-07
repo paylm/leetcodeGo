@@ -62,24 +62,6 @@ func test1() {
 	fmt.Println(7, search(&has, 7))
 }
 
-func testHm() {
-	var m HashMap
-	m = NewHashLinkMap(10)
-	m.Insert(4, 4)
-	m.Insert(8, 8)
-	m.Insert(-8, -8)
-	m.Insert(18, 18)
-	m.Insert(14, 14)
-	m.Insert(0, 0)
-
-	fmt.Println(m.Search(4))
-	fmt.Println(m.Search(8))
-	fmt.Println(m.Search(-8))
-	fmt.Println(m.Search(-18))
-	fmt.Println(m.Search(-28))
-	fmt.Println(m)
-}
-
 func testHm2() {
 	var m HashMap
 	m = NewHashLinkMap(10)
@@ -149,10 +131,73 @@ func testHm4() {
 	fmt.Println(m.Search(81))
 
 }
+
+func printVerticalOrder(root *Node, hd int, m HashMap) {
+
+	if root == nil {
+		return
+	}
+
+	//	err,oodv := m.Search(hd)
+	//	if err != nil {
+	//		//not this level data
+	//	}else{
+	//
+	//	}
+	fmt.Printf("hd=%d,v=%d\n", hd, root.Val)
+
+	printVerticalOrder(root.Left, hd-1, m)
+	printVerticalOrder(root.Right, hd+1, m)
+}
+
+func printVerticalOrderSys(root *Node, hd int, m map[int][]int) {
+
+	if root == nil {
+		return
+	}
+
+	oodv := m[hd]
+	if oodv != nil {
+		//not this level data
+		oodv = append(oodv, root.Val)
+		m[hd] = oodv
+	} else {
+		m[hd] = []int{root.Val}
+	}
+	//fmt.Printf("hd=%d,v=%d\n", hd, root.Val)
+
+	printVerticalOrderSys(root.Left, hd-1, m)
+	printVerticalOrderSys(root.Right, hd+1, m)
+}
+
+func testPrintvO() {
+	var m HashMap
+	m = NewHashAddrMap()
+
+	root := NewNode(6)
+	root.InsertNode(NewNode(4))
+	root.InsertNode(NewNode(8))
+	root.Left.InsertNode(NewNode(2))
+	root.Right.InsertNode(NewNode(5))
+	root.Left.Left.InsertNode(NewNode(1))
+	root.Right.InsertNode(NewNode(10))
+	PreOrder(root)
+	m.HmPrint()
+	printVerticalOrder(root, 0, m)
+
+	m2 := make(map[int][]int)
+	printVerticalOrderSys(root, 0, m2)
+	fmt.Println("use system map")
+	for _, v := range m2 {
+		fmt.Println(v)
+	}
+}
+
 func main() {
 	//test1()
 	//testHm()
 	//testHm2()
 	testHm4()
+	testPrintvO()
 	//fmt.Println((75 * 100) / 100)
 }

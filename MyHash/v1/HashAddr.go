@@ -55,6 +55,10 @@ func (h *HashAddr) isFull() bool {
 }
 
 func (h *HashAddr) Insert(k, v int) {
+
+	if h.isFull() {
+		return
+	}
 	i := h.hash1(k)
 	if h.data[i] == nil {
 		h.data[i] = NewHashNode(k, v)
