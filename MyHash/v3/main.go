@@ -193,6 +193,58 @@ func testPrintvO() {
 	}
 }
 
+/**
+*Minimum delete operations to make all elements of array same
+Time complexity : O(n)
+*O(n)
+*/
+func minDelete(a []int) int {
+	if len(a) < 2 {
+		return 1
+	}
+	m := make(map[int]int)
+	maxFeq := 0
+	for _, v := range a {
+		od, ok := m[v]
+
+		if !ok {
+			od = 1
+		} else {
+			od++
+		}
+		if maxFeq < od {
+			maxFeq = od
+		}
+		m[v] = od
+	}
+
+	fmt.Printf("maxFeq:%d\n", maxFeq)
+	return len(a) - maxFeq
+}
+
+// Function to find maximum distance between equal elements
+func maxDistance(a []int) int {
+	if len(a) < 2 {
+		return 1
+	}
+	var m HashMap
+	m = NewHashAddrMap()
+	MaxDis := 0
+	for i, v := range a {
+		err, od := m.Search(v)
+		//fmt.Println(err, od)
+		if err != nil {
+			m.Insert(v, i)
+		} else {
+			if i-od > MaxDis {
+				MaxDis = i - od
+			}
+		}
+	}
+	fmt.Printf("maxDistance is :%d\n", MaxDis)
+	return MaxDis
+}
+
 func main() {
 	//test1()
 	//testHm()
@@ -200,4 +252,9 @@ func main() {
 	testHm4()
 	testPrintvO()
 	//fmt.Println((75 * 100) / 100)
+	a := []int{5, 0, 0, 9, 5, 1, 5}
+	fmt.Println(minDelete(a))
+	fmt.Println(maxDistance(a))
+	a2 := []int{3, 2, 1, 2, 1, 4, 5, 8, 6, 7, 4, 2}
+	fmt.Println(maxDistance(a2))
 }
