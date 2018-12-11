@@ -1,12 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
 	MAX_VERtEX_NUM int = 20
 )
 
-var visited map[string]bool = make(map[string]bool)
+var visited map[string]bool = make(map[string]bool) //for DFS
 
 type MyGraph struct {
 	VRType          int //对于无权图，用 1 或 0 表示是否相邻；对于带权图，直接为权值。
@@ -25,7 +27,10 @@ func NewMyGraph(vex int) *MyGraph {
 	return g
 }
 
-func (g *MyGraph) drawEdge(x, y, VRType int) {
+/**
+* 添加连接边 , 带权值
+**/
+func (g *MyGraph) addEdge(x, y, VRType int) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Printf("drawEdge:%v", err)
@@ -97,6 +102,37 @@ func (g *MyGraph) DFSearchDep(x, y, l int) {
 					fmt.Printf("\t")
 				}
 				//fmt.Printf(" -> ")
+			}
+		}
+	}
+}
+
+//找到点节F(5) ,EXIT
+func (g *MyGraph) BFS(x, y, target int) {
+	visBfs := make(map[int]bool) //for BFS
+	var queue MyQueue
+	queue = NewLQueue()
+	visBfs[y] = true
+	queue.push(y)
+	for {
+		if queue.empty() {
+			break
+		}
+		err, v := queue.peek()
+		if err != nil {
+			break
+		}
+		fmt.Printf("-> %d ", v)
+		if v == target {
+			fmt.Printf("find to target :%d \n", target)
+		}
+		//time.Sleep(time.Second * 3)
+		queue.pop()
+		for i := 0; i < len(g.AdjMatrix[v]); i++ {
+			if g.AdjMatrix[v][i] != 0 && visBfs[i] != true {
+				//fmt.Println(i)
+				queue.push(i)
+				visBfs[i] = true
 			}
 		}
 	}
