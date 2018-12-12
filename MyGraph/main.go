@@ -4,14 +4,51 @@ import (
 	"fmt"
 )
 
+type Point struct {
+	Val  int
+	Prev *Point
+}
+
+func NewPoint(v int) *Point {
+	p := new(Point)
+	p.Val = v
+	return p
+}
+
+func (p *Point) traversePath() {
+	c := p
+	for {
+		if c == nil {
+			break
+		}
+		fmt.Printf("-> %d ", c.Val)
+		c = c.Prev
+	}
+	fmt.Println()
+}
+
+func (p *Point) traverseRole(r []string) {
+
+	c := p
+	for {
+		if c == nil {
+			break
+		}
+		fmt.Printf("-> %s ", r[c.Val])
+		c = c.Prev
+	}
+	fmt.Println()
+
+}
+
 /***
 
   Graph :
-   0 -> 1  -> 2      //2 also has edge to 3
+   A -> B  -> C      //B also has edge to C
    \     \   /
-    > 3 -> 4<
+    > D -> E<
        \   /
-	    >5
+	    >F
 
 	A B C D E F
   A 0 1 0 1 0 0
@@ -21,7 +58,7 @@ import (
   E 0 0 0 0 0 1
 **/
 
-var ids byte = []byte{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'}
+var role = []string{"A", "B", "C", "D", "E", "F", "G", "H"}
 
 func testStack() {
 	s := NewMyStack()
@@ -65,7 +102,7 @@ func testInput() {
 	//testStack()
 	paths := g.DFS(0, size-1)
 	for _, v := range paths {
-		v.traversePath()
+		v.traverseRole(role)
 	}
 }
 
@@ -96,10 +133,20 @@ func main() {
 	//testStack()
 	paths := g.DFS(2, 5)
 	for _, v := range paths {
-		v.traversePath()
+		v.traverseRole(role)
 	}
 	fmt.Println("level tree")
 	fmt.Printf("from %d -> %d , level :%d \n", 0, 5, g.BFSlevel(0, 5))
 
-	testInput()
+	//testInput()
+	g2 := NewLsGraph(5)
+	g2.addEdge(0, 1)
+	g2.addEdge(0, 2)
+	g2.addEdge(1, 2)
+	g2.addEdge(1, 3)
+	g2.addEdge(2, 3)
+	g2.addEdge(3, 4)
+	g2.addEdge(4, 1)
+	g2.show()
+	g2.BFS(0, 4)
 }

@@ -6,11 +6,9 @@ import (
 
 var visited map[string]bool = make(map[string]bool) //for DFS
 
-type Point struct {
-	Val  int
-	Prev *Point
-}
-
+/***
+Adjacency Matrix impl Graph
+**/
 type MyGraph struct {
 	VRType          int //对于无权图，用 1 或 0 表示是否相邻；对于带权图，直接为权值。
 	AdjMatrix       [][]int
@@ -165,24 +163,6 @@ func (g *MyGraph) BFS(start, target int) *Point {
 		}
 	}
 	return zR
-}
-
-func NewPoint(v int) *Point {
-	p := new(Point)
-	p.Val = v
-	return p
-}
-
-func (p *Point) traversePath() {
-	c := p
-	for {
-		if c == nil {
-			break
-		}
-		fmt.Printf("-> %d ", c.Val)
-		c = c.Prev
-	}
-	fmt.Println()
 }
 
 func (g *MyGraph) BFSlevel(start, target int) int {
