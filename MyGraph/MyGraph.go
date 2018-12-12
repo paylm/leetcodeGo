@@ -184,3 +184,46 @@ func (p *Point) traversePath() {
 	}
 	fmt.Println()
 }
+
+func (g *MyGraph) BFSlevel(start, target int) int {
+
+	vistlevel := make(map[int]int) //for BFS
+	var queue MyQueue
+	queue = NewLQueue()
+	vistlevel[start] = 0
+	maxLevel := 0
+	queue.push(start)
+	for {
+		if queue.empty() {
+			break
+		}
+		err, v := queue.pop()
+		if err != nil {
+			break
+		}
+		zrlevel := vistlevel[v]
+		fmt.Printf("-> %d ", v)
+		if zrlevel > maxLevel {
+			maxLevel = zrlevel
+		}
+		if v == target {
+			fmt.Printf("\n find to target :%d \n", target)
+			//		break
+		}
+		//time.Sleep(time.Second * 3)
+		for i := 0; i < len(g.AdjMatrix[v]); i++ {
+			if g.AdjMatrix[v][i] != 0 {
+				if _, ok := vistlevel[i]; !ok {
+					//fmt.Println(i)
+					vistlevel[i] = zrlevel + 1
+					queue.push(i)
+				}
+			}
+		}
+	}
+
+	for k, v := range vistlevel {
+		fmt.Printf("%d => %d\n", k, v)
+	}
+	return maxLevel
+}
