@@ -4,11 +4,12 @@ import (
 	"fmt"
 )
 
-const (
-	MAX_VERtEX_NUM int = 20
-)
-
 var visited map[string]bool = make(map[string]bool) //for DFS
+
+type Point struct {
+	Val  int
+	Prev *Point
+}
 
 type MyGraph struct {
 	VRType          int //对于无权图，用 1 或 0 表示是否相邻；对于带权图，直接为权值。
@@ -40,6 +41,7 @@ func (g *MyGraph) addEdge(x, y, VRType int) {
 		return
 	}
 	g.AdjMatrix[x][y] = VRType
+	g.edgenum++
 }
 
 func (g *MyGraph) findFistAdjVex() (x, y int) {
@@ -70,19 +72,40 @@ func (g *MyGraph) show() {
 	}
 }
 
-func (g *MyGraph) DFS(x, y int) {
-	for j := y; j < len(g.AdjMatrix); j++ {
-		if g.AdjMatrix[x][j] != 0 {
-			vet := fmt.Sprintf("%d-%d", x, j)
-			if visited[vet] != true {
-				fmt.Printf("<%s> -> ", vet)
-				visited[vet] = true
-				g.DFS(j, 0)
-			}
-			//out stack
-			delete(visited, vet)
+//返回可行路径
+func (g *MyGraph) DFS(start, target int) []*Point {
+	routes := make([]*Point, 1)
+	visDfs := make(map[int]*Point)
+	var stack Stack
+	stack = NewMyStack()
+	p := NewPoint(start)
+	visDfs[start] = p
+	stack.Push(start)
+	for {
+		if stack.empty() {
+			break
 		}
+		err, v := stack.Pop()
+		if err != nil {
+			break
+		}
+		zR := visDfs[v]
+		if v == target {
+			//fmt.Println("find a pat")
+			routes = append(routes, zR)
+		}
+		for i := 0; i < len(g.AdjMatrix[v]); i++ {
+			if g.AdjMatrix[v][i] != 0 {
+				pNext := NewPoint(i)
+				pNext.Prev = zR
+				visDfs[i] = pNext
+				stack.Push(i)
+			}
+		}
+
+		delete(visDfs, v)
 	}
+	return routes
 }
 
 func (g *MyGraph) DFSearchDep(x, y, l int) {
@@ -108,32 +131,56 @@ func (g *MyGraph) DFSearchDep(x, y, l int) {
 }
 
 //找到点节F(5) ,EXIT
-func (g *MyGraph) BFS(x, y, target int) {
-	visBfs := make(map[int]bool) //for BFS
+func (g *MyGraph) BFS(start, target int) *Point {
+	var zR *Point
+	visBfs := make(map[int]*Point) //for BFS
 	var queue MyQueue
 	queue = NewLQueue()
-	visBfs[y] = true
-	queue.push(y)
+	p := NewPoint(start)
+	visBfs[start] = p
+	queue.push(start)
 	for {
 		if queue.empty() {
 			break
 		}
-		err, v := queue.peek()
+		err, v := queue.pop()
 		if err != nil {
 			break
 		}
+		zR = visBfs[v]
 		fmt.Printf("-> %d ", v)
 		if v == target {
-			fmt.Printf("find to target :%d \n", target)
+			fmt.Printf("\n find to target :%d \n", target)
+			break
 		}
 		//time.Sleep(time.Second * 3)
-		queue.pop()
 		for i := 0; i < len(g.AdjMatrix[v]); i++ {
-			if g.AdjMatrix[v][i] != 0 && visBfs[i] != true {
+			if g.AdjMatrix[v][i] != 0 && visBfs[i] == nil {
 				//fmt.Println(i)
+				iZr := NewPoint(i)
+				iZr.Prev = zR
 				queue.push(i)
-				visBfs[i] = true
+				visBfs[i] = iZr
 			}
 		}
 	}
+	return zR
+}
+
+func NewPoint(v int) *Point {
+	p := new(Point)
+	p.Val = v
+	return p
+}
+
+func (p *Point) traversePath() {
+	c := p
+	for {
+		if c == nil {
+			break
+		}
+		fmt.Printf("-> %d ", c.Val)
+		c = c.Prev
+	}
+	fmt.Println()
 }

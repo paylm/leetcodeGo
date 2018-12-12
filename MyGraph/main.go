@@ -5,11 +5,11 @@ import "fmt"
 /***
 
   Graph :
-   A -> B  -> C       //C also has edge to D
+   0 -> 1  -> 2      //2 also has edge to 3
    \     \   /
-    > D -> E<
+    > 3 -> 4<
        \   /
-	    >F
+	    >5
 
 	A B C D E F
   A 0 1 0 1 0 0
@@ -18,6 +18,27 @@ import "fmt"
   D 0 0 0 0 1 1
   E 0 0 0 0 0 1
 **/
+
+func testStack() {
+	s := NewMyStack()
+	a := []int{1, 3, 5, 7, 9}
+	for _, x := range a {
+		s.Push(x)
+	}
+
+	i := len(a) - 1
+	for {
+		if i < 0 {
+			break
+		}
+		_, v := s.Pop()
+		if v != a[i] {
+			fmt.Println("push and pop err")
+		}
+		i--
+		fmt.Printf("pop : %d\n", v)
+	}
+}
 
 func main() {
 	fmt.Println("vim-go")
@@ -38,5 +59,14 @@ func main() {
 	//g.DFS(x, y)
 	g.DFSearchDep(x, y, 0)
 	//target F(5)
-	g.BFS(x, y, 5)
+	fmt.Println("BFS SEARCH")
+	bZR := g.BFS(0, 5)
+	bZR.traversePath()
+
+	fmt.Println("DFS SEARCH")
+	//testStack()
+	paths := g.DFS(0, 5)
+	for _, v := range paths {
+		v.traversePath()
+	}
 }

@@ -3,10 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
+	"sync"
 )
 
 type MyQueue interface {
-	pop() int
+	pop() (error, int)
 	push(v int)
 	peek() (error, int)
 	empty() bool //队列是否为空
@@ -19,6 +20,7 @@ type LQueue struct {
 	Last     *DNode
 	lenght   int
 	listsize int
+	lock     *sync.Mutex
 }
 
 //双向链表
@@ -91,12 +93,13 @@ func NewLQueue() *LQueue {
 	q := new(LQueue)
 	q.lenght = 0
 	q.listsize = 0
+	q.lock = new(sync.Mutex)
 	return q
 }
 
-func (lq *LQueue) pop() int {
+func (lq *LQueue) pop() (error, int) {
 	if lq.lenght == 0 {
-		return -1
+		return errors.New("Queue is nil"), -1
 	}
 	var popNode *DNode
 	lq.Last, popNode = removeLastNode(lq.Last)
@@ -105,7 +108,7 @@ func (lq *LQueue) pop() int {
 		lq.listsize--
 
 	}
-	return popNode.Val
+	return nil, popNode.Val
 }
 
 func (lq *LQueue) push(v int) {
@@ -114,7 +117,7 @@ func (lq *LQueue) push(v int) {
 		fmt.Println("Queue is nil")
 		return
 	}
-
+	lq.lock.Lock()
 	lq.Head = addPrevNode(lq.Head, v)
 	if lq.Last == nil {
 		lq.Last = lq.Head
@@ -124,6 +127,7 @@ func (lq *LQueue) push(v int) {
 		lq.listsize++
 	}
 	lq.lenght++
+	lq.lock.Unlock()
 }
 
 func (lq *LQueue) peek() (error, int) {
