@@ -81,6 +81,47 @@ func testStack() {
 	}
 }
 
+/**
+判断两个数是是否只有一位不同
+eg: 1432   1232 true
+    1432   1331 false
+	1432   1432 false
+**/
+func compareSingle(a, b int) bool {
+	if a == b {
+		return false
+	}
+	var x, y int
+	if a > b {
+		x = a
+		y = b
+	} else {
+		x = b
+		y = a
+	}
+	i := 10
+	n := 0 //x,y相差位数
+	for {
+		if x < 1 {
+			break
+		}
+		k1 := x % i
+		k2 := y % i
+		//	fmt.Println(k1, k2)
+		if k1 != k2 {
+			n++
+		}
+		x = x / 10
+		y = y / 10
+	}
+	//fmt.Printf("%d compare %d diff byte  n :%d , i :%d \n", a, b, n, i)
+	if n == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
 func testInput() {
 	var size int
 	var p1, p2 int
@@ -103,6 +144,54 @@ func testInput() {
 	paths := g.DFS(0, size-1)
 	for _, v := range paths {
 		v.traverseRole(role)
+	}
+}
+
+func testListGraph() {
+
+	g2 := NewLsGraph(5)
+	g2.addEdge(0, 1)
+	g2.addEdge(0, 2)
+	g2.addEdge(1, 2)
+	g2.addEdge(1, 3)
+	g2.addEdge(2, 3)
+	g2.addEdge(3, 4)
+	g2.addEdge(4, 1)
+	g2.show()
+	g2.BFS(0, 4)
+}
+
+//数组生成路径
+func testLsGraph(a []int) {
+	fmt.Println(a)
+	l := len(a)
+	g3 := NewLsGraph(l)
+	for i := 0; i < l; i++ {
+		for j := i + 1; j < l; j++ {
+			//		fmt.Printf("i:%d,j=%d\n", a[i], a[j])
+			if compareSingle(a[i], a[j]) {
+				//			fmt.Println("compareSingle true")
+				g3.addEdge(a[i], a[j])
+				//g3.addEdge(a[j], a[i])
+			}
+		}
+	}
+	g3.show()
+	r := g3.BFS(a[0], a[l-1])
+	if r != nil {
+		fmt.Printf("found %d to %d\n", a[0], a[l-1])
+		r.traversePath()
+	}
+	r2 := g3.BFS(a[2], a[l-2])
+	if r != nil {
+		fmt.Printf("found %d to %d\n", a[2], a[l-2])
+		r2.traversePath()
+	}
+
+	rs := g3.DFS(a[0], a[l-1])
+	for _, v := range rs {
+		fmt.Println("DFS PATH")
+		v.traversePath()
 	}
 }
 
@@ -139,14 +228,9 @@ func main() {
 	fmt.Printf("from %d -> %d , level :%d \n", 0, 5, g.BFSlevel(0, 5))
 
 	//testInput()
-	g2 := NewLsGraph(5)
-	g2.addEdge(0, 1)
-	g2.addEdge(0, 2)
-	g2.addEdge(1, 2)
-	g2.addEdge(1, 3)
-	g2.addEdge(2, 3)
-	g2.addEdge(3, 4)
-	g2.addEdge(4, 1)
-	g2.show()
-	g2.BFS(0, 4)
+	fmt.Println(compareSingle(1234, 1244))
+	fmt.Println(compareSingle(1224, 1334))
+	fmt.Println(compareSingle(1234, 1234))
+	fmt.Println(compareSingle(1733, 3733))
+	testLsGraph([]int{1033, 1733, 3733, 3739, 3779, 8779, 8179})
 }

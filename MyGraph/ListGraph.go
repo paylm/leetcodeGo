@@ -9,7 +9,7 @@ An array of lists is used. Size of the array is equal to the number of vertices.
 type LsGraph struct {
 	Vertex  int
 	Edge    int
-	AdjList []*AdjListNode
+	AdjList map[int]*AdjListNode
 }
 
 type AdjListNode struct {
@@ -26,7 +26,7 @@ func NewAdjListNode(v int) *AdjListNode {
 func NewLsGraph(s int) *LsGraph {
 	lg := new(LsGraph)
 	lg.Vertex = s
-	lg.AdjList = make([]*AdjListNode, lg.Vertex)
+	lg.AdjList = make(map[int]*AdjListNode)
 	return lg
 }
 
@@ -39,11 +39,12 @@ func (g *LsGraph) addEdge(src, dst int) {
 	g.AdjList[src] = d
 }
 
-func (g *LsGraph) BFS(src, dst int) {
-	visBfs := make(map[int]bool)
+func (g *LsGraph) BFS(src, dst int) *Point {
+	visBfs := make(map[int]*Point)
 	queue := NewLQueue()
 	queue.push(src)
-	visBfs[src] = true
+	zR := NewPoint(src)
+	visBfs[src] = zR
 	for {
 		if queue.empty() {
 			break
@@ -53,10 +54,12 @@ func (g *LsGraph) BFS(src, dst int) {
 			fmt.Println(err)
 			break
 		}
-		fmt.Printf("%d->", v)
+		zR = visBfs[v]
+		//fmt.Printf("%d->", v)
 		if v == dst {
 			fmt.Printf("\nfind the dst :%d\n", dst)
-			break
+			return zR
+			//break
 		}
 		c := g.AdjList[v]
 		//fmt.Println(c)
@@ -64,13 +67,54 @@ func (g *LsGraph) BFS(src, dst int) {
 			if c == nil {
 				break
 			}
-			if visBfs[c.Val] != true {
+			if visBfs[c.Val] == nil {
 				queue.push(c.Val)
-				visBfs[c.Val] = true
+				xZr := NewPoint(c.Val)
+				xZr.Prev = zR
+				visBfs[c.Val] = xZr
 			}
 			c = c.Next
 		}
 	}
+	return nil
+}
+
+func (g *LsGraph) DFS(src, dst int) []*Point {
+	rs := make([]*Point, 1)
+	visDfs := make(map[int]*Point)
+	stack := NewMyStack()
+	stack.Push(src)
+	visDfs[src] = NewPoint(src)
+	for {
+		if stack.empty() {
+			break
+		}
+		err, v := stack.Pop()
+		if err != nil {
+			break
+		}
+		zR := visDfs[v]
+		if v == dst {
+			rs = append(rs, zR)
+		}
+		c := g.AdjList[v]
+		for {
+			if c == nil {
+				break
+			}
+			if visDfs[c.Val] == nil {
+				xZr := NewPoint(c.Val)
+				xZr.Prev = zR
+				visDfs[c.Val] = xZr
+				stack.Push(c.Val)
+			}
+			c = c.Next
+		}
+		//	fmt.Printf("%d remove from visDfs", v)
+		delete(visDfs, v)
+	}
+
+	return rs
 }
 
 func (g *LsGraph) show() {
