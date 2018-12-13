@@ -162,6 +162,7 @@ func testListGraph() {
 }
 
 //数组生成路径
+//https://www.geeksforgeeks.org/minimum-initial-vertices-traverse-whole-matrix-given-conditions/
 func testLsGraph(a []int) {
 	fmt.Println(a)
 	l := len(a)
