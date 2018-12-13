@@ -2,13 +2,9 @@ package main
 
 import "fmt"
 
-func main() {
-	fmt.Println("vim-go")
-	a := []int{0, 1, 2, 3, 4}
-	//删除第i个元素
-	i := 2
-	a = append(a[:i], a[i+1:]...)
+func test1() {
 
+	fmt.Println()
 	var q Queue
 	q = NewMyQueue()
 	q.put(1)
@@ -31,6 +27,31 @@ func main() {
 			root.InsertNode(NewNode(v))
 		}
 	}
+}
 
-	travese(root)
+func testP(p *int) {
+
+	fmt.Println("testP:", *p)
+	*p++
+}
+
+func main() {
+	fmt.Println("vim-go")
+	a := []int{0, 1, 2, 3, 4}
+	//删除第i个元素
+	i := 2
+	a = append(a[:i], a[i+1:]...)
+
+	r := NewNode(10)
+	r.Left = NewNode(30)
+	r.Right = NewNode(15)
+	r.Left.Left = NewNode(20)
+	r.Right.Right = NewNode(5)
+	PreOrder(r)
+	arrayToBinaryTree(r)
+	PreOrder(r)
+	//	p := 2
+	//	fmt.Println(&p)
+	//	testP(&p)
+	//	fmt.Println(p)
 }

@@ -81,25 +81,77 @@ func PostOrder(rootNode *Node) {
 	PostOrder(rootNode.Left)
 }
 
-func travese(rootNode *Node) {
-	var q Queue
-	q = NewMyQueue()
-	//var n Node
-	q.put(rootNode)
+func binaryTreeToArray(rootNode *Node) []int {
+	if rootNode == nil {
+		return nil
+	}
+	arr := []int{rootNode.Val}
+	l := binaryTreeToArray(rootNode.Left)
+	r := binaryTreeToArray(rootNode.Right)
+	arr = append(arr, l...)
+	arr = append(arr, r...)
+	return arr
+}
+
+func arrayToBST(rootNode *Node, arr []int, i *int) {
+	if rootNode == nil {
+		return
+	}
+
+	arrayToBST(rootNode.Left, arr, i)
+	//fmt.Printf("old val:%d,new val:%d,i:%d\n", rootNode.Val, arr[*i], *i)
+	rootNode.Val = arr[*i]
+	*i++
+	arrayToBST(rootNode.Right, arr, i)
+
+}
+
+func arrayToBinaryTree(rootNode *Node) {
+	if rootNode == nil {
+		return
+	}
+	arr := binaryTreeToArray(rootNode)
+
+	i := 0
+	fmt.Println("before quickSort:", arr)
+	quickSort(arr, 0, len(arr)-1)
+	fmt.Println("after quickSort:", arr)
+	arrayToBST(rootNode, arr, &i)
+}
+
+func quickSort(a []int, start int, end int) {
+	if len(a) == 0 || start == end {
+		return
+	}
+
+	k := a[start]
+	i, j := start, end
 	for {
-		if q.empty() {
+		if i == j {
 			break
 		}
-		n := q.pop()
-
-		fmt.Print(n)
-
-		if n.Left != nil {
-			q.put(n.Left)
+		for {
+			if j > i && a[j] > k {
+				j--
+			} else {
+				break
+			}
 		}
 
-		if n.Right != nil {
-			q.put(n.Right)
+		for {
+			if j > i && a[i] < k {
+				i++
+			} else {
+				break
+			}
 		}
+		temp := a[i]
+		a[i] = a[j]
+		a[j] = temp
 	}
+
+	a[i] = k
+	//fmt.Println(a)
+	quickSort(a, start, i)
+	quickSort(a, j+1, end)
 }
