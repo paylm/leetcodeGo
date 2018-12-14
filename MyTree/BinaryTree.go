@@ -237,3 +237,28 @@ func delBTNode(rootBTNode *BTNode, k int) *BTNode {
 
 	return rootBTNode
 }
+
+func linkToBSTRrecur(l *LinkNode, n int) *BTNode {
+	if n <= 0 {
+		return nil
+	}
+
+	left := linkToBSTRrecur(l, n/2)
+	root := NewBTNode(l.Val)
+	l = l.Next
+	root.Left = left
+	root.Right = linkToBSTRrecur(l, n-n/2+1)
+	return root
+}
+
+func linkToBST(l *LinkNode) *BTNode {
+
+	if l == nil {
+		return nil
+	}
+
+	n := countLinkNode(l)
+
+	root := linkToBSTRrecur(l, n)
+	return root
+}
