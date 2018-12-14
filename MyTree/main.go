@@ -19,12 +19,12 @@ func test1() {
 	}
 
 	arr := []int{8, 4, 10, 3, 5, 1, 7}
-	var root *Node
+	var root *BTNode
 	for _, v := range arr {
 		if root == nil {
-			root = NewNode(v)
+			root = NewBTNode(v)
 		} else {
-			root.InsertNode(NewNode(v))
+			root.InsertBTNode(NewBTNode(v))
 		}
 	}
 }
@@ -42,13 +42,20 @@ func main() {
 	i := 2
 	a = append(a[:i], a[i+1:]...)
 
-	r := NewNode(10)
-	r.Left = NewNode(30)
-	r.Right = NewNode(15)
-	r.Left.Left = NewNode(20)
-	r.Right.Right = NewNode(5)
+	r := NewBTNode(10)
+	r.Left = NewBTNode(30)
+	r.Right = NewBTNode(15)
+	r.Left.Left = NewBTNode(20)
+	r.Left.Right = NewBTNode(25)
+	r.Right.Right = NewBTNode(5)
+	r.Right.Left = NewBTNode(1)
 	PreOrder(r)
 	arrayToBinaryTree(r)
+	PreOrder(r)
+	showBST(r)
+	fmt.Println(minValBTNode(r))
+	delBTNode(r, 15)
+	showBST(r)
 	PreOrder(r)
 	//	p := 2
 	//	fmt.Println(&p)

@@ -190,6 +190,7 @@ func testLsGraph(a []int) {
 	}
 
 	rs := g3.DFS(a[0], a[l-1])
+	fmt.Println(rs)
 	for _, v := range rs {
 		fmt.Println("DFS PATH")
 		v.traversePath()

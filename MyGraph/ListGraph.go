@@ -12,6 +12,8 @@ type LsGraph struct {
 	AdjList map[int]*AdjListNode
 }
 
+type s struct{}
+
 type AdjListNode struct {
 	Val  int
 	Next *AdjListNode
@@ -95,6 +97,7 @@ func (g *LsGraph) DFS(src, dst int) []*Point {
 		}
 		zR := visDfs[v]
 		if v == dst {
+			fmt.Println("router :", zR)
 			rs = append(rs, zR)
 		}
 		c := g.AdjList[v]

@@ -2,121 +2,158 @@ package main
 
 import "fmt"
 
-type Node struct {
+type BTNode struct {
 	Val   int
-	Left  *Node
-	Right *Node
+	Left  *BTNode
+	Right *BTNode
 }
 
-func NewNode(k int) *Node {
-	n := new(Node)
+func NewBTNode(k int) *BTNode {
+	n := new(BTNode)
 	n.Val = k
 	return n
 }
 
-func (rootNode *Node) Gt(n *Node) bool {
-	if rootNode.Val > n.Val {
+func (rootBTNode *BTNode) Gt(n *BTNode) bool {
+	if rootBTNode.Val > n.Val {
 		return true
 	}
 	return false
 }
 
-func (rootNode *Node) InsertNode(n *Node) {
+func (rootBTNode *BTNode) InsertBTNode(n *BTNode) {
 
-	if rootNode == nil {
+	if rootBTNode == nil {
 		return
 	}
 	defer func() {
 		fmt.Printf("insert %d ok \n", n.Val)
 	}()
-	if rootNode.Gt(n) {
+	if rootBTNode.Gt(n) {
 		// root > b
-		if rootNode.Left == nil {
-			rootNode.Left = n
+		if rootBTNode.Left == nil {
+			rootBTNode.Left = n
 			return
 		}
-		rootNode.Left.InsertNode(n)
+		rootBTNode.Left.InsertBTNode(n)
 
 	} else {
-		if rootNode.Right == nil {
-			rootNode.Right = n
+		if rootBTNode.Right == nil {
+			rootBTNode.Right = n
 			return
 		}
-		rootNode.Right.InsertNode(n)
+		rootBTNode.Right.InsertBTNode(n)
 	}
 
 }
 
-func PreOrder(rootNode *Node) {
+func PreOrder(rootBTNode *BTNode) {
 
-	if rootNode == nil {
-		//fmt.Println("is a Empty Node")
+	if rootBTNode == nil {
+		//fmt.Println("is a Empty BTNode")
 		return
 	}
 
-	PreOrder(rootNode.Left)
-	fmt.Println(rootNode.Val)
-	PreOrder(rootNode.Right)
+	PreOrder(rootBTNode.Left)
+	fmt.Println(rootBTNode.Val)
+	PreOrder(rootBTNode.Right)
 }
-func InOrder(rootNode *Node) {
+func InOrder(rootBTNode *BTNode) {
 
-	if rootNode == nil {
-		//fmt.Println("is a Empty Node")
+	if rootBTNode == nil {
+		//fmt.Println("is a Empty BTNode")
 		return
 	}
 
-	fmt.Println(rootNode.Val)
-	InOrder(rootNode.Left)
-	InOrder(rootNode.Right)
+	fmt.Println(rootBTNode.Val)
+	InOrder(rootBTNode.Left)
+	InOrder(rootBTNode.Right)
 }
 
-func PostOrder(rootNode *Node) {
+func PostOrder(rootBTNode *BTNode) {
 
-	if rootNode == nil {
-		//fmt.Println("is a Empty Node")
+	if rootBTNode == nil {
+		//fmt.Println("is a Empty BTNode")
 		return
 	}
-	PostOrder(rootNode.Right)
-	fmt.Println(rootNode.Val)
-	PostOrder(rootNode.Left)
+	PostOrder(rootBTNode.Right)
+	fmt.Println(rootBTNode.Val)
+	PostOrder(rootBTNode.Left)
 }
 
-func binaryTreeToArray(rootNode *Node) []int {
-	if rootNode == nil {
+/**
+load the tree to map
+        15
+	  /    \
+   15       25
+  /  \    /  \
+5     10 20   30
+
+to:
+5
+15
+15 10 20
+25
+30
+
+**/
+func loadBST(rootBTNode *BTNode, s map[int][]int, i int) {
+	if rootBTNode == nil {
+		return
+	}
+	v, ok := s[i]
+	if !ok {
+		s[i] = []int{rootBTNode.Val}
+	} else {
+		v = append(v, rootBTNode.Val)
+		s[i] = v
+	}
+	loadBST(rootBTNode.Left, s, i-1)
+	loadBST(rootBTNode.Right, s, i+1)
+}
+
+func showBST(rootBTNode *BTNode) {
+	ts := make(map[int][]int)
+	loadBST(rootBTNode, ts, 0)
+	fmt.Println(ts)
+}
+
+func binaryTreeToArray(rootBTNode *BTNode) []int {
+	if rootBTNode == nil {
 		return nil
 	}
-	arr := []int{rootNode.Val}
-	l := binaryTreeToArray(rootNode.Left)
-	r := binaryTreeToArray(rootNode.Right)
+	arr := []int{rootBTNode.Val}
+	l := binaryTreeToArray(rootBTNode.Left)
+	r := binaryTreeToArray(rootBTNode.Right)
 	arr = append(arr, l...)
 	arr = append(arr, r...)
 	return arr
 }
 
-func arrayToBST(rootNode *Node, arr []int, i *int) {
-	if rootNode == nil {
+func arrayToBST(rootBTNode *BTNode, arr []int, i *int) {
+	if rootBTNode == nil {
 		return
 	}
 
-	arrayToBST(rootNode.Left, arr, i)
-	//fmt.Printf("old val:%d,new val:%d,i:%d\n", rootNode.Val, arr[*i], *i)
-	rootNode.Val = arr[*i]
+	arrayToBST(rootBTNode.Left, arr, i)
+	//fmt.Printf("old val:%d,new val:%d,i:%d\n", rootBTNode.Val, arr[*i], *i)
+	rootBTNode.Val = arr[*i]
 	*i++
-	arrayToBST(rootNode.Right, arr, i)
+	arrayToBST(rootBTNode.Right, arr, i)
 
 }
 
-func arrayToBinaryTree(rootNode *Node) {
-	if rootNode == nil {
+func arrayToBinaryTree(rootBTNode *BTNode) {
+	if rootBTNode == nil {
 		return
 	}
-	arr := binaryTreeToArray(rootNode)
+	arr := binaryTreeToArray(rootBTNode)
 
 	i := 0
-	fmt.Println("before quickSort:", arr)
+	//fmt.Println("before quickSort:", arr)
 	quickSort(arr, 0, len(arr)-1)
-	fmt.Println("after quickSort:", arr)
-	arrayToBST(rootNode, arr, &i)
+	//fmt.Println("after quickSort:", arr)
+	arrayToBST(rootBTNode, arr, &i)
 }
 
 func quickSort(a []int, start int, end int) {
@@ -154,4 +191,49 @@ func quickSort(a []int, start int, end int) {
 	//fmt.Println(a)
 	quickSort(a, start, i)
 	quickSort(a, j+1, end)
+}
+
+func minValBTNode(rootBTNode *BTNode) *BTNode {
+
+	if rootBTNode.Left == nil {
+		return rootBTNode
+	} else {
+		return minValBTNode(rootBTNode.Left)
+	}
+}
+
+/**
+Given a binary search tree and a key, this func deletes the key and return the new root
+**/
+func delBTNode(rootBTNode *BTNode, k int) *BTNode {
+
+	if rootBTNode == nil {
+		return nil
+	}
+
+	if rootBTNode.Val > k {
+		rootBTNode.Left = delBTNode(rootBTNode.Left, k)
+	} else if rootBTNode.Val < k {
+		rootBTNode.Right = delBTNode(rootBTNode.Right, k)
+	} else {
+
+		//fmt.Println("del BTNode:", rootBTNode.Val)
+		//if key is samve sa root's key,then this is the node to be delete
+		if rootBTNode.Left == nil {
+			temp := rootBTNode.Right
+			rootBTNode = nil
+			return temp
+		} else if rootBTNode.Right == nil {
+			temp := rootBTNode.Left
+			rootBTNode = nil
+			return temp
+		}
+		//node has two children : Get the inorder succuessor
+		temp := minValBTNode(rootBTNode.Right)
+		fmt.Println("del BTNode with two sun :", temp)
+		rootBTNode.Val = temp.Val
+		rootBTNode.Right = delBTNode(rootBTNode.Right, temp.Val)
+	}
+
+	return rootBTNode
 }
