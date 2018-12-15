@@ -69,6 +69,7 @@ func main() {
 	l1.Next.Next.Next.Next = NewLinkNode(9)
 	l1.Next.Next.Next.Next.Next = NewLinkNode(11)
 	l1.Next.Next.Next.Next.Next.Next = NewLinkNode(13)
+	l1.show()
 	r2 := linkToBST(l1)
 	showBST(r2)
 }

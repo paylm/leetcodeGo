@@ -238,16 +238,27 @@ func delBTNode(rootBTNode *BTNode, k int) *BTNode {
 	return rootBTNode
 }
 
-func linkToBSTRrecur(l *LinkNode, n int) *BTNode {
+//未完成
+func linkToBSTRrecur(lp **LinkNode, n int) *BTNode {
+	//	defer func() {
+	//		if err := recover(); err != nil {
+	//			fmt.Printf("n:%d,err:%v\n", n, err)
+	//		}
+	//	}()
 	if n <= 0 {
 		return nil
 	}
 
-	left := linkToBSTRrecur(l, n/2)
-	root := NewBTNode(l.Val)
-	l = l.Next
+	left := linkToBSTRrecur(lp, n/2)
+	root := NewBTNode((*lp).Val)
+	fmt.Printf("v:%T, v :%d \n", *lp, (*lp).Val)
 	root.Left = left
-	root.Right = linkToBSTRrecur(l, n-n/2+1)
+	*lp = (*lp).Next
+	fmt.Println("lp:", lp, "root:", root, "afer left:", root, "right:", (*lp).Val)
+	fmt.Println("left n:", n, " right n:", n-n/2+1)
+	right := linkToBSTRrecur(lp, n-n/2+1)
+	fmt.Println("root:", root, "left:", left, "right:", right)
+	//root.Right = right
 	return root
 }
 
@@ -256,9 +267,9 @@ func linkToBST(l *LinkNode) *BTNode {
 	if l == nil {
 		return nil
 	}
-
 	n := countLinkNode(l)
-
-	root := linkToBSTRrecur(l, n)
+	fmt.Printf("link len:=%d\n", n)
+	fmt.Println("head:", l)
+	root := linkToBSTRrecur(&l, n)
 	return root
 }

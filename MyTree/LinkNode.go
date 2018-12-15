@@ -34,4 +34,5 @@ func (l *LinkNode) show() {
 		fmt.Printf("%d->", c.Val)
 		c = c.Next
 	}
+	fmt.Println()
 }
