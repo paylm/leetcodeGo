@@ -86,6 +86,12 @@ func Insert(n *AvlNode, x int) *AvlNode {
 /**
 k1 old root
 k2 new root
+
+   k1                 k2
+     \              /    \
+	  k2    ==>   k1     xxx
+	    \
+		 xx
 **/
 func LeftRotate(k1 *AvlNode) *AvlNode {
 	fmt.Printf("LeftRotate %v\n", k1)
