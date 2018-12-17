@@ -35,6 +35,19 @@ func testP(p *int) {
 	*p++
 }
 
+func testAvl() {
+
+	r1 := NewAvlNode(1)
+	r1 = Insert(r1, 2)
+	r1 = Insert(r1, 3)
+	r1 = Insert(r1, 6)
+	r1 = Insert(r1, 5)
+	r1 = Insert(r1, 4)
+	AvlTraverse(r1)
+	fmt.Printf("\nmix:%v,max:%v\n", findMinNode(r1), findMaxNode(r1))
+
+}
+
 func main() {
 	fmt.Println("vim-go")
 	a := []int{0, 1, 2, 3, 4}
@@ -57,10 +70,10 @@ func main() {
 	delBTNode(r, 15)
 	showBST(r)
 	PreOrder(r)
-	//	p := 2
-	//	fmt.Println(&p)
-	//	testP(&p)
-	//	fmt.Println(p)
+	p := 2
+	fmt.Println(&p)
+	testP(&p)
+	fmt.Println(p)
 	fmt.Println("link to BST")
 	l1 := NewLinkNode(1)
 	l1.Next = NewLinkNode(3)

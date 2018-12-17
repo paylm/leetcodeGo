@@ -26,7 +26,7 @@ func Max(a, b int) int {
 
 func Height(n *AvlNode) int {
 	if n == nil {
-		return 0
+		return -1
 	} else {
 		return n.Height
 	}
@@ -94,10 +94,10 @@ k2 new root
 		 xx
 **/
 func LeftRotate(k1 *AvlNode) *AvlNode {
-	fmt.Printf("LeftRotate %v\n", k1)
+	//fmt.Printf("LeftRotate %v\n", k1)
 	k2 := k1.Right
 	k1.Right = k2.Left
-	k2.Left = k2
+	k2.Left = k1
 
 	k1.Height = Max(Height(k1.Left), Height(k1.Right)) + 1
 	k2.Height = Max(Height(k2.Left), Height(k2.Right)) + 1
@@ -108,16 +108,55 @@ func LeftRotate(k1 *AvlNode) *AvlNode {
 /**
 k1 old root
 k2 new root
+         k1               k2
+	    /               /   \
+	  k2      = >      t     k1
+	 /  \                   /
+    t    xx                x
+
 **/
 func RightRotate(k1 *AvlNode) *AvlNode {
-	fmt.Printf("RightRotate %v , left :%v , right:%v\n", k1, k1.Left, k1.Right)
+	//fmt.Printf("RightRotate %v , left :%v , right:%v\n", k1, k1.Left, k1.Right)
 	k2 := k1.Left
 	k1.Left = k2.Right
-	k2.Left = k1
+	k2.Right = k1
 	k1.Height = Max(Height(k1.Left), Height(k1.Right)) + 1
 	k2.Height = Max(Height(k2.Left), Height(k2.Right)) + 1
 
 	return k2
+}
+
+func findMinNode(n *AvlNode) *AvlNode {
+	if n == nil {
+		return nil
+	}
+
+	nleft := n
+	for {
+
+		if nleft.Left == nil {
+			return nleft
+		}
+
+		nleft = nleft.Left
+	}
+}
+
+func findMaxNode(n *AvlNode) *AvlNode {
+
+	if n == nil {
+		return nil
+	}
+
+	nright := n
+	for {
+
+		if nright.Right == nil {
+			return nright
+		}
+
+		nright = nright.Right
+	}
 }
 
 func AvlTraverse(n *AvlNode) {
@@ -125,7 +164,7 @@ func AvlTraverse(n *AvlNode) {
 		return
 	}
 
-	fmt.Printf("%d ", n.Val)
+	fmt.Printf("(%d->h:%d) ", n.Val, n.Height)
 	AvlTraverse(n.Left)
 	AvlTraverse(n.Right)
 }

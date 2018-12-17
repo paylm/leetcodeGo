@@ -245,7 +245,7 @@ func linkToBSTRrecur(lp **LinkNode, n int) *BTNode {
 	//			fmt.Printf("n:%d,err:%v\n", n, err)
 	//		}
 	//	}()
-	if n <= 0 {
+	if n <= 0 || (*lp) == nil {
 		return nil
 	}
 
@@ -254,11 +254,11 @@ func linkToBSTRrecur(lp **LinkNode, n int) *BTNode {
 	fmt.Printf("v:%T, v :%d \n", *lp, (*lp).Val)
 	root.Left = left
 	*lp = (*lp).Next
-	fmt.Println("lp:", lp, "root:", root, "afer left:", root, "right:", (*lp).Val)
+	fmt.Println("*lp:", *lp, "root:", root, "afer left:", root, "right:", (*lp).Val)
 	fmt.Println("left n:", n, " right n:", n-n/2+1)
 	right := linkToBSTRrecur(lp, n-n/2+1)
 	fmt.Println("root:", root, "left:", left, "right:", right)
-	//root.Right = right
+	root.Right = right
 	return root
 }
 
