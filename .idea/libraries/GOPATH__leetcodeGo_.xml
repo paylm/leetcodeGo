@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;leetcodeGo&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../.." />
+      <root url="file://$PROJECT_DIR$/../../../httpSvr" />
+      <root url="file://$PROJECT_DIR$/../../../sr1" />
+      <root url="file://$PROJECT_DIR$/../../../gotest" />
+      <root url="file://$PROJECT_DIR$/../../../.settings" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../.." />
+      <root url="file://$PROJECT_DIR$/../../../httpSvr" />
+      <root url="file://$PROJECT_DIR$/../../../sr1" />
+      <root url="file://$PROJECT_DIR$/../../../gotest" />
+      <root url="file://$PROJECT_DIR$/../../../.settings" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
