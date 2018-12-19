@@ -45,4 +45,15 @@ func main() {
 	}
 	fmt.Println(CheckHeap([]int{1, 2, 13, 4, 5, 6, 7}, 0))
 	fmt.Println(CheckHeap([]int{2, 12, 5, 14, 34, 9, 10, 66}, 0))
+	fmt.Println("sort heap test")
+
+	arr := []int{5, 8, 3, 1, 11, 9, 16}
+	mp1 := NewMinHeap(len(arr))
+	mp1.heap_size = len(arr)
+	mp1.harr = arr
+	fmt.Println(mp1)
+	fmt.Println(CheckHeap(mp1.harr, 0))
+	mp1.sortHeap()
+	fmt.Println(mp1)
+	fmt.Println(CheckHeap(mp1.harr, 0))
 }

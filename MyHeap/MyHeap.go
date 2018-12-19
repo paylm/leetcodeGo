@@ -143,3 +143,14 @@ func CheckHeap(arr []int, i int) bool {
 
 	return true && CheckHeap(arr, left) && CheckHeap(arr, right)
 }
+
+/***
+ 把一个无序堆转化为有序堆
+**/
+func (mp *MinHeap) sortHeap() {
+	sp := parentId(mp.heap_size)
+	for i := mp.heap_size - 1; i >= sp; i-- {
+		fmt.Printf("i:%d = > %d\n", i, mp.harr[i])
+		mp.shiftUp(i)
+	}
+}
