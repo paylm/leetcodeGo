@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 )
-func main(){
+
+func main() {
 	fmt.Println("test")
 	a := 1
 	b := 2
-	swap(&a,&b)
-	fmt.Println(a,b)
+	swap(&a, &b)
+	fmt.Println(a, b)
 
 	mp := NewMinHeap(10)
 	mp.Insert(14)
@@ -29,7 +30,19 @@ func main(){
 
 	mp.Remove(4)
 	fmt.Println(mp)
-	root,_ := mp.PopRoot()
-	fmt.Println("root:",root)
+	root, _ := mp.PopRoot()
+	fmt.Println("root:", root)
 	fmt.Println(mp)
+	fmt.Println(mp.PopRoot())
+	fmt.Println(mp)
+	for {
+		if mp.isEmpty() {
+			break
+		}
+		r, _ := mp.PopRoot()
+		fmt.Println("root Pop:", r)
+		fmt.Println(mp)
+	}
+	fmt.Println(CheckHeap([]int{1, 2, 13, 4, 5, 6, 7}, 0))
+	fmt.Println(CheckHeap([]int{2, 12, 5, 14, 34, 9, 10, 66}, 0))
 }
