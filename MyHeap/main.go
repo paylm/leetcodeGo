@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-func main() {
+//BS HEAP TEST
+func testBSHeap(){
 	fmt.Println("test")
 	a := 1
 	b := 2
@@ -56,4 +57,24 @@ func main() {
 	mp1.sortHeap()
 	fmt.Println(mp1)
 	fmt.Println(CheckHeap(mp1.harr, 0))
+}
+
+func main() {
+
+	bh1 := NewBinomialHeap(1)
+	bh2 := NewBinomialHeap(2)
+	bh3 := NewBinomialHeap(13)
+	bh4 := NewBinomialHeap(14)
+
+	s1 := unionBinomialHeap(bh1,bh2)
+	traverseBheap(s1)
+	fmt.Println()
+	fmt.Println("s1:",s1)
+	s2 := unionBinomialHeap(s1,bh3)
+	traverseBheap(s2)
+	s3 := unionBinomialHeap(s2,bh4)
+	//fmt.Println(s1)
+	//fmt.Println(s2)
+	fmt.Println("\ns3=>")
+	traverseBheap(s3)
 }

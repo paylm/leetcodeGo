@@ -5,6 +5,9 @@ import (
 	"fmt"
 )
 
+/***
+ 二叉堆
+ */
 type MinHeap struct {
 	harr      []int // pointer to array of elements in heap
 	capacity  int   // maximum possible size of min heap
