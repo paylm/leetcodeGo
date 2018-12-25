@@ -61,20 +61,17 @@ func testBSHeap() {
 
 func main() {
 
-	bh1 := NewBinomialHeap(1)
-	bh2 := NewBinomialHeap(2)
-	bh3 := NewBinomialHeap(13)
-	bh4 := NewBinomialHeap(14)
+	bh := NewBinomialHeap()
+	bh.Push(1)
+	bh.Push(12)
+	bh.Push(5)
+	bh.Push(8)
+	bh.Push(2)
 
-	s1 := unionBinomialHeap(bh1, bh2)
-	//traverseBheap(s1)
-	fmt.Println()
-	fmt.Println("s1:", s1)
-	s2 := unionBinomialHeap(s1, bh3)
-	//traverseBheap(s2)
-	s3 := unionBinomialHeap(s2, bh4)
-	//fmt.Println(s1)
-	//fmt.Println(s2)
-	fmt.Println("\ns3=>")
-	traverseBheap(s3, 0)
+	traverseBheap(bh.head,0)
+
+	fmt.Println("pop the mix")
+	fmt.Println(bh.Pop())
+
+	traverseBheap(bh.head,0)
 }
