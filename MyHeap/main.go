@@ -74,4 +74,17 @@ func main() {
 	fmt.Println(bh.Pop())
 
 	traverseBheap(bh.head,0)
+
+	fmt.Println("test for peek")
+	fmt.Println(bh.Peek())
+	fmt.Println(bh.Peek())
+	fmt.Println(bh.Peek())
+
+	for {
+		if bh.empty() {
+			break
+		}
+		fmt.Println("pop min => ")
+		fmt.Println(bh.Pop())
+	}
 }

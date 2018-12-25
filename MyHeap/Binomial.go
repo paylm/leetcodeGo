@@ -156,7 +156,7 @@ func NewBinomialHeap() *BinomialHeap{
 }
 
 func (bh *BinomialHeap)Pop() (int,error){
-	if bh == nil{
+	if bh.head == nil{
 		return -1,errors.New("BinomialNode is empty")
 	}
 	//find the min Node
@@ -174,6 +174,11 @@ func (bh *BinomialHeap)Pop() (int,error){
 	}
 
 	deletQue := minHeap.LeftChild
+	if deletQue == nil {
+		//当节点高度只有1
+		bh.head = minHeap.Next
+		return minHeap.Key,nil
+	}
 	dc := deletQue.Next
 	deletQue.Next = nil
 	//update parent and reverse ?
@@ -194,17 +199,20 @@ func (bh *BinomialHeap)Pop() (int,error){
 		preHeap.Next = minHeap.Next //截断删除点
 	}else {
 		//fmt.Println("bh udpate",bh)
-		bh.head = minHeap.Next
+		if minHeap.Next != nil {
+			bh.head = minHeap.Next
+		}else{
+			bh.head = nil
+		}
 	}
 	//fmt.Println("bh :",bh)
-	if bh == nil{
+	if bh.head == nil{
 		bh.head = deletQue
 		//fmt.Println("delQueu => bh",bh,deletQue)
 	}else{
 		//union two new heap
 		unionBinomialNode(bh.head,deletQue)
 	}
-
 	return minHeap.Key,nil
 }
 
@@ -215,6 +223,20 @@ func (bh *BinomialHeap)Push(v int){
 		return
 	}
 	bh.head = unionBinomialNode(bh.head,bn)
+}
+
+func (bh *BinomialHeap)Peek() (int,error){
+	if bh == nil{
+		return -1,errors.New("BinomialNode is empty")
+	}
+	return bh.head.FindMinNode().Key,nil
+}
+
+func (bh *BinomialHeap)empty() bool{
+	if bh.head == nil{
+		return true
+	}
+	return false
 }
 
 func traverseBheap(h *BinomialNode, parent int) {
