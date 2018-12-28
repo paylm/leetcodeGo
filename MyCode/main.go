@@ -105,15 +105,78 @@ func convert(s string, numRows int) string {
 	return strings.Join(res, "")
 }
 
+func swap(a, b *int) {
+	temp := *b
+	*b = *a
+	*a = temp
+}
+
+//把小的数下沉
+func perUP(arr []int, l int) {
+	for i := l; i >= 0; i-- {
+		leftChild := 2*i + 1
+		k := i
+		if arr[i] < arr[leftChild] {
+			k = leftChild
+		}
+
+		if len(arr) > leftChild+1 && arr[k] < arr[leftChild+1] {
+			k = leftChild + 1
+		}
+		fmt.Printf("i:%d,k:%d\n", i, k)
+		if k != i {
+			swap(&(arr[i]), &(arr[k]))
+		}
+	}
+}
+
+//l 最大边界
+func perDown(arr []int, l int) {
+	for i := 0; i < l; i++ {
+		leftChild := i*2 + 1
+		k := i
+		if leftChild < l && arr[i] < arr[leftChild] {
+			k = leftChild
+		}
+
+		if leftChild+1 < l && arr[k] < arr[leftChild+1] {
+			k = leftChild + 1
+		}
+
+		if k != i {
+			swap(&(arr[i]), &(arr[k]))
+		}
+	}
+}
+
+func headSort(arr []int) {
+
+	//build head
+	perUP(arr, (len(arr)-1)/2)
+
+	for i := len(arr) - 1; i >= 0; i-- {
+		//fmt.Println(arr[0])
+		swap(&(arr[0]), &(arr[i]))
+		perDown(arr, i-1)
+	}
+}
+
 func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
 	a := []int{10, 5, 4, 1, 16, 8, 2, 13, 6, 3}
 	//quickSort(a, 0, len(a)-1)
-	findNumS(a, 9)
+	//findNumS(a, 9)
 	convert("fuck123", 3)
 	convert("LEETCODEISHIRING", 3)
 	fmt.Println(convert("LEETCODEISHIRING", 4))
 	fmt.Println(convert("A", 1))
 	fmt.Println(convert("AB", 1))
+	fmt.Println(a)
+	headSort(a)
+	fmt.Println(a)
+	k1, k2 := 11, 12
+	fmt.Println(k1, k2)
+	swap(&k1, &k2)
+	fmt.Println(k1, k2)
 }
