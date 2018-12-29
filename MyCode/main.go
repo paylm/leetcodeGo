@@ -123,7 +123,7 @@ func perUP(arr []int, l int) {
 		if len(arr) > leftChild+1 && arr[k] < arr[leftChild+1] {
 			k = leftChild + 1
 		}
-		fmt.Printf("i:%d,k:%d\n", i, k)
+		//fmt.Printf("i:%d,k:%d\n", i, k)
 		if k != i {
 			swap(&(arr[i]), &(arr[k]))
 		}
@@ -132,7 +132,8 @@ func perUP(arr []int, l int) {
 
 //l 最大边界
 func perDown(arr []int, l int) {
-	for i := 0; i < l; i++ {
+	for i := 0; i < l;{
+		//fmt.Println("perDown fun() run")
 		leftChild := i*2 + 1
 		k := i
 		if leftChild < l && arr[i] < arr[leftChild] {
@@ -145,6 +146,9 @@ func perDown(arr []int, l int) {
 
 		if k != i {
 			swap(&(arr[i]), &(arr[k]))
+			i = k
+		}else{
+			break
 		}
 	}
 }
