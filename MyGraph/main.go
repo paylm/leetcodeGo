@@ -147,6 +147,39 @@ func testInput() {
 	}
 }
 
+func testdijInput() {
+	var size int
+	var p1, p2, vd int
+	fmt.Println("input graph vet size")
+	fmt.Scanln(&size)
+	g := NewMyGraph(size)
+	for {
+		fmt.Scanln(&p1, &p2, &vd)
+		fmt.Printf("p1=>%d,p2=>%d,vd=>%d\n", p1, p2, vd)
+		if p1 >= size || p2 >= size || p1 == -1 {
+			break
+		}
+
+		g.addCyEdge(p1, p2, vd)
+	}
+	g.show()
+
+	fmt.Println("dijkstra SEARCH")
+	var target int
+	fmt.Println("please input target node")
+	for {
+		fmt.Scanln(&target)
+		if target < len(g.AdjMatrix) {
+			fmt.Printf("src:%d,target:%d\n", 0, target)
+			break
+		}
+		fmt.Println("target not in graph , please input again")
+	}
+	//testStack()
+	res := g.dijkstra(0, len(g.AdjMatrix)-1)
+	fmt.Println(res)
+}
+
 func testListGraph() {
 
 	g2 := NewLsGraph(5)
@@ -230,9 +263,24 @@ func main() {
 	fmt.Printf("from %d -> %d , level :%d \n", 0, 5, g.BFSlevel(0, 5))
 
 	//testInput()
-	fmt.Println(compareSingle(1234, 1244))
-	fmt.Println(compareSingle(1224, 1334))
-	fmt.Println(compareSingle(1234, 1234))
-	fmt.Println(compareSingle(1733, 3733))
+	//	fmt.Println(compareSingle(1234, 1244))
+	//	fmt.Println(compareSingle(1224, 1334))
+	//	fmt.Println(compareSingle(1234, 1234))
+	//	fmt.Println(compareSingle(1733, 3733))
 	testLsGraph([]int{1033, 1733, 3733, 3739, 3779, 8779, 8179})
+	fmt.Println("dijkstra search ")
+	//testdijInput()
+	g1 := NewMyGraph(6)
+	g1.addCyEdge(0, 1, 7)
+	g1.addCyEdge(0, 2, 9)
+	g1.addCyEdge(0, 5, 14)
+	g1.addCyEdge(1, 2, 10)
+	g1.addCyEdge(1, 3, 15)
+	g1.addCyEdge(2, 3, 11)
+	g1.addCyEdge(2, 5, 2)
+	g1.addCyEdge(3, 4, 6)
+	g1.addCyEdge(4, 5, 9)
+	g1.show()
+	res := g1.dijkstra(0, 4)
+	fmt.Println("dijkstra res : ", res)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+var INT_MAX = 10000
 var visited map[string]bool = make(map[string]bool) //for DFS
 
 /***
@@ -27,7 +28,7 @@ func NewMyGraph(vex int) *MyGraph {
 }
 
 /**
-* 添加连接边 , 带权值
+* 添加连接边 , 带权值,此为有向边
 **/
 func (g *MyGraph) addEdge(x, y, VRType int) {
 	defer func() {
@@ -39,6 +40,23 @@ func (g *MyGraph) addEdge(x, y, VRType int) {
 		return
 	}
 	g.AdjMatrix[x][y] = VRType
+	g.edgenum++
+}
+
+/**
+* 添加连接边 , 带权值,此为有向边
+**/
+func (g *MyGraph) addCyEdge(x, y, VRType int) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Printf("drawCyEdge:%v", err)
+		}
+	}()
+	if g.AdjMatrix == nil {
+		return
+	}
+	g.AdjMatrix[x][y] = VRType
+	g.AdjMatrix[y][x] = VRType
 	g.edgenum++
 }
 
@@ -206,4 +224,61 @@ func (g *MyGraph) BFSlevel(start, target int) int {
 		fmt.Printf("%d => %d\n", k, v)
 	}
 	return maxLevel
+}
+
+func minDistance(dist []int, sptSet []bool) int {
+
+	var min, min_index int
+	min = INT_MAX
+	for i := 0; i < len(dist); i++ {
+		if min > dist[i] && dist[i] != INT_MAX && sptSet[i] == false {
+			min = dist[i]
+			min_index = i
+		}
+	}
+
+	return min_index
+}
+
+//通过dijstra 算法找到最短路径
+func (g *MyGraph) dijkstra(src, target int) []int {
+	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
+	// distance from src to i
+
+	sptSet := make([]bool, g.vexnum) // sptSet[i] will be true if vertex i is included in shortest
+	// path tree or shortest distance from src to i is finalized
+
+	for i := 0; i < g.vexnum; i++ {
+		dist[i] = INT_MAX
+		sptSet[i] = false
+	}
+
+	dist[src] = 0
+	//every time use on vex
+	for i := 0; i < g.vexnum; i++ {
+
+		n := minDistance(dist, sptSet)
+		sptSet[n] = true
+		//fmt.Printf("dijkstra read %d\n", n)
+
+		//if n == target {
+		//	break
+		//}
+
+		for j := 0; j < len(g.AdjMatrix[n]); j++ {
+			if g.AdjMatrix[n][j] != 0 && sptSet[j] == false {
+				//计算距离
+				//fmt.Printf("dijkstra => point:%d ->%d\n", n, j)
+				if dist[j] == INT_MAX && j == n {
+					dist[j] = g.AdjMatrix[n][j]
+				} else if g.AdjMatrix[n][j]+dist[n] < dist[j] {
+					dist[j] = g.AdjMatrix[n][j] + dist[n]
+				}
+			}
+		}
+		//fmt.Println("dist:", dist)
+		//fmt.Println("sptS", sptSet)
+	}
+
+	return dist
 }
