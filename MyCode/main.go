@@ -37,12 +37,18 @@ func findNumS(a []int, k int) {
 }
 
 func quickSort(a []int, start int, end int) {
-	if len(a) == 0 || start == end {
+	//	defer func() {
+	//		if err := recover(); err != nil {
+	//			fmt.Printf("a:%v,start:%d,end:%d,err:%v\n", a, start, end, err)
+	//		}
+	//	}()
+
+	if len(a) == 0 || start >= end {
 		return
 	}
 
 	k := a[start]
-	i, j := start, end
+	i, oi, j, oj := start, start, end, end
 	for {
 		if i == j {
 			break
@@ -50,6 +56,13 @@ func quickSort(a []int, start int, end int) {
 		for {
 			if j > i && a[j] > k {
 				j--
+			} else if j > i && a[j] == k {
+				if j != end {
+					swap(&(a[j]), &(a[oj]))
+					oj--
+				} else {
+					j--
+				}
 			} else {
 				break
 			}
@@ -58,16 +71,26 @@ func quickSort(a []int, start int, end int) {
 		for {
 			if j > i && a[i] < k {
 				i++
+			} else if j > i && a[i] == k && i != start {
+				swap(&(a[i]), &(a[oi]))
+				oi++
+				//i++
 			} else {
 				break
 			}
 		}
-		temp := a[i]
-		a[i] = a[j]
-		a[j] = temp
+		swap(&(a[i]), &(a[j]))
 	}
 
-	a[i] = k
+	//a[i] = k
+	for o := end; o > oj; o-- {
+		swap(&(a[j+1]), &(a[o]))
+		j++
+	}
+	for o := start; o < oi; o++ {
+		swap(&(a[i]), &(a[o]))
+		i--
+	}
 	//fmt.Println(a)
 	quickSort(a, start, i)
 	quickSort(a, j+1, end)
@@ -132,7 +155,7 @@ func perUP(arr []int, l int) {
 
 //l 最大边界
 func perDown(arr []int, l int) {
-	for i := 0; i < l;{
+	for i := 0; i < l; {
 		//fmt.Println("perDown fun() run")
 		leftChild := i*2 + 1
 		k := i
@@ -147,7 +170,7 @@ func perDown(arr []int, l int) {
 		if k != i {
 			swap(&(arr[i]), &(arr[k]))
 			i = k
-		}else{
+		} else {
 			break
 		}
 	}
@@ -168,19 +191,21 @@ func headSort(arr []int) {
 func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
-	a := []int{10, 5, 4, 1, 16, 8, 2, 13, 6, 3}
-	//quickSort(a, 0, len(a)-1)
+	a := []int{10, 5, 4, 1, 16, 10, 5, 8, 13, 2, 10, 6, 3}
+	//a := []int{10, 5, 4, 1, 16, 8, 13, 2, 6, 3}
+	quickSort(a, 0, len(a)-1)
+	fmt.Println(a)
 	//findNumS(a, 9)
 	convert("fuck123", 3)
-	convert("LEETCODEISHIRING", 3)
-	fmt.Println(convert("LEETCODEISHIRING", 4))
+	//convert("LEETCODEISHIRING", 3)
+	//fmt.Println(convert("LEETCODEISHIRING", 4))
 	fmt.Println(convert("A", 1))
 	fmt.Println(convert("AB", 1))
-	fmt.Println(a)
-	headSort(a)
-	fmt.Println(a)
-	k1, k2 := 11, 12
-	fmt.Println(k1, k2)
-	swap(&k1, &k2)
-	fmt.Println(k1, k2)
+	//	fmt.Println(a)
+	//	headSort(a)
+	//	fmt.Println(a)
+	//	k1, k2 := 11, 12
+	//	fmt.Println(k1, k2)
+	//	swap(&k1, &k2)
+	//	fmt.Println(k1, k2)
 }

@@ -244,7 +244,6 @@ func minDistance(dist []int, sptSet []bool) int {
 func (g *MyGraph) dijkstra(src, target int) []int {
 	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
 	// distance from src to i
-
 	sptSet := make([]bool, g.vexnum) // sptSet[i] will be true if vertex i is included in shortest
 	// path tree or shortest distance from src to i is finalized
 
@@ -252,18 +251,16 @@ func (g *MyGraph) dijkstra(src, target int) []int {
 		dist[i] = INT_MAX
 		sptSet[i] = false
 	}
-
 	dist[src] = 0
 	//every time use on vex
 	for i := 0; i < g.vexnum; i++ {
-
 		n := minDistance(dist, sptSet)
 		sptSet[n] = true
 		//fmt.Printf("dijkstra read %d\n", n)
-
-		//if n == target {
-		//	break
-		//}
+		//找到最短路径退出
+		if n == target {
+			break
+		}
 
 		for j := 0; j < len(g.AdjMatrix[n]); j++ {
 			if g.AdjMatrix[n][j] != 0 && sptSet[j] == false {
