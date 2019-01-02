@@ -93,6 +93,37 @@ func quickSort(a []int, start int, end int) {
 	quickSort(a, j+1, end)
 }
 
+func sort3Parttion(a []int, start int, end int) {
+	fmt.Printf("%v,start:%d,end:%d\n", a, start, end)
+	if len(a) == 0 || start >= end {
+		return
+	}
+
+	lt, gt := start, end
+	i := lt
+	k := a[i]
+	for {
+		if i > gt {
+			break
+		}
+
+		if k < a[i] {
+			swap(&(a[i]), &(a[gt]))
+			gt--
+			//i++
+		} else if k > a[i] {
+			swap(&(a[i]), &(a[lt]))
+			lt++
+
+		} else {
+			i++
+		}
+	}
+	//fmt.Println(a)
+	sort3Parttion(a, start, lt-1)
+	sort3Parttion(a, gt+1, end)
+}
+
 //Z 字形变换
 //https://leetcode-cn.com/problems/zigzag-conversion/
 func convert(s string, numRows int) string {
@@ -190,9 +221,13 @@ func main() {
 	fmt.Println("quickSort")
 	a := []int{10, 5, 4, 1, 16, 10, 5, 8, 13, 2, 10, 6, 3}
 	//a := []int{10, 10, 10, 10, 10}
-	//a := []int{10, 5, 4, 1, 16, 8, 13, 2, 6, 3}
+	b := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	quickSort(a, 0, len(a)-1)
 	fmt.Println(a)
+
+	fmt.Println("三路快排")
+	sort3Parttion(b, 0, len(b)-1)
+	fmt.Println(b)
 	//findNumS(a, 9)
 	convert("fuck123", 3)
 	//convert("LEETCODEISHIRING", 3)
