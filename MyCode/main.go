@@ -71,7 +71,7 @@ func quickSort(a []int, start int, end int) {
 			} else if j > i && a[i] == k && i != start {
 				swap(&(a[i]), &(a[oi]))
 				oi++
-				//i++
+				i++
 			} else {
 				break
 			}
