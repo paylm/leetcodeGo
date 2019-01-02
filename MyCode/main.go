@@ -57,12 +57,9 @@ func quickSort(a []int, start int, end int) {
 			if j > i && a[j] > k {
 				j--
 			} else if j > i && a[j] == k {
-				if j != end {
-					swap(&(a[j]), &(a[oj]))
-					oj--
-				} else {
-					j--
-				}
+				swap(&(a[j]), &(a[oj]))
+				oj--
+				j--
 			} else {
 				break
 			}
@@ -192,6 +189,7 @@ func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
 	a := []int{10, 5, 4, 1, 16, 10, 5, 8, 13, 2, 10, 6, 3}
+	//a := []int{10, 10, 10, 10, 10}
 	//a := []int{10, 5, 4, 1, 16, 8, 13, 2, 6, 3}
 	quickSort(a, 0, len(a)-1)
 	fmt.Println(a)
