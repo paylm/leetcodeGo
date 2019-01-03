@@ -279,3 +279,60 @@ func (g *MyGraph) dijkstra(src, target int) []int {
 
 	return dist
 }
+
+//通过dijstra 算法找到最短路径链表
+func (g *MyGraph) dijkstraPath(src, target int) *Point {
+	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
+	// distance from src to i
+	sptSet := make([]bool, g.vexnum) // sptSet[i] will be true if vertex i is included in shortest
+	// path tree or shortest distance from src to i is finalized
+	zrSet :=make(map[int]*Point)
+
+	for i := 0; i < g.vexnum; i++ {
+		dist[i] = INT_MAX
+		sptSet[i] = false
+	}
+	dist[src] = 0
+	zrSet[src] = NewPoint(src)
+	//every time use on vex
+	for i := 0; i < g.vexnum; i++ {
+		n := minDistance(dist, sptSet)
+		sptSet[n] = true
+		//fmt.Printf("dijkstra read %d\n", n)
+		//找到最短路径退出
+		zR := zrSet[n]
+		if n == target {
+			return zR
+		}
+
+		for j := 0; j < len(g.AdjMatrix[n]); j++ {
+			if g.AdjMatrix[n][j] != 0 && sptSet[j] == false {
+				//计算距离
+
+				//fmt.Printf("dijkstra => point:%d ->%d\n", n, j)
+				if dist[j] == INT_MAX && j == n {
+					dist[j] = g.AdjMatrix[n][j]
+				} else if g.AdjMatrix[n][j]+dist[n] < dist[j] {
+					dist[j] = g.AdjMatrix[n][j] + dist[n]
+				}
+
+				iZr,ok:= zrSet[j]
+				if  !ok {
+					iZr = NewPoint(j)
+					iZr.Space =  g.AdjMatrix[n][j]
+					iZr.Prev = zR
+					zrSet[j] = iZr
+				}else{
+					iZr.Prev = zR
+					iZr.Space =  g.AdjMatrix[n][j]
+				}
+			}
+		}
+		//fmt.Println("dist:", dist)
+		//fmt.Println("sptS", sptSet)
+	}
+
+	return nil
+}
+
+
