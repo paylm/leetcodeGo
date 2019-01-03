@@ -124,6 +124,24 @@ func sort3Parttion(a []int, start int, end int) {
 	sort3Parttion(a, gt+1, end)
 }
 
+/***
+插入排序
+每次找一位,向前移动到合适位置
+**/
+func insertSort(a []int) {
+	if len(a) < 2 {
+		return
+	}
+	i := 1
+	for p := 1; p < len(a); p++ {
+		temp := a[p]
+		for i = p; i > 0 && a[i-1] > temp; i-- {
+			a[i] = a[i-1]
+		}
+		a[i] = temp
+	}
+}
+
 //Z 字形变换
 //https://leetcode-cn.com/problems/zigzag-conversion/
 func convert(s string, numRows int) string {
@@ -222,12 +240,16 @@ func main() {
 	a := []int{10, 5, 4, 1, 16, 10, 5, 8, 13, 2, 10, 6, 3}
 	//a := []int{10, 10, 10, 10, 10}
 	b := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
+	c := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	quickSort(a, 0, len(a)-1)
 	fmt.Println(a)
 
 	fmt.Println("三路快排")
 	sort3Parttion(b, 0, len(b)-1)
 	fmt.Println(b)
+	fmt.Println("insert Sort")
+	insertSort(c)
+	fmt.Println(c)
 	//findNumS(a, 9)
 	convert("fuck123", 3)
 	//convert("LEETCODEISHIRING", 3)
