@@ -234,6 +234,42 @@ func headSort(arr []int) {
 	}
 }
 
+/**
+回文数
+https://leetcode-cn.com/problems/palindrome-number/
+**/
+func isPalindrome(x int) bool {
+	if x > 0 && x < 10 {
+		return true
+	}
+	if x < 0 {
+		return false
+	}
+
+	arr := []int{}
+	t := x
+	for t > 0 {
+		y := t % 10
+		arr = append(arr, y)
+		t = t / 10
+	}
+	fmt.Println(arr)
+	i, j := 0, len(arr)-1
+	for {
+		if i >= j {
+			break
+		}
+
+		if arr[i] != arr[j] {
+			return false
+		}
+		i++
+		j--
+	}
+
+	return true
+}
+
 func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
@@ -263,4 +299,5 @@ func main() {
 	//	fmt.Println(k1, k2)
 	//	swap(&k1, &k2)
 	//	fmt.Println(k1, k2)
+	fmt.Println(isPalindrome(121))
 }
