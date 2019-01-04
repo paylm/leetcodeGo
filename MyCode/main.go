@@ -234,6 +234,24 @@ func headSort(arr []int) {
 	}
 }
 
+func shellSort(arr []int) {
+	l := len(arr)
+	k := 1 //计算时间复杂度
+	gap := l / 2
+	for gap > 0 {
+		for i := gap; i < l; i++ {
+			for j := i; j >= gap; j = j - gap {
+				k++
+				if j-gap >= 0 && arr[j] < arr[j-gap] {
+					swap(&(arr[j]), &(arr[j-gap]))
+				}
+			}
+		}
+		gap = gap / 2
+	}
+	fmt.Printf("shell sort :%v,k:%d\n", arr, k)
+}
+
 /**
 回文数
 https://leetcode-cn.com/problems/palindrome-number/
@@ -277,6 +295,7 @@ func main() {
 	//a := []int{10, 10, 10, 10, 10}
 	b := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	c := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
+	d := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	quickSort(a, 0, len(a)-1)
 	fmt.Println(a)
 
@@ -286,6 +305,9 @@ func main() {
 	fmt.Println("insert Sort")
 	insertSort(c)
 	fmt.Println(c)
+	fmt.Println("shell sort")
+	shellSort(d)
+	fmt.Println(d)
 	//findNumS(a, 9)
 	convert("fuck123", 3)
 	//convert("LEETCODEISHIRING", 3)
