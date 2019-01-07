@@ -302,15 +302,14 @@ func rotate(matrix [][]int) {
 
 	n := len(matrix) - 1
 
-	for i := 0; i < n; i++ {
-		for j := i; j < n && j < (n-2*i)/2+1; j++ {
+	n := len(matrix) - 1
+	for i := 0; i < n/2+1; i++ {
+		for j := i; j < n && j+i < n; j++ {
 			k := matrix[i][j]
 			matrix[i][j] = matrix[n-j][i]
 			matrix[n-j][i] = matrix[n-i][n-j]
 			matrix[n-i][n-j] = matrix[j][n-i]
 			matrix[j][n-i] = k
-			fmt.Printf("after rotate %d:%d\n", i, j)
-			showMatrix(matrix)
 		}
 	}
 }
