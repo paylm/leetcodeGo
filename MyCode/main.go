@@ -288,6 +288,39 @@ func isPalindrome(x int) bool {
 	return true
 }
 
+/**
+n*n
+
+i,j			j,n-i
+
+
+
+n-i,j			n-i,n-j
+**/
+
+func rotate(matrix [][]int) {
+
+	n := len(matrix) - 1
+
+	for i := 0; i < n; i++ {
+		for j := i; j < n && j < (n-2*i)/2+1; j++ {
+			k := matrix[i][j]
+			matrix[i][j] = matrix[n-j][i]
+			matrix[n-j][i] = matrix[n-i][n-j]
+			matrix[n-i][n-j] = matrix[j][n-i]
+			matrix[j][n-i] = k
+			fmt.Printf("after rotate %d:%d\n", i, j)
+			showMatrix(matrix)
+		}
+	}
+}
+
+func showMatrix(matrix [][]int) {
+	for i := 0; i < len(matrix); i++ {
+		fmt.Println(matrix[i])
+	}
+}
+
 func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
@@ -322,4 +355,9 @@ func main() {
 	//	swap(&k1, &k2)
 	//	fmt.Println(k1, k2)
 	fmt.Println(isPalindrome(121))
+
+	matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	rotate(matrix)
+	matrix4 := [][]int{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}
+	rotate(matrix4)
 }
