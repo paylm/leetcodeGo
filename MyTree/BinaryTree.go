@@ -81,6 +81,39 @@ func PostOrder(rootBTNode *BTNode) {
 	PostOrder(rootBTNode.Left)
 }
 
+func MorrisInOrder(rootBTNode *BTNode) {
+	if rootBTNode == nil {
+		return
+	}
+
+	c := rootBTNode
+	for {
+		if c == nil {
+			break
+		}
+
+		if c.Left == nil {
+			fmt.Printf("%d\n", c.Val)
+			c = c.Right
+		} else {
+			p := c.Left
+			for p != nil && p.Right != nil && p.Right != c {
+				p = p.Right
+			}
+			//fmt.Printf("right p:%d\n", p.Val)
+
+			if p.Right == nil {
+				p.Right = c
+				fmt.Printf("%d\n", c.Val)
+				c = c.Left
+			} else {
+				p.Right = nil
+				c = c.Right
+			}
+		}
+	}
+}
+
 /**
 load the tree to map
         15
