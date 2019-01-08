@@ -295,12 +295,10 @@ i,j			j,n-i
 
 
 
-n-i,j			n-i,n-j
+n-j,i			n-i,n-j
 **/
 
 func rotate(matrix [][]int) {
-
-	n := len(matrix) - 1
 
 	n := len(matrix) - 1
 	for i := 0; i < n/2+1; i++ {
@@ -317,6 +315,100 @@ func rotate(matrix [][]int) {
 func showMatrix(matrix [][]int) {
 	for i := 0; i < len(matrix); i++ {
 		fmt.Println(matrix[i])
+	}
+}
+
+/**
+https://leetcode-cn.com/problems/integer-to-roman/
+罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
+
+字符          数值
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+例如， 罗马数字 2 写做 II ，即为两个并列的 1。12 写做 XII ，即为 X + II 。 27 写做  XXVII, 即为 XX + V + II 。
+
+示例 1:
+
+输入: 3
+输出: "III"
+示例 2:
+
+输入: 4
+输出: "IV"
+
+1 < num < 3994
+
+**/
+func intToRoman(num int) string {
+	k := num
+
+	m := make(map[int][]string)
+	m[1] = []string{"I", "V", "X"}
+	m[10] = []string{"X", "L", "C"}
+	m[100] = []string{"C", "D", "M"}
+
+	xm := []string{"", "M", "MM", "MMM"}
+
+	//fmt.Println(bit)
+	s := 1
+	sts := []string{}
+
+	for {
+		if k <= 0 {
+			break
+		}
+		if s < 1000 {
+			sts = append(sts, (intXstr(k%10, (m[s])[0], (m[s])[1], (m[s])[2])))
+		} else {
+			sts = append(sts, xm[k])
+		}
+		s = s * 10
+		//bit = append(bit, k%10)
+		k = k / 10
+	}
+
+	for i, j := 0, len(sts)-1; i <= j; {
+		temp := sts[i]
+		sts[i] = sts[j]
+		sts[j] = temp
+		i++
+		j--
+	}
+
+	return strings.Join(sts, "")
+}
+
+func intXstr(n int, l string, m string, h string) string {
+	s := ""
+	if n == 4 {
+		s = fmt.Sprintf("%s%s", l, m)
+	} else if n == 5 {
+		s = fmt.Sprintf("%s", m)
+	} else if n == 9 {
+		s = fmt.Sprintf("%s%s", l, h)
+	}
+
+	k := 0
+	si := []string{}
+	if n < 4 {
+		k = n
+	} else if n > 5 && n < 9 {
+		k = n - 5
+		si = append(si, m)
+	}
+
+	for i := 0; i < k; i++ {
+		si = append(si, l)
+	}
+	if k == 0 {
+		return s
+	} else {
+		return strings.Join(si, "")
 	}
 }
 
@@ -357,6 +449,14 @@ func main() {
 
 	matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
 	rotate(matrix)
+	showMatrix(matrix)
 	matrix4 := [][]int{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}}
 	rotate(matrix4)
+	showMatrix(matrix4)
+
+	fmt.Println("test for intToRoman")
+	intToRoman(3)
+	intToRoman(9)
+	intToRoman(58)
+	fmt.Println(intToRoman(1994))
 }
