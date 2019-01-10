@@ -229,3 +229,20 @@ func (sk *Skiplist) show() {
 	}
 	fmt.Println()
 }
+
+//显示跳跃表，行转列显示
+func (sk *Skiplist) showCol() {
+	fmt.Println("---- showCol ---- ")
+	c := sk.head
+	for {
+		if c == nil {
+			break
+		}
+		fmt.Printf("%d", c.Val)
+		for i := 0; i < len(c.levelNode)-1 && c.levelNode[i] != nil; i++ {
+			fmt.Printf("<-%d", c.levelNode[i].Val)
+		}
+		c = c.levelNode[0]
+		fmt.Println()
+	}
+}

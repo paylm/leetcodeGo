@@ -571,8 +571,8 @@ func main() {
 		fmt.Printf("rand key at i:%d => %d\n", i, rk.randomNum(10))
 	}
 	fmt.Println(sk)
-	for i := 0; i < 100; i++ {
-		k := rand.Intn(130)
+	for i := 0; i < 36; i++ {
+		k := rand.Intn(50)
 		fmt.Printf("insert %d ,res :%v\n", k, sk.Insert(k))
 	}
 	fmt.Println("search for 6:", sk.Search(6))
@@ -587,4 +587,5 @@ func main() {
 	fmt.Println("del element 27")
 	sk.Del(27)
 	sk.show()
+	sk.showCol()
 }
