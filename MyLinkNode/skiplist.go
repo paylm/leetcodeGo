@@ -16,7 +16,7 @@ type randomKey struct {
 
 type Node struct {
 	Val       int
-	Next      *Node
+	fb        *Node   //上一节点的指针
 	levelNode []*Node //存的是每层指向下一指针的头部
 	level     int
 }
@@ -62,32 +62,43 @@ func (rdk *randomKey) randomNum(k int) int {
 	return k
 }
 
-func (sk *Skiplist) Search(k int) *Node {
-	if sk.head.Next == nil {
-		return nil
-	}
+func (sk *Skiplist) Search(Val int) *Node {
 	top := len(sk.head.levelNode) - 1
-
 	c := sk.head
 
 	for i := top; i >= 0; i-- {
-		if c.levelNode[i] != nil {
+		if c.levelNode[i] == nil {
 			continue
-		} else {
-			temp := c.levelNode[i]
-
-			for {
-				if temp == nil || temp.Val > k {
-					break
-				}
-				if temp.Val == k {
-					fmt.Printf("search k found at :%d\n", i)
-					return temp
-				}
-				temp = temp.Next
-			}
 		}
 
+		temp := c.levelNode[i]
+		if temp.Val == Val {
+			return temp
+		}
+		for {
+			if temp == nil {
+				break
+			}
+			if temp.Val > Val {
+				break
+			}
+
+			if temp.levelNode[i] != nil && temp.levelNode[i].Val > Val {
+				c = temp
+				break
+			}
+			if temp.Val < Val && temp.levelNode[i] == nil {
+				c = temp
+				break
+			}
+
+			temp = temp.levelNode[i]
+		}
+	}
+
+	if c.Val == Val {
+		//fmt.Printf("already exist %d ,insert fail \n", Val)
+		return c
 	}
 	return nil
 }
@@ -104,11 +115,11 @@ func (sk *Skiplist) Insert(Val int) bool {
 
 		temp := c.levelNode[i]
 		if temp.Val == Val {
-			fmt.Printf("already exits %d , insert fail\n", Val)
+			//fmt.Printf("already exits %d , insert fail\n", Val)
 			return false
 		}
 		for {
-			fmt.Printf("i:%d,Val:%d,temp:%v\n", i, Val, temp)
+			//fmt.Printf("level:%d,Val:%d,temp:%v\n", i, Val, temp)
 			if temp == nil {
 				break
 			}
@@ -116,37 +127,42 @@ func (sk *Skiplist) Insert(Val int) bool {
 				break
 			}
 
-			if temp.Val < Val && temp.Next == nil {
-				fmt.Println("到最后结点 ....")
+			if temp.levelNode[i] != nil && temp.levelNode[i].Val > Val {
 				c = temp
+				//fmt.Printf("下一节点%v >=%d 下沉处理\n", temp.levelNode[i], Val)
 				break
 			}
-			if temp.Val < Val && temp.levelNode[i] != nil && Val <= temp.levelNode[i].Val {
-				fmt.Printf("找到合适插入位置%d\n", c.Val)
+			if temp.Val < Val && temp.levelNode[i] == nil {
 				c = temp
+				//fmt.Printf("已到最后节点%v >=%d 右移处理 \n", temp.levelNode[i], Val)
 				break
 			}
-			fmt.Printf("%d %v 找不到符合位置,到下一位找\n", temp.Val, temp)
+
+			//fmt.Printf("%d %v 找不到符合位置,到下一位找\n", temp.Val, temp)
 			temp = temp.levelNode[i]
 		}
 	}
 
+	if c.Val == Val {
+		fmt.Printf("already exist %d ,insert fail \n", Val)
+		return false
+	}
+
+	//c 为fb 位置
 	fmt.Printf("insert point:%d,after:%d\n", Val, c.Val)
 	n := NewNode(Val)
 	n.level = sk.randomNum(sk.level)
 	n.levelNode = make([]*Node, n.level)
+	n.fb = c
 	fmt.Printf("add n:%v\n", n)
-	current := sk.head
+	//current := sk.head
 	for i := 0; i < n.level; i++ {
 		if i == 0 {
-			temp := c.Next
-			n.Next = temp
-			c.Next = n
+			temp := c.levelNode[i]
+			c.levelNode[i] = n
+			n.levelNode[i] = temp
 		} else {
-			//处理levelNode 指向指针
-			if current.levelNode[i-1] == nil {
-				current.levelNode[i-1] = n
-			}
+			//多层处理
 		}
 	}
 
@@ -166,8 +182,8 @@ func (sk *Skiplist) show() {
 		if c == nil {
 			break
 		}
-
 		fmt.Printf("%d(%d)->", c.Val, c.level)
-		c = c.Next
+		c = c.levelNode[0]
 	}
+	fmt.Println()
 }
