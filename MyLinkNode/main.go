@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type LinkNode struct {
 	Val  int
@@ -115,7 +118,7 @@ func (n *LinkNode) Del(k int) bool {
 		preN = delN
 		delN = delN.Next
 	}
-	return false
+
 }
 
 func (n *LinkNode) Insert(aNode *LinkNode, v int) {
@@ -558,4 +561,30 @@ func main() {
 	l10 := moveToFront(l9)
 	l10.PrintLinkNode()
 	//fmt.Println(l9)
+	fmt.Println("skip list")
+	sk := NewSkiplist(&randomKey{})
+	sk.Search(1)
+	fmt.Println(sk)
+
+	rk := &randomKey{}
+	for i := 0; i < 16; i++ {
+		fmt.Printf("rand key at i:%d => %d\n", i, rk.randomNum(10))
+	}
+	fmt.Println(sk)
+	for i := 0; i < 30; i++ {
+		k := rand.Intn(50)
+		fmt.Printf("insert %d ,res :%v\n", k, sk.Insert(k))
+	}
+	fmt.Println("search for 6:", sk.Search(6))
+	fmt.Println("search for 18:", sk.Search(18))
+	fmt.Println("search for 25:", sk.Search(25))
+	//fmt.Println(sk)
+	sk.show()
+
+	fmt.Println("del element 25")
+	sk.Del(25)
+	sk.show()
+	fmt.Println("del element 27")
+	sk.Del(27)
+	sk.show()
 }
