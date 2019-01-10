@@ -239,8 +239,12 @@ func (sk *Skiplist) showCol() {
 			break
 		}
 		fmt.Printf("%d", c.Val)
-		for i := 0; i < len(c.levelNode)-1 && c.levelNode[i] != nil; i++ {
-			fmt.Printf("<-%d", c.levelNode[i].Val)
+		for i := 0; i < len(c.levelNode)-1; i++ {
+			if c.levelNode[i] != nil {
+				fmt.Printf("<-%d", c.levelNode[i].Val)
+			} else {
+				fmt.Printf("<-nil")
+			}
 		}
 		c = c.levelNode[0]
 		fmt.Println()
