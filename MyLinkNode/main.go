@@ -562,14 +562,10 @@ func main() {
 	l10.PrintLinkNode()
 	//fmt.Println(l9)
 	fmt.Println("skip list")
-	sk := NewSkiplist(&randomKey{})
+	sk := NewSkiplist(&RandomKey{})
 	sk.Search(1)
 	fmt.Println(sk)
 
-	rk := &randomKey{}
-	for i := 0; i < 16; i++ {
-		fmt.Printf("rand key at i:%d => %d\n", i, rk.randomNum(10))
-	}
 	fmt.Println(sk)
 	for i := 0; i < 36; i++ {
 		k := rand.Intn(50)
@@ -588,4 +584,10 @@ func main() {
 	sk.Del(27)
 	sk.show()
 	sk.showCol()
+
+	sk2 := NewSkiplist(&RandomKey{})
+	for _,v :=range([]int{1,1,1,1,1,5,8}){
+		sk2.Insert(v)
+	}
+	sk2.showCol()
 }

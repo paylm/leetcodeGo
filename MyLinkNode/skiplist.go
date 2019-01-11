@@ -7,11 +7,11 @@ import (
 
 var MAX_LEVEL = 16
 
-type randomKeyer interface {
-	randomNum(k int) int //基于最大值k生成随机数
+type RandomKeyer interface {
+	RandomNum(k int) int //基于最大值k生成随机数
 }
 
-type randomKey struct {
+type RandomKey struct {
 }
 
 type Node struct {
@@ -25,13 +25,13 @@ type Skiplist struct {
 	level int
 	head  *Node
 	tail  *Node
-	randomKeyer
+	RandomKeyer
 }
 
-func NewSkiplist(rk randomKeyer) *Skiplist {
+func NewSkiplist(rk RandomKeyer) *Skiplist {
 	sk := new(Skiplist)
 	sk.level = MAX_LEVEL
-	sk.randomKeyer = rk
+	sk.RandomKeyer = rk
 	h := []*Node{}
 	sk.head = NewNode(-100)
 	sk.head.levelNode = h
@@ -45,7 +45,7 @@ func NewNode(val int) *Node {
 	return n
 }
 
-func (rdk *randomKey) randomNum(k int) int {
+func (rdk *RandomKey) RandomNum(k int) int {
 	l := 1
 	for {
 		if rand.Intn(2) == 0 {
@@ -88,7 +88,6 @@ func (sk *Skiplist) Search(Val int) *Node {
 				c = temp
 				break
 			}
-
 			temp = temp.levelNode[i]
 		}
 	}
@@ -104,7 +103,7 @@ func (sk *Skiplist) Insert(Val int) bool {
 
 	//step 1 , make Insert Node
 	n := NewNode(Val)
-	n.level = sk.randomNum(sk.level)
+	n.level = sk.RandomNum(sk.level)
 	n.levelNode = make([]*Node, n.level)
 
 	//step 2 :calc level , resize head level if current len(n) > len(head)
@@ -118,7 +117,6 @@ func (sk *Skiplist) Insert(Val int) bool {
 	update := make([]*Node, n.level)
 	c := sk.head
 	for i := n.level - 1; i >= 0; i-- {
-
 		temp := c.levelNode[i]
 		//next node is null or next node > Val
 		// set current node to insert location
