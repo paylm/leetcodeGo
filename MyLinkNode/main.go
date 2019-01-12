@@ -564,18 +564,18 @@ func main() {
 	fmt.Println("skip list")
 	sk := NewSkiplist(&RandomKey{})
 	sk.Search(1)
-	fmt.Println(sk)
 
 	fmt.Println(sk)
-	for i := 0; i < 36; i++ {
-		k := rand.Intn(50)
+	for i := 0; i < 50; i++ {
+		k := rand.Intn(100)
 		fmt.Printf("insert %d ,res :%v\n", k, sk.Insert(k))
 	}
 	fmt.Println("search for 6:", sk.Search(6))
 	fmt.Println("search for 18:", sk.Search(18))
 	fmt.Println("search for 25:", sk.Search(25))
 	//fmt.Println(sk)
-	sk.show()
+	fmt.Println("col type show skiplist")
+	sk.showCol()
 
 	fmt.Println("del element 25")
 	sk.Del(25)
@@ -586,8 +586,9 @@ func main() {
 	sk.showCol()
 
 	sk2 := NewSkiplist(&RandomKey{})
-	for _,v :=range([]int{1,1,1,1,1,5,8}){
+	for _, v := range []int{1, 1, 1, 1, 1, 5, 8} {
 		sk2.Insert(v)
 	}
+	fmt.Println("col type show skiplist")
 	sk2.showCol()
 }

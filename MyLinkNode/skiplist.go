@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 var MAX_LEVEL = 16
@@ -47,6 +48,7 @@ func NewNode(val int) *Node {
 
 func (rdk *RandomKey) RandomNum(k int) int {
 	l := 1
+	rand.Seed(time.Now().UnixNano())
 	for {
 		if rand.Intn(2) == 0 {
 			break
@@ -206,7 +208,7 @@ func ldelNodeNext(n *Node, i int) {
 		return
 	}
 	delN := n.levelNode[i]
-	fmt.Printf("from %d i:%d del %d\n", n.Val, i, delN.Val)
+	//fmt.Printf("from %d i:%d del %d\n", n.Val, i, delN.Val)
 	if len(delN.levelNode) >= i {
 		n.levelNode[i] = delN.levelNode[i]
 	} else {
@@ -230,7 +232,6 @@ func (sk *Skiplist) show() {
 
 //显示跳跃表，行转列显示
 func (sk *Skiplist) showCol() {
-	fmt.Println("---- showCol ---- ")
 	c := sk.head
 	for {
 		if c == nil {
