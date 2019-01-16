@@ -5,17 +5,22 @@ import (
 	"fmt"
 )
 
+type Element struct {
+	i      int //index
+	Weigth int
+}
+
 type MinHeap struct {
-	harr      []int // pointer to array of elements in heap
-	capacity  int   // maximum possible size of min heap
-	heap_size int   // Current number of elements in min heap
+	harr      []*Element // pointer to array of elements in heap
+	capacity  int        // maximum possible size of min heap
+	heap_size int        // Current number of elements in min heap
 }
 
 func NewMinHeap(capacity int) *MinHeap {
 	mp := new(MinHeap)
 	mp.capacity = capacity
 	mp.heap_size = 0
-	mp.harr = make([]int, mp.capacity)
+	mp.harr = make([]*Element, mp.capacity)
 	return mp
 }
 
@@ -31,7 +36,8 @@ func rightId(i int) int {
 	return i*2 + 2
 }
 
-func swap(a *int, b *int) {
+//todo ... update i
+func swap(a *Element, b *Element) {
 	temp := *b
 	*b = *a
 	*a = temp
@@ -43,8 +49,8 @@ func (mp *MinHeap) shiftUp(i int) {
 		return
 	}
 	parent := parentId(i)
-	if mp.harr[i] < mp.harr[parent] {
-		swap(&(mp.harr[parent]), &(mp.harr[i]))
+	if ltElement(mp.harr[i], mp.harr[parent]) {
+		swap(mp.harr[parent], mp.harr[i])
 		mp.shiftUp(parent)
 
 	}
@@ -58,24 +64,26 @@ func (mp *MinHeap) shiftDown(i int) {
 	right := rightId(i)
 	min := i //ex 为待交换点index
 
-	if left < mp.heap_size && mp.harr[left] < mp.harr[i] {
+	if left < mp.heap_size && ltElement(mp.harr[left], mp.harr[i]) {
 		min = left
 	}
-	if right < mp.heap_size && mp.harr[right] < mp.harr[min] {
+	if right < mp.heap_size && ltElement(mp.harr[right], mp.harr[min]) {
 		min = right
 	}
 	//fmt.Printf("i:%d,min:%d,left:%d,right:%d\n",i,min,left,right)
 	if i != min {
-		swap(&(mp.harr[i]), &(mp.harr[min]))
+		swap(mp.harr[i], mp.harr[min])
 		mp.shiftDown(min)
 	}
 
 }
-func (mp *MinHeap) Insert(x int) error {
+func (mp *MinHeap) Push(x int) error {
 	if mp.heap_size >= mp.capacity {
 		return errors.New("head is full")
 	}
-	mp.harr[mp.heap_size] = x
+	e := NewElement(x)
+	e.i = mp.heap_size
+	mp.harr[mp.heap_size] = e
 
 	//	parent := parentId(mp.heap_size)
 	//	//fmt.Printf("p:%d => %d,i:%d = >%d\n",parent,mp.harr[parent],mp.heap_size,mp.harr[mp.heap_size])
@@ -99,16 +107,16 @@ func (mp *MinHeap) Remove(x int) {
 		return
 	}
 	if x <= mp.heap_size {
-		swap(&(mp.harr[x]), &(mp.harr[mp.heap_size-1]))
-		mp.harr[mp.heap_size-1] = 0
+		swap(mp.harr[x], mp.harr[mp.heap_size-1])
+		mp.harr[mp.heap_size-1] = nil
 		mp.heap_size--
 		mp.shiftDown(x)
 	}
 }
 
-func (mp *MinHeap) pop() (error, int) {
+func (mp *MinHeap) pop() (error, *Element) {
 	if mp.heap_size == 0 {
-		return errors.New("heap is empty"), -1
+		return errors.New("heap is empty"), nil
 	}
 	x := mp.harr[0]
 	//mp.heap_size--
@@ -116,18 +124,30 @@ func (mp *MinHeap) pop() (error, int) {
 	return nil, x
 }
 
-func (mp *MinHeap) peek() (error, int) {
+func (mp *MinHeap) peek() (error, *Element) {
 	if mp.heap_size == 0 {
-		return errors.New("heap is empty"), -1
+		return errors.New("heap is empty"), nil
 	}
 	x := mp.harr[0]
 	return nil, x
 }
 
-func (mp *MinHeap) push(v int) {
-	mp.Insert(v)
-}
-
 func (mp *MinHeap) show() {
 	fmt.Println(mp)
+}
+
+func NewElement(w int) *Element {
+	e := new(Element)
+	e.Weigth = w
+	return e
+}
+
+/**
+  return  e1 > e1
+**/
+func ltElement(e1, e2 *Element) bool {
+	if e1.Weigth > e2.Weigth {
+		return true
+	}
+	return false
 }
