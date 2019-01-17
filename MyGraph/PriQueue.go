@@ -5,9 +5,17 @@ import (
 	"fmt"
 )
 
+type PriQueue interface {
+	Push(e *Element) error
+	Pop() (error, *Element)
+	DecreseKey(e *Element)
+	empty() bool
+}
+
 type Element struct {
 	i      int //index
 	Weigth int
+	Val    int //节点信息
 }
 
 type MinHeap struct {
@@ -37,10 +45,14 @@ func rightId(i int) int {
 }
 
 //todo ... update i
-func swap(a *Element, b *Element) {
+func Swap(a *Element, b *Element) {
+	//fmt.Printf("swap %v %v\n", a, b)
 	temp := *b
+	tmpi := a.i
 	*b = *a
+	b.i = temp.i
 	*a = temp
+	a.i = tmpi
 }
 
 //上浮某个节点
@@ -50,7 +62,7 @@ func (mp *MinHeap) shiftUp(i int) {
 	}
 	parent := parentId(i)
 	if ltElement(mp.harr[i], mp.harr[parent]) {
-		swap(mp.harr[parent], mp.harr[i])
+		Swap(mp.harr[parent], mp.harr[i])
 		mp.shiftUp(parent)
 
 	}
@@ -72,16 +84,15 @@ func (mp *MinHeap) shiftDown(i int) {
 	}
 	//fmt.Printf("i:%d,min:%d,left:%d,right:%d\n",i,min,left,right)
 	if i != min {
-		swap(mp.harr[i], mp.harr[min])
+		Swap(mp.harr[i], mp.harr[min])
 		mp.shiftDown(min)
 	}
 
 }
-func (mp *MinHeap) Push(x int) error {
+func (mp *MinHeap) Push(e *Element) error {
 	if mp.heap_size >= mp.capacity {
 		return errors.New("head is full")
 	}
-	e := NewElement(x)
 	e.i = mp.heap_size
 	mp.harr[mp.heap_size] = e
 
@@ -107,14 +118,14 @@ func (mp *MinHeap) Remove(x int) {
 		return
 	}
 	if x <= mp.heap_size {
-		swap(mp.harr[x], mp.harr[mp.heap_size-1])
+		Swap(mp.harr[x], mp.harr[mp.heap_size-1])
 		mp.harr[mp.heap_size-1] = nil
 		mp.heap_size--
 		mp.shiftDown(x)
 	}
 }
 
-func (mp *MinHeap) pop() (error, *Element) {
+func (mp *MinHeap) Pop() (error, *Element) {
 	if mp.heap_size == 0 {
 		return errors.New("heap is empty"), nil
 	}
@@ -122,6 +133,20 @@ func (mp *MinHeap) pop() (error, *Element) {
 	//mp.heap_size--
 	mp.Remove(0)
 	return nil, x
+}
+
+func (mp *MinHeap) DecreseKey(e *Element) {
+	if e == nil {
+		return
+	}
+
+	i := e.i
+
+	if mp.harr[i] != e {
+		return
+	}
+
+	mp.shiftDown(i)
 }
 
 func (mp *MinHeap) peek() (error, *Element) {
@@ -146,7 +171,7 @@ func NewElement(w int) *Element {
   return  e1 > e1
 **/
 func ltElement(e1, e2 *Element) bool {
-	if e1.Weigth > e2.Weigth {
+	if e1.Weigth < e2.Weigth {
 		return true
 	}
 	return false
