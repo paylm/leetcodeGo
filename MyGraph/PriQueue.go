@@ -113,25 +113,23 @@ func (mp *MinHeap) empty() bool {
 	}
 }
 
-func (mp *MinHeap) Remove(x int) {
-	if x > mp.heap_size {
-		return
-	}
-	if x <= mp.heap_size {
-		Swap(mp.harr[x], mp.harr[mp.heap_size-1])
-		mp.harr[mp.heap_size-1] = nil
-		mp.heap_size--
-		mp.shiftDown(x)
-	}
-}
-
 func (mp *MinHeap) Pop() (error, *Element) {
-	if mp.heap_size == 0 {
+	if mp.empty() {
 		return errors.New("heap is empty"), nil
 	}
 	x := mp.harr[0]
-	//mp.heap_size--
-	mp.Remove(0)
+	//fmt.Printf("pop X:%v\n", x)
+	//mp.Remove(0)
+
+	if mp.heap_size > 1 {
+		mp.harr[0] = mp.harr[mp.heap_size-1]
+		mp.harr[mp.heap_size-1] = nil
+		mp.heap_size--
+		mp.shiftDown(0)
+	} else {
+		mp.harr[0] = nil
+		mp.heap_size--
+	}
 	return nil, x
 }
 

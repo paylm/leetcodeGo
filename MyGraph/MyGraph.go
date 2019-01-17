@@ -340,12 +340,12 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 func (g *MyGraph) dijkstrQue(src, target int) []int {
 	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
 	vistMap := make(map[int]*Element)
+	for i := 0; i < g.vexnum; i++ {
+		dist[i] = INT_MAX
+	}
 	var que PriQueue
 	var e *Element
-	que = NewMinHeap(500)
-	for i := 0; i < g.vexnum; i++ {
-		dist = append(dist, INT_MAX)
-	}
+	que = NewMinHeap(g.vexnum)
 	e = NewElement(0)
 	e.Weigth = 0
 	e.Val = src
@@ -359,26 +359,32 @@ func (g *MyGraph) dijkstrQue(src, target int) []int {
 		}
 
 		_, e = que.Pop()
+		fmt.Printf("pop the min:%v,dist:%v\n", e, dist)
 		n := e.Val
 
 		for i := 0; i < len(g.AdjMatrix[n]); i++ {
-			if g.AdjMatrix[n][i] != 0 {
+			if g.AdjMatrix[n][i] != 0 && n != i {
 
-				sp, ok := vistMap[i]
-				if !ok {
+				if dist[i] == INT_MAX {
 					//put it to que
 					e1 := NewElement(g.AdjMatrix[n][i])
 					e1.Val = i
-					que.Push(e)
+					que.Push(e1)
 					vistMap[i] = e1
 					dist[i] = g.AdjMatrix[n][i]
 				} else {
+					sp, ok := vistMap[i]
+					if !ok {
+						continue
+					}
 					//update que
-					if dist[i] > e.Val+g.AdjMatrix[n][i] {
-						dist[i] = e.Val + g.AdjMatrix[n][i]
+					if dist[i] > e.Weigth+g.AdjMatrix[n][i] {
+						fmt.Printf("update old calc i:%d,new dist:%d\n", i, e.Val+g.AdjMatrix[n][i])
+						dist[i] = e.Weigth + g.AdjMatrix[n][i]
 						sp.Weigth = dist[i]
 						que.DecreseKey(sp)
 					}
+
 				}
 			}
 		}
