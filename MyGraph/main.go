@@ -5,9 +5,9 @@ import (
 )
 
 type Point struct {
-	Val  int
+	Val   int
 	Space int
-	Prev *Point
+	Prev  *Point
 }
 
 func NewPoint(v int) *Point {
@@ -22,7 +22,7 @@ func (p *Point) traversePath() {
 		if c == nil {
 			break
 		}
-		fmt.Printf("->(%d) %d ",c.Space, c.Val)
+		fmt.Printf("->(%d) %d ", c.Space, c.Val)
 		c = c.Prev
 	}
 	fmt.Println()
@@ -284,9 +284,12 @@ func main() {
 	g1.show()
 	res := g1.dijkstra(0, 4)
 	fmt.Println("dijkstra res : ", res)
-	r1 := g1.dijkstraPath(0,4)
+	r1 := g1.dijkstraPath(0, 4)
 	r1.traversePath()
 
-	r2 := g1.dijkstraPath(0,5)
+	r2 := g1.dijkstraPath(0, 5)
 	r2.traversePath()
+
+	r3 := g1.dijkstrQue(0, 4)
+	fmt.Println("dijkstrQue res :", r3)
 }

@@ -226,6 +226,7 @@ func (g *MyGraph) BFSlevel(start, target int) int {
 	return maxLevel
 }
 
+//使用遍历，时间复杂度O(n)
 func minDistance(dist []int, sptSet []bool) int {
 
 	var min, min_index int
@@ -286,7 +287,7 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 	// distance from src to i
 	sptSet := make([]bool, g.vexnum) // sptSet[i] will be true if vertex i is included in shortest
 	// path tree or shortest distance from src to i is finalized
-	zrSet :=make(map[int]*Point)
+	zrSet := make(map[int]*Point)
 
 	for i := 0; i < g.vexnum; i++ {
 		dist[i] = INT_MAX
@@ -316,15 +317,15 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 					dist[j] = g.AdjMatrix[n][j] + dist[n]
 				}
 
-				iZr,ok:= zrSet[j]
-				if  !ok {
+				iZr, ok := zrSet[j]
+				if !ok {
 					iZr = NewPoint(j)
-					iZr.Space =  g.AdjMatrix[n][j]
+					iZr.Space = g.AdjMatrix[n][j]
 					iZr.Prev = zR
 					zrSet[j] = iZr
-				}else{
+				} else {
 					iZr.Prev = zR
-					iZr.Space =  g.AdjMatrix[n][j]
+					iZr.Space = g.AdjMatrix[n][j]
 				}
 			}
 		}
@@ -335,4 +336,53 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 	return nil
 }
 
+//通过dijstra 算法找到最短路径(通过优先队列处理)
+func (g *MyGraph) dijkstrQue(src, target int) []int {
+	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
+	vistMap := make(map[int]*Element)
+	var que PriQueue
+	var e *Element
+	que = NewMinHeap(500)
+	for i := 0; i < g.vexnum; i++ {
+		dist = append(dist, INT_MAX)
+	}
+	e = NewElement(0)
+	e.Weigth = 0
+	e.Val = src
+	que.Push(e)
+	vistMap[src] = e
+	dist[src] = 0
 
+	for {
+		if que.empty() {
+			break
+		}
+
+		_, e = que.Pop()
+		n := e.Val
+
+		for i := 0; i < len(g.AdjMatrix[n]); i++ {
+			if g.AdjMatrix[n][i] != 0 {
+
+				sp, ok := vistMap[i]
+				if !ok {
+					//put it to que
+					e1 := NewElement(g.AdjMatrix[n][i])
+					e1.Val = i
+					que.Push(e)
+					vistMap[i] = e1
+					dist[i] = g.AdjMatrix[n][i]
+				} else {
+					//update que
+					if dist[i] > e.Val+g.AdjMatrix[n][i] {
+						dist[i] = e.Val + g.AdjMatrix[n][i]
+						sp.Weigth = dist[i]
+						que.DecreseKey(sp)
+					}
+				}
+			}
+		}
+	}
+
+	return dist
+}
