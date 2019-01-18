@@ -285,11 +285,16 @@ func main() {
 	res := g1.dijkstra(0, 4)
 	fmt.Println("dijkstra res : ", res)
 	r1 := g1.dijkstraPath(0, 4)
+	fmt.Printf("from %d to %d\n", 0, 4)
 	r1.traversePath()
 
 	r2 := g1.dijkstraPath(0, 5)
+	fmt.Printf("from %d to %d\n", 0, 5)
 	r2.traversePath()
 
-	r3 := g1.dijkstrQue(0, 4)
-	fmt.Println("dijkstrQue res :", r3)
+	res3 := g1.dijkstrQue(0, 4)
+	fmt.Println("dijkstrQue res :", res3)
+	r3 := g1.dijkstrQuePath(0, 4)
+	fmt.Println("dijkstrQuePath: from 0 to 4")
+	r3.traversePath()
 }

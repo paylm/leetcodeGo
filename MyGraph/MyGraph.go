@@ -311,17 +311,17 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 				//fmt.Printf("dijkstra => point:%d ->%d\n", n, j)
 				if g.AdjMatrix[n][j]+dist[n] < dist[j] {
 					dist[j] = g.AdjMatrix[n][j] + dist[n]
-				}
 
-				iZr, ok := zrSet[j]
-				if !ok {
-					iZr = NewPoint(j)
-					iZr.Space = g.AdjMatrix[n][j]
-					iZr.Prev = zR
-					zrSet[j] = iZr
-				} else {
-					iZr.Prev = zR
-					iZr.Space = g.AdjMatrix[n][j]
+					iZr, ok := zrSet[j]
+					if !ok {
+						iZr = NewPoint(j)
+						iZr.Space = g.AdjMatrix[n][j]
+						iZr.Prev = zR
+						zrSet[j] = iZr
+					} else {
+						iZr.Prev = zR
+						iZr.Space = g.AdjMatrix[n][j]
+					}
 				}
 			}
 		}
@@ -354,7 +354,6 @@ func (g *MyGraph) dijkstrQue(src, target int) []int {
 		if que.empty() {
 			break
 		}
-
 		_, e = que.Pop()
 		//fmt.Printf("pop the min:%v,dist:%v\n", e, dist)
 		if e.Val == target {
@@ -384,4 +383,72 @@ func (g *MyGraph) dijkstrQue(src, target int) []int {
 	}
 
 	return dist
+}
+
+//通过dijstra 算法找到最短路径(通过优先队列处理)
+func (g *MyGraph) dijkstrQuePath(src, target int) *Point {
+	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
+	vistMap := make(map[int]*Element)
+	visit := make(map[int]bool)
+	// path tree or shortest distance from src to i is finalized
+	zrSet := make(map[int]*Point)
+	for i := 0; i < g.vexnum; i++ {
+		dist[i] = INT_MAX
+	}
+	var que PriQueue
+	var e *Element
+	que = NewMinHeap(g.vexnum)
+	e = NewElement(0)
+	e.Weigth = 0
+	e.Val = src
+	que.Push(e)
+	vistMap[src] = e
+	dist[src] = 0
+	zrSet[src] = NewPoint(src)
+
+	for {
+		if que.empty() {
+			break
+		}
+		_, e = que.Pop()
+		//fmt.Printf("pop the min:%v,dist:%v\n", e, dist)
+		n := e.Val
+		visit[n] = true
+		zR, _ := zrSet[n]
+		if e.Val == target {
+			return zR
+		}
+
+		for i := 0; i < len(g.AdjMatrix[n]); i++ {
+			if g.AdjMatrix[n][i] != 0 && visit[i] == false {
+
+				e, ok := vistMap[i]
+				if !ok {
+					e = NewElement(g.AdjMatrix[n][i])
+					e.Val = i
+					que.Push(e)
+					vistMap[i] = e
+				}
+				//当前计算路径小于之前保存时，更新路由
+				if dist[i] > dist[n]+g.AdjMatrix[n][i] {
+					dist[i] = dist[n] + g.AdjMatrix[n][i]
+					e.Weigth = dist[i]
+					que.DecreseKey(e)
+
+					iZr, ok := zrSet[i]
+					if !ok {
+						iZr = NewPoint(i)
+						iZr.Space = g.AdjMatrix[n][i]
+						iZr.Prev = zR
+						zrSet[i] = iZr
+					} else {
+						iZr.Prev = zR
+						iZr.Space = g.AdjMatrix[n][i]
+					}
+				}
+			}
+		}
+	}
+
+	return nil
 }
