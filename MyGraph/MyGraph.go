@@ -267,9 +267,7 @@ func (g *MyGraph) dijkstra(src, target int) []int {
 			if g.AdjMatrix[n][j] != 0 && sptSet[j] == false {
 				//计算距离
 				//fmt.Printf("dijkstra => point:%d ->%d\n", n, j)
-				if dist[j] == INT_MAX && j == n {
-					dist[j] = g.AdjMatrix[n][j]
-				} else if g.AdjMatrix[n][j]+dist[n] < dist[j] {
+				if g.AdjMatrix[n][j]+dist[n] < dist[j] {
 					dist[j] = g.AdjMatrix[n][j] + dist[n]
 				}
 			}
@@ -311,9 +309,7 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 				//计算距离
 
 				//fmt.Printf("dijkstra => point:%d ->%d\n", n, j)
-				if dist[j] == INT_MAX && j == n {
-					dist[j] = g.AdjMatrix[n][j]
-				} else if g.AdjMatrix[n][j]+dist[n] < dist[j] {
+				if g.AdjMatrix[n][j]+dist[n] < dist[j] {
 					dist[j] = g.AdjMatrix[n][j] + dist[n]
 				}
 
@@ -340,6 +336,7 @@ func (g *MyGraph) dijkstraPath(src, target int) *Point {
 func (g *MyGraph) dijkstrQue(src, target int) []int {
 	dist := make([]int, g.vexnum) // The output array.  dist[i] will hold the shortest
 	vistMap := make(map[int]*Element)
+	visit := make(map[int]bool)
 	for i := 0; i < g.vexnum; i++ {
 		dist[i] = INT_MAX
 	}
@@ -359,32 +356,28 @@ func (g *MyGraph) dijkstrQue(src, target int) []int {
 		}
 
 		_, e = que.Pop()
-		fmt.Printf("pop the min:%v,dist:%v\n", e, dist)
+		//fmt.Printf("pop the min:%v,dist:%v\n", e, dist)
+		if e.Val == target {
+			break
+		}
 		n := e.Val
+		visit[n] = true
 
 		for i := 0; i < len(g.AdjMatrix[n]); i++ {
-			if g.AdjMatrix[n][i] != 0 && n != i {
+			if g.AdjMatrix[n][i] != 0 && visit[i] == false {
 
-				if dist[i] == INT_MAX {
-					//put it to que
-					e1 := NewElement(g.AdjMatrix[n][i])
-					e1.Val = i
-					que.Push(e1)
-					vistMap[i] = e1
-					dist[i] = g.AdjMatrix[n][i]
-				} else {
-					sp, ok := vistMap[i]
-					if !ok {
-						continue
-					}
-					//update que
-					if dist[i] > e.Weigth+g.AdjMatrix[n][i] {
-						fmt.Printf("update old calc i:%d,new dist:%d\n", i, e.Val+g.AdjMatrix[n][i])
-						dist[i] = e.Weigth + g.AdjMatrix[n][i]
-						sp.Weigth = dist[i]
-						que.DecreseKey(sp)
-					}
-
+				e, ok := vistMap[i]
+				if !ok {
+					e = NewElement(g.AdjMatrix[n][i])
+					e.Val = i
+					que.Push(e)
+					vistMap[i] = e
+				}
+				//当前计算路径小于之前保存时，更新路由
+				if dist[i] > dist[n]+g.AdjMatrix[n][i] {
+					dist[i] = dist[n] + g.AdjMatrix[n][i]
+					e.Weigth = dist[i]
+					que.DecreseKey(e)
 				}
 			}
 		}
