@@ -297,4 +297,7 @@ func main() {
 	r3 := g1.dijkstrQuePath(0, 4)
 	fmt.Println("dijkstrQuePath: from 0 to 4")
 	r3.traversePath()
+
+	mst := g1.primQue()
+	fmt.Printf("mst dist :%v\n", mst)
 }

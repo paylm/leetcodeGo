@@ -452,3 +452,52 @@ func (g *MyGraph) dijkstrQuePath(src, target int) *Point {
 
 	return nil
 }
+
+func (g *MyGraph) primQue() []int {
+	dist := make([]int, g.vexnum)
+	visit := make(map[int]bool)
+	queMap := make(map[int]*Element)
+	for i := 0; i < g.vexnum; i++ {
+		dist[i] = INT_MAX
+	}
+	var que PriQueue
+	que = NewMinHeap(g.vexnum)
+	e0 := NewElement(0)
+	e0.Val = 0
+	que.Push(e0)
+	queMap[0] = e0
+	dist[0] = 0
+	for {
+		if que.empty() {
+			break
+		}
+		err, e := que.Pop()
+		if err != nil {
+			fmt.Printf("Que push err: %v\n", err)
+		}
+		n := e.Val
+		visit[n] = true
+
+		for i := 0; i < len(g.AdjMatrix[n]); i++ {
+			if visit[i] == false && g.AdjMatrix[n][i] != 0 {
+
+				ce, ok := queMap[i]
+				if !ok {
+					ce = NewElement(g.AdjMatrix[n][i])
+					ce.Val = i
+					queMap[i] = ce
+					que.Push(ce)
+				}
+				//if 路径更小时
+				if dist[i] > g.AdjMatrix[n][i] {
+					dist[i] = g.AdjMatrix[n][i]
+					ce.Weigth = dist[i]
+					que.DecreseKey(ce)
+					//queMap[i] = ce
+				}
+			}
+		}
+
+	}
+	return dist
+}
