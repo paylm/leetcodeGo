@@ -453,12 +453,16 @@ func (g *MyGraph) dijkstrQuePath(src, target int) *Point {
 	return nil
 }
 
-func (g *MyGraph) primQue() []int {
-	dist := make([]int, g.vexnum)
+/**
+* 返回最小生成树
+  item[p1 p2 space] => p1 -> p2 所花费的路径为 space
+**/
+func (g *MyGraph) primQue() [][3]int {
+	dist := make([][3]int, g.vexnum)
 	visit := make(map[int]bool)
 	queMap := make(map[int]*Element)
 	for i := 0; i < g.vexnum; i++ {
-		dist[i] = INT_MAX
+		dist[i] = [...]int{0, 0, INT_MAX}
 	}
 	var que PriQueue
 	que = NewMinHeap(g.vexnum)
@@ -466,7 +470,7 @@ func (g *MyGraph) primQue() []int {
 	e0.Val = 0
 	que.Push(e0)
 	queMap[0] = e0
-	dist[0] = 0
+	dist[0] = [...]int{0, 0, 0}
 	for {
 		if que.empty() {
 			break
@@ -489,9 +493,10 @@ func (g *MyGraph) primQue() []int {
 					que.Push(ce)
 				}
 				//if 路径更小时
-				if dist[i] > g.AdjMatrix[n][i] {
-					dist[i] = g.AdjMatrix[n][i]
-					ce.Weigth = dist[i]
+				if dist[i][2] > g.AdjMatrix[n][i] {
+					//dist[i] = g.AdjMatrix[n][i]
+					dist[i] = [...]int{n, i, g.AdjMatrix[n][i]}
+					ce.Weigth = dist[i][2]
 					que.DecreseKey(ce)
 					//queMap[i] = ce
 				}

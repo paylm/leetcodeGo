@@ -300,4 +300,9 @@ func main() {
 
 	mst := g1.primQue()
 	fmt.Printf("mst dist :%v\n", mst)
+	g2 := NewMyGraph(6)
+	for _, p := range mst {
+		g2.addCyEdge(p[0], p[1], p[2])
+	}
+	g2.show()
 }
