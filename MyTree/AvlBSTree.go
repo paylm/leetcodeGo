@@ -159,6 +159,59 @@ func findMaxNode(n *AvlNode) *AvlNode {
 	}
 }
 
+func AvlDel(n *AvlNode, Val int) *AvlNode {
+	if n == nil {
+		return nil
+	}
+	if n.Val > Val {
+		n.Left = AvlDel(n.Left, Val)
+	} else if n.Val < Val {
+		n.Right = AvlDel(n.Right, Val)
+	} else {
+		if n.Left == nil && n.Right == nil {
+			return nil
+		}
+		temp := findMaxNode(n.Right)
+		n.Val = temp.Val
+		temp = nil
+		AvlDel(n.Right, temp.Val)
+		return n
+	}
+
+	return nil
+}
+
+//通过队列的方式查找
+func AvlFind(n *AvlNode, key int) *AvlNode {
+	if n == nil {
+		return nil
+	}
+	que := []*AvlNode{}
+	que = append(que, n)
+	for {
+		if len(que) < 1 {
+			return nil
+		}
+		c := que[0]
+		que = append(que[1:])
+
+		if c == nil {
+			return nil
+		}
+
+		if c.Val == key {
+			return c
+		}
+
+		if c.Left != nil {
+			que = append(que, c.Left)
+		}
+		if c.Right != nil {
+			que = append(que, c.Right)
+		}
+	}
+}
+
 func AvlTraverse(n *AvlNode) {
 	if n == nil {
 		return
