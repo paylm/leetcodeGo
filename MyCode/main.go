@@ -37,13 +37,13 @@ func findNumS(a []int, k int) {
 }
 
 func quickSort(a []int, start int, end int) {
-	//	defer func() {
-	//		if err := recover(); err != nil {
-	//			fmt.Printf("a:%v,start:%d,end:%d,err:%v\n", a, start, end, err)
-	//		}
-	//	}()
 
 	if len(a) == 0 || start >= end {
+		return
+	}
+	//if len less than 8 , use shell sort
+	if end-start < 8 {
+		shellSortArea(a, start, end)
 		return
 	}
 
@@ -94,7 +94,7 @@ func quickSort(a []int, start int, end int) {
 }
 
 func sort3Parttion(a []int, start int, end int) {
-	fmt.Printf("%v,start:%d,end:%d\n", a, start, end)
+	//fmt.Printf("%v,start:%d,end:%d\n", a, start, end)
 	if len(a) == 0 || start >= end {
 		return
 	}
@@ -219,6 +219,23 @@ func perDown(arr []int, l int) {
 		} else {
 			break
 		}
+	}
+}
+
+func shellSortArea(arr []int, start int, end int) {
+	if len(arr) < end || start > end {
+		return
+	}
+	gap := end / 2
+	for gap > 0 {
+		for i := start + gap; i < end; i++ {
+			for j := i; j >= gap; j = j - gap {
+				if j-gap >= 0 && arr[j] < arr[j-gap] {
+					swap(&(arr[j]), &(arr[j-gap]))
+				}
+			}
+		}
+		gap = gap / 2
 	}
 }
 
