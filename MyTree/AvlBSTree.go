@@ -168,17 +168,47 @@ func AvlDel(n *AvlNode, Val int) *AvlNode {
 	} else if n.Val < Val {
 		n.Right = AvlDel(n.Right, Val)
 	} else {
-		if n.Left == nil && n.Right == nil {
-			return nil
+		if n.Right == nil {
+			temp := n.Left
+			n = nil
+			return temp
+		}
+		if n.Left == nil {
+			temp := n.Right
+			n = nil
+			return temp
 		}
 		temp := findMaxNode(n.Right)
 		n.Val = temp.Val
-		temp = nil
 		AvlDel(n.Right, temp.Val)
-		return n
+		//n.Height = Max(Height(n.Left), Height(n.Right)) + 1
+		//return n
+	}
+	n.Height = Max(Height(n.Left), Height(n.Right)) + 1
+	balance := getBalance(n)
+	// left left rotate
+	if balance > 1 && Val < n.Left.Val {
+		return RightRotate(n)
 	}
 
-	return nil
+	// right right case
+	if balance < -1 && Val > n.Right.Val {
+		return LeftRotate(n)
+	}
+
+	// right left case
+	if balance > 1 && Val > n.Left.Val {
+		n.Left = LeftRotate(n.Left)
+		return RightRotate(n)
+	}
+
+	//left right case
+	if balance < -1 && Val < n.Right.Val {
+		n.Right = RightRotate(n.Right)
+		return LeftRotate(n)
+	}
+
+	return n
 }
 
 //通过队列的方式查找
@@ -186,28 +216,19 @@ func AvlFind(n *AvlNode, key int) *AvlNode {
 	if n == nil {
 		return nil
 	}
-	que := []*AvlNode{}
-	que = append(que, n)
+	c := n
 	for {
-		if len(que) < 1 {
-			return nil
-		}
-		c := que[0]
-		que = append(que[1:])
-
 		if c == nil {
 			return nil
 		}
-
 		if c.Val == key {
 			return c
 		}
 
-		if c.Left != nil {
-			que = append(que, c.Left)
-		}
-		if c.Right != nil {
-			que = append(que, c.Right)
+		if c.Val > key {
+			c = c.Left
+		} else {
+			c = c.Right
 		}
 	}
 }

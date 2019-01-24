@@ -43,9 +43,17 @@ func testAvl() {
 	r1 = Insert(r1, 6)
 	r1 = Insert(r1, 5)
 	r1 = Insert(r1, 4)
+	r1 = Insert(r1, 8)
+	r1 = Insert(r1, 10)
 	AvlTraverse(r1)
 	fmt.Printf("\nmix:%v,max:%v\n", findMinNode(r1), findMaxNode(r1))
-
+	AvlDel(r1, 6)
+	AvlDel(r1, 5)
+	fmt.Println("after del 5 6")
+	AvlTraverse(r1)
+	r1 = Insert(r1, 0)
+	fmt.Println("insert 0")
+	AvlTraverse(r1)
 }
 
 func main() {
@@ -88,4 +96,6 @@ func main() {
 	InOrder(r)
 	fmt.Println("morris traverse")
 	MorrisInOrder(r)
+	fmt.Println("test avl")
+	testAvl()
 }
