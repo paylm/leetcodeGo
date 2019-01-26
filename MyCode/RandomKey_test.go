@@ -11,6 +11,7 @@ func Test_RandomKey(t *testing.T) {
 		fmt.Printf("k :%d\n", k)
 		if k > 10 {
 			t.Errorf("test fail k:%d\n", k)
+			break
 		} else {
 			t.Log("test pass")
 		}

@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-func quickSort(a []int, start int, end int) {
+func QuickSort(a []int, start int, end int) {
 
 	if len(a) == 0 || start >= end {
 		return
@@ -58,8 +57,8 @@ func quickSort(a []int, start int, end int) {
 		i--
 	}
 	//fmt.Println(a)
-	quickSort(a, start, i)
-	quickSort(a, j+1, end)
+	QuickSort(a, start, i)
+	QuickSort(a, j+1, end)
 }
 
 func sort3Parttion(a []int, start int, end int) {
@@ -111,83 +110,41 @@ func insertSort(a []int) {
 	}
 }
 
-//Z 字形变换
-//https://leetcode-cn.com/problems/zigzag-conversion/
-func convert(s string, numRows int) string {
-	sarr := strings.Split(s, "")
-	if len(sarr) <= numRows {
-		return s
-	}
-	sgo := make([][]string, numRows)
-	k := numRows - 2
-	if numRows == 1 {
-		k = 0
-	}
-	for i, v := range sarr {
-		a := i % (numRows + k)
-		if a < numRows {
-			fmt.Println(a, i, v)
-			sgo[a] = append(sgo[a], v)
-		} else {
-			b := a - numRows
-			sgo[k-b] = append(sgo[k-b], v)
-		}
-	}
-	//fmt.Println(sgo)
-	//return "fuck"
-	res := []string{}
-	for i := 0; i < numRows; i++ {
-		res = append(res, sgo[i]...)
-	}
-	fmt.Println(res)
-	return strings.Join(res, "")
-}
-
 func swap(a, b *int) {
 	temp := *b
 	*b = *a
 	*a = temp
 }
 
-//把小的数下沉
-func perUP(arr []int, l int) {
-	for i := l; i >= 0; i-- {
-		leftChild := 2*i + 1
-		k := i
-		if arr[i] < arr[leftChild] {
-			k = leftChild
-		}
+//把大的数上浮
+func perUP(arr []int, i int) {
+	parent := (i - 1) / 2
+	if parent < 0 {
+		return
+	}
 
-		if len(arr) > leftChild+1 && arr[k] < arr[leftChild+1] {
-			k = leftChild + 1
-		}
-		//fmt.Printf("i:%d,k:%d\n", i, k)
-		if k != i {
-			swap(&(arr[i]), &(arr[k]))
-		}
+	if len(arr) > i && arr[parent] < arr[i] {
+		swap(&(arr[i]), &(arr[parent]))
+		perUP(arr, parent)
 	}
 }
 
 //l 最大边界
-func perDown(arr []int, l int) {
-	for i := 0; i < l; {
-		//fmt.Println("perDown fun() run")
-		leftChild := i*2 + 1
-		k := i
-		if leftChild < l && arr[i] < arr[leftChild] {
-			k = leftChild
-		}
+func perDown(arr []int, i int, l int) {
+	//fmt.Println("perDown fun() run")
+	leftChild := i*2 + 1
+	k := i
+	if leftChild < l && arr[i] < arr[leftChild] {
+		k = leftChild
+	}
 
-		if leftChild+1 < l && arr[k] < arr[leftChild+1] {
-			k = leftChild + 1
-		}
+	if leftChild+1 < l && arr[k] < arr[leftChild+1] {
+		k = leftChild + 1
+	}
 
-		if k != i {
-			swap(&(arr[i]), &(arr[k]))
-			i = k
-		} else {
-			break
-		}
+	if k != i {
+		swap(&(arr[i]), &(arr[k]))
+		perDown(arr, k, l)
 	}
 }
 
@@ -197,7 +154,7 @@ func shellSortArea(arr []int, start int, end int) {
 	}
 	gap := end / 2
 	for gap > 0 {
-		for i := start + gap; i < end; i++ {
+		for i := start + gap; i <= end; i++ {
 			for j := i; j >= gap; j = j - gap {
 				if j-gap >= 0 && arr[j] < arr[j-gap] {
 					swap(&(arr[j]), &(arr[j-gap]))
@@ -208,15 +165,19 @@ func shellSortArea(arr []int, start int, end int) {
 	}
 }
 
-func headSort(arr []int) {
+func HeapSort(arr []int) {
 
 	//build head
-	perUP(arr, (len(arr)-1)/2)
+	for i := len(arr) - 1; i >= len(arr)/2; i-- {
+		perUP(arr, i)
+	}
+
+	fmt.Printf("after per Up:%v\n", arr)
 
 	for i := len(arr) - 1; i >= 0; i-- {
-		//fmt.Println(arr[0])
+		fmt.Printf("heap max:%v,arr:%v\n", arr[0], arr)
 		swap(&(arr[0]), &(arr[i]))
-		perDown(arr, i-1)
+		perDown(arr, 0, i-1)
 	}
 }
 
@@ -236,4 +197,69 @@ func shellSort(arr []int) {
 		gap = gap / 2
 	}
 	fmt.Printf("shell sort :%v,k:%d\n", arr, k)
+}
+
+//归并排序
+func MergeSort(arr []int) {
+	tmpArr := make([]int, len(arr))
+	if len(arr) <= 0 {
+		return
+	}
+	mSort(arr, tmpArr, 0, len(arr)-1)
+}
+
+func mSort(arr []int, tmpArr []int, left int, right int) {
+	if left < right {
+		center := (left + right) / 2
+		mSort(arr, tmpArr, left, center)
+		mSort(arr, tmpArr, center+1, right)
+		merge(arr, tmpArr, left, center, right)
+	}
+}
+
+//merge tmpArr[left to center] && tmpArr[center to right] to arr[left-right]
+func merge(arr []int, tmpArr []int, left int, center int, right int) {
+	i, k, j := left, left, center+1
+	for {
+		if i > center || j > right {
+			break
+		}
+
+		if arr[i] >= arr[j] {
+			tmpArr[k] = arr[j]
+			j++
+		} else if arr[i] < arr[j] {
+			tmpArr[k] = arr[i]
+			i++
+		}
+		k++
+	}
+	//fmt.Printf("step 1 tmpArr:%v,left:%d,center:%d,right:%d\n", tmpArr, left, center, right)
+
+	if j > right && i <= center {
+		for {
+			if i > center {
+				break
+			}
+			tmpArr[k] = arr[i]
+			k++
+			i++
+		}
+	}
+	if i > center && j <= right {
+		for {
+			if j > right {
+				break
+			}
+			tmpArr[k] = arr[j]
+			k++
+			j++
+		}
+	}
+	//fmt.Printf("tmpArr:%v,left:%d,center:%d,right:%d\n", tmpArr, left, center, right)
+	//copy it back to arr
+	for i := left; i <= right; i++ {
+		arr[i] = tmpArr[i]
+	}
+	//fmt.Printf("arr:%v\n", arr)
 }

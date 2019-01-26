@@ -5,12 +5,44 @@ import (
 	"strings"
 )
 
+//Z 字形变换
+//https://leetcode-cn.com/problems/zigzag-conversion/
+func convert(s string, numRows int) string {
+	sarr := strings.Split(s, "")
+	if len(sarr) <= numRows {
+		return s
+	}
+	sgo := make([][]string, numRows)
+	k := numRows - 2
+	if numRows == 1 {
+		k = 0
+	}
+	for i, v := range sarr {
+		a := i % (numRows + k)
+		if a < numRows {
+			fmt.Println(a, i, v)
+			sgo[a] = append(sgo[a], v)
+		} else {
+			b := a - numRows
+			sgo[k-b] = append(sgo[k-b], v)
+		}
+	}
+	//fmt.Println(sgo)
+	//return "fuck"
+	res := []string{}
+	for i := 0; i < numRows; i++ {
+		res = append(res, sgo[i]...)
+	}
+	fmt.Println(res)
+	return strings.Join(res, "")
+}
+
 //从数组中找到两个数的值和为k
 func findNumS(a []int, k int) {
 	if len(a) == 0 {
 		return
 	}
-	quickSort(a, 0, len(a)-1)
+	QuickSort(a, 0, len(a)-1)
 	fmt.Println(a)
 	i, j := 0, len(a)-1
 	for {
@@ -204,7 +236,7 @@ func main() {
 	b := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	c := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
 	d := []int{10, 5, 4, 1, 16, 8, 13, 2, 10, 6, 3, 10}
-	quickSort(a, 0, len(a)-1)
+	QuickSort(a, 0, len(a)-1)
 	fmt.Println(a)
 
 	fmt.Println("三路快排")
@@ -223,7 +255,7 @@ func main() {
 	fmt.Println(convert("A", 1))
 	fmt.Println(convert("AB", 1))
 	//	fmt.Println(a)
-	//	headSort(a)
+	//	HeadSort(a)
 	//	fmt.Println(a)
 	//	k1, k2 := 11, 12
 	//	fmt.Println(k1, k2)
@@ -243,4 +275,7 @@ func main() {
 	intToRoman(9)
 	intToRoman(58)
 	fmt.Println(intToRoman(1994))
+	fmt.Println("test for MergeSort")
+	arr := []int{5, 1, 9, 6, 11, 3, 30, 0, -1}
+	MergeSort(arr)
 }
