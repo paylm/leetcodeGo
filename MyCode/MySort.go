@@ -117,15 +117,20 @@ func swap(a, b *int) {
 }
 
 //把大的数上浮
-func perUP(arr []int, i int) {
-	parent := (i - 1) / 2
-	if parent < 0 {
-		return
+func percolateDown(arr []int, i int) {
+	leftChild := i*2 + 1
+	k := i
+	if leftChild < len(arr) && arr[i] <= arr[leftChild] {
+		k = leftChild
 	}
 
-	if len(arr) > i && arr[parent] < arr[i] {
-		swap(&(arr[i]), &(arr[parent]))
-		perUP(arr, parent)
+	if leftChild+1 < len(arr) && arr[k] <= arr[leftChild+1] {
+		k = leftChild + 1
+	}
+
+	if k != i {
+		swap(&(arr[i]), &(arr[k]))
+		percolateDown(arr, k)
 	}
 }
 
@@ -134,11 +139,11 @@ func perDown(arr []int, i int, l int) {
 	//fmt.Println("perDown fun() run")
 	leftChild := i*2 + 1
 	k := i
-	if leftChild < l && arr[i] < arr[leftChild] {
+	if leftChild <= l && arr[i] < arr[leftChild] {
 		k = leftChild
 	}
 
-	if leftChild+1 < l && arr[k] < arr[leftChild+1] {
+	if leftChild+1 <= l && arr[k] < arr[leftChild+1] {
 		k = leftChild + 1
 	}
 
@@ -168,14 +173,14 @@ func shellSortArea(arr []int, start int, end int) {
 func HeapSort(arr []int) {
 
 	//build head
-	for i := len(arr) - 1; i >= len(arr)/2; i-- {
-		perUP(arr, i)
+	for i := len(arr)/2 + 2; i >= 0; i-- {
+		percolateDown(arr, i)
 	}
 
-	fmt.Printf("after per Up:%v\n", arr)
+	//fmt.Printf("after per Up:%v\n", arr)
 
 	for i := len(arr) - 1; i >= 0; i-- {
-		fmt.Printf("heap max:%v,arr:%v\n", arr[0], arr)
+		//fmt.Printf("heap max:%v,arr:%v\n", arr[0], arr)
 		swap(&(arr[0]), &(arr[i]))
 		perDown(arr, 0, i-1)
 	}

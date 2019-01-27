@@ -255,7 +255,7 @@ func main() {
 	fmt.Println(convert("A", 1))
 	fmt.Println(convert("AB", 1))
 	//	fmt.Println(a)
-	//	HeadSort(a)
+	HeapSort(a)
 	//	fmt.Println(a)
 	//	k1, k2 := 11, 12
 	//	fmt.Println(k1, k2)
