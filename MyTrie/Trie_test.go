@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"strings"
 	"testing"
 )
 
@@ -18,6 +20,32 @@ func Test_InsertWord(t *testing.T) {
 		t.Errorf("test fail,after Insert word , trie size len is 0")
 	} else {
 		t.Log("test pass")
+	}
+}
+
+func TestTire_Insert(t *testing.T) {
+	//test string from txt
+	if contents, err := ioutil.ReadFile("word.txt"); err == nil {
+		//fmt.Printf("content:%v\n", string(contents))
+		text := strings.Replace(string(contents), "\n", "", -1)
+		strs := strings.ToLower(text)
+		strArr := strings.Split(strs, " ")
+		tw := NewTrie("")
+		for _, v := range strArr {
+			Insert(tw, v)
+		}
+
+		for _, tag := range []string{"th", "da", "o"} {
+			res := Search(tw, tag)
+
+			if len(res) == 0 {
+				t.Errorf("test fail , not found word %v\n", tag)
+			} else {
+				t.Logf("test pass , foud to words(%s) :%v\n", tag, res)
+			}
+		}
+	} else {
+		t.Errorf("load text from word.txt , throw err:%v\n", err)
 	}
 }
 
