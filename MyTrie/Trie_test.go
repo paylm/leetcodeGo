@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -45,17 +46,17 @@ func Test_SearchWord(t *testing.T) {
 }
 
 func Test_DelWord(t *testing.T) {
-	tw := NewTrie("")
+	t1 := NewTrie("")
 	datas := []string{
 		"keys", "hello", "world", "hi", "word", "work", "words",
 	}
 	for _, s := range datas {
-		Insert(tw, s)
+		Insert(t1, s)
 	}
 
-	Del(tw, "wo")
+	fmt.Printf("del word:%v,ret :%v", "words", Del(t1, "words"))
 
-	case1 := Search(tw, "wo")
+	case1 := Search(t1, "wo")
 	if len(case1) == 0 {
 		t.Errorf("test fail , not found word %v\n", "wo")
 	} else {
