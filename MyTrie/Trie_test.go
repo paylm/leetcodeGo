@@ -23,7 +23,7 @@ func Test_InsertWord(t *testing.T) {
 func Test_SearchWord(t *testing.T) {
 	tw := NewTrie("")
 	datas := []string{
-		"keys", "hello", "world", "hi", "word",
+		"keys", "hello", "world", "hi", "word", "work", "words",
 	}
 	for _, s := range datas {
 		Insert(tw, s)
@@ -35,6 +35,25 @@ func Test_SearchWord(t *testing.T) {
 	} else {
 		t.Logf("test pass , foud to words :%v\n", res)
 	}
+
+	case1 := Search(tw, "wo")
+	if len(case1) == 0 {
+		t.Errorf("test fail , not found word %v\n", "wo")
+	} else {
+		t.Logf("test pass , foud to words :%v\n", case1)
+	}
+}
+
+func Test_DelWord(t *testing.T) {
+	tw := NewTrie("")
+	datas := []string{
+		"keys", "hello", "world", "hi", "word", "work", "words",
+	}
+	for _, s := range datas {
+		Insert(tw, s)
+	}
+
+	Del(tw, "wo")
 
 	case1 := Search(tw, "wo")
 	if len(case1) == 0 {
