@@ -28,6 +28,7 @@ func TestTire_Insert(t *testing.T) {
 	if contents, err := ioutil.ReadFile("word.txt"); err == nil {
 		//fmt.Printf("content:%v\n", string(contents))
 		text := strings.Replace(string(contents), "\n", "", -1)
+		text = strings.Replace(string(contents), ",", " ", -1)
 		strs := strings.ToLower(text)
 		strArr := strings.Split(strs, " ")
 		tw := NewTrie("")
@@ -46,6 +47,22 @@ func TestTire_Insert(t *testing.T) {
 		}
 	} else {
 		t.Errorf("load text from word.txt , throw err:%v\n", err)
+	}
+}
+
+func BenchmarkTrie_Insert(b *testing.B) {
+	if contents, err := ioutil.ReadFile("word.txt"); err == nil {
+		//fmt.Printf("content:%v\n", string(contents))
+		text := strings.Replace(string(contents), "\n", "", -1)
+		text = strings.Replace(string(contents), ",", " ", -1)
+		strs := strings.ToLower(text)
+		strArr := strings.Split(strs, " ")
+		tw := NewTrie("")
+		for i := 0; i < b.N; i++ {
+			for _, v := range strArr {
+				Insert(tw, v)
+			}
+		}
 	}
 }
 
@@ -70,6 +87,27 @@ func Test_SearchWord(t *testing.T) {
 		t.Errorf("test fail , not found word %v\n", "wo")
 	} else {
 		t.Logf("test pass , foud to words :%v\n", case1)
+	}
+}
+
+func BenchmarkTrie_Search(b *testing.B) {
+	if contents, err := ioutil.ReadFile("word.txt"); err == nil {
+		//fmt.Printf("content:%v\n", string(contents))
+		b.StopTimer()
+		text := strings.Replace(string(contents), "\n", "", -1)
+		text = strings.Replace(string(contents), ",", " ", -1)
+		strs := strings.ToLower(text)
+		strArr := strings.Split(strs, " ")
+		tw := NewTrie("")
+		for _, v := range strArr {
+			Insert(tw, v)
+		}
+		b.StartTimer()
+		for i := 0; i < b.N; i++ {
+			Search(tw, "wo")
+			Search(tw, "th")
+			Search(tw, "a")
+		}
 	}
 }
 
