@@ -129,3 +129,19 @@ func Test_DelWord(t *testing.T) {
 		t.Logf("test pass , foud to words :%v\n", case1)
 	}
 }
+
+func Test_CommonPrefix(t *testing.T) {
+	testcase := make(map[string][]string)
+	testcase["gee"] = []string{"geeksforgeeks", "geeks", "geek", "geezer"}
+	testcase["wo"] = []string{"work", "working", "word", "world", "wood"}
+
+	for k, v := range testcase {
+		res := commonPrefix(v)
+
+		if res == k {
+			t.Logf("test pass,%v commonPrefix is %v\n", v, k)
+		} else {
+			t.Errorf("test fail,%v commonPrefix is %v,but return %v\n", v, k, res)
+		}
+	}
+}

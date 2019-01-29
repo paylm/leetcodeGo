@@ -113,3 +113,25 @@ func Del(t *Trie, word string) error {
 	}
 	return nil
 }
+
+//公共字符的公共前缀
+func commonPrefix(strs []string) string {
+	//step 1 . add all string to trie
+	t := NewTrie("")
+	for _, s := range strs {
+		Insert(t, s)
+	}
+	//step 2 : find the childNode which has more than 1 childen
+	ct := t
+	reStrArr := []string{}
+	for {
+		if ct == nil || ct.size > 1 {
+			break
+		}
+		for _, mp := range ct.nexts {
+			ct = mp
+		}
+		reStrArr = append(reStrArr, ct.Key)
+	}
+	return strings.Join(reStrArr, "")
+}
