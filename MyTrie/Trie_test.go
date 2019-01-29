@@ -36,6 +36,7 @@ func TestTire_Insert(t *testing.T) {
 			Insert(tw, v)
 		}
 
+		t.Logf("total word :%d\n", countWord(tw))
 		for _, tag := range []string{"th", "da", "o"} {
 			res := Search(tw, tag)
 
@@ -142,6 +143,26 @@ func Test_CommonPrefix(t *testing.T) {
 			t.Logf("test pass,%v commonPrefix is %v\n", v, k)
 		} else {
 			t.Errorf("test fail,%v commonPrefix is %v,but return %v\n", v, k, res)
+		}
+	}
+}
+
+func Test_CountWord(t *testing.T) {
+	testcase := make(map[int][]string)
+	testcase[4] = []string{"geeksforgeeks", "geeks", "geek", "geezer"}
+	testcase[5] = []string{"work", "working", "word", "world", "wood"}
+
+	for k, v := range testcase {
+		tw := NewTrie("")
+		for _, s := range v {
+			Insert(tw, s)
+		}
+		count := countWord(tw)
+
+		if count == k {
+			t.Logf("test pass,%v has  %d word \n", v, k)
+		} else {
+			t.Errorf("test fail,%v has %d word ,but return %v\n", v, k, count)
 		}
 	}
 }

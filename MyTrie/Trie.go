@@ -135,3 +135,14 @@ func commonPrefix(strs []string) string {
 	}
 	return strings.Join(reStrArr, "")
 }
+
+func countWord(t *Trie) int {
+	count := 0
+	if t.isWord {
+		count++
+	}
+	for _, cT := range t.nexts {
+		count = count + countWord(cT)
+	}
+	return count
+}
