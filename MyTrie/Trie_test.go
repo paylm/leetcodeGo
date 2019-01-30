@@ -166,3 +166,25 @@ func Test_CountWord(t *testing.T) {
 		}
 	}
 }
+
+func Test_SuffixWord(t *testing.T) {
+	testcase := []string{"geek", "geek0", "geek1", "geek", "geek2"}
+	testres := []string{"geek", "geek0", "geek1", "geek2", "geek20"}
+	res := suffixWord(testcase)
+
+	if len(res) != len(testres) {
+		t.Logf("test fail , result count(%d) is less than awnser(%d)", len(res), len(testres))
+	}
+	//fmt.Printf("result:%v\n", res)
+	rSet := make(map[string]bool)
+	for _, k := range testres {
+		rSet[k] = true
+	}
+	//check resut
+	for _, r := range res {
+		_, ok := rSet[r]
+		if !ok {
+			t.Errorf("test fail, %s is not found in anwser %v\n", r, testres)
+		}
+	}
+}

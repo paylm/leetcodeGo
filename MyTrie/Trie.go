@@ -146,3 +146,36 @@ func countWord(t *Trie) int {
 	}
 	return count
 }
+
+//利用前缀树进行同名文件处理(abc,abb,abc,abc) to (abc,bbb,abc1,abc2)
+//https://www.geeksforgeeks.org/program-for-assigning-usernames-using-trie/
+func suffixWord(strs []string) []string {
+	tw := NewTrie("root")
+	//insert to trie , if found exist word , rename it to s1,s2,s3 ....
+	for _, w := range strs {
+		alpw := strings.Split(w, "")
+		alTw := tw
+		for _, cw := range alpw {
+			alItem, ok := alTw.nexts[cw]
+			if !ok {
+				alItem = NewTrie(cw)
+				alTw.size++
+				alTw.nexts[cw] = alItem
+				alTw = alItem
+			} else {
+				alTw = alItem
+			}
+		}
+		//fmt.Printf("end word:%s\n", alTw.Key)
+		if alTw.isWord {
+			temp := NewTrie(fmt.Sprintf("%d", alTw.size))
+			temp.isWord = true
+			//fmt.Printf("aready exist old value,insert duble item:%v\n", temp)
+			alTw.nexts[fmt.Sprintf("%d", alTw.size)] = temp
+			alTw.size++
+		} else {
+			alTw.isWord = true
+		}
+	}
+	return recurrence_Search(tw, "")
+}
