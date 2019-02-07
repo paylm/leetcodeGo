@@ -179,3 +179,22 @@ func suffixWord(strs []string) []string {
 	}
 	return recurrence_Search(tw, "")
 }
+
+func display(t *Trie, prefix string) {
+	if t == nil {
+		return
+	}
+
+	for _, s := range t.nexts {
+		sprefix := fmt.Sprintf("%s%s", prefix, s.Key)
+		if s.isWord {
+			fmt.Println(sprefix)
+		}
+		display(s, sprefix)
+	}
+}
+
+//output tire with format like a->b->c...z
+func sortDisplay(t *Trie, prefix string) {
+
+}
