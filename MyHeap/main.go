@@ -59,7 +59,7 @@ func testBSHeap() {
 	fmt.Println(CheckHeap(mp1.harr, 0))
 }
 
-func main() {
+func testBmHeap() {
 
 	bh := NewBinomialHeap()
 	bh.Push(1)
@@ -68,12 +68,12 @@ func main() {
 	bh.Push(8)
 	bh.Push(2)
 
-	traverseBheap(bh.head,0)
+	traverseBheap(bh.head, 0)
 
 	fmt.Println("pop the mix")
 	fmt.Println(bh.Pop())
 
-	traverseBheap(bh.head,0)
+	traverseBheap(bh.head, 0)
 
 	fmt.Println("test for peek")
 	fmt.Println(bh.Peek())
@@ -87,4 +87,8 @@ func main() {
 		fmt.Println("pop min => ")
 		fmt.Println(bh.Pop())
 	}
+}
+
+func main() {
+	testBmHeap()
 }
