@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -197,4 +198,29 @@ func display(t *Trie, prefix string) {
 //output tire with format like a->b->c...z
 func sortDisplay(t *Trie, prefix string) {
 
+	if t == nil {
+		return
+	}
+	newMp := []string{}
+	for _, w := range t.nexts {
+		newMp = append(newMp, w.Key)
+	}
+	sort.Strings(newMp)
+
+	for _, s := range newMp {
+		sprefix := fmt.Sprintf("%s%s", prefix, s)
+		st, _ := t.nexts[s]
+		if st.isWord {
+			fmt.Println(sprefix)
+		}
+		display(st, sprefix)
+	}
+}
+
+//对字符串和各字符进行排序输出
+func sortApl(word string) []string {
+
+	s := strings.Split(word, "")
+	sort.Strings(s)
+	return s
 }
