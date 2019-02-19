@@ -506,3 +506,26 @@ func (g *MyGraph) primQue() [][3]int {
 	}
 	return dist
 }
+
+//通过kruskal 返回最小生成树
+func (g *MyGraph) kruskal() {
+	//dj := NewDisjSet(g.vexnum)
+
+	egQue := NewMinEdgeHeap(g.vexnum * g.vexnum)
+	//step 1 , find all edgnum,and sort it
+	for i := 0; i < g.vexnum; i++ {
+		for j := 0; j < g.vexnum; j++ {
+			if g.AdjMatrix[i][j] != 0 {
+				fmt.Printf("add Edge:%d %d %d\n", g.AdjMatrix[i][j], i, j)
+				egQue.Push(NewEdge(g.AdjMatrix[i][j], i, j))
+			}
+		}
+	}
+
+	for {
+		if egQue.empty() {
+			break
+		}
+		fmt.Printf("min Edge:%v\n", egQue.Pop())
+	}
+}
