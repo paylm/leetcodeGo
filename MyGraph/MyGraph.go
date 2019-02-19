@@ -508,24 +508,33 @@ func (g *MyGraph) primQue() [][3]int {
 }
 
 //通过kruskal 返回最小生成树
-func (g *MyGraph) kruskal() {
-	//dj := NewDisjSet(g.vexnum)
-
-	egQue := NewMinEdgeHeap(g.vexnum * g.vexnum)
-	//step 1 , find all edgnum,and sort it
+func (g *MyGraph) kruskal() [][3]int {
+	dj := NewDisjSet(g.vexnum)
+	eDgeAccepted := 0
+	dist := [][3]int{}
+	edgeQue := NewMinEdgeHeap(g.vexnum * g.vexnum)
+	//step 1 , find all edgnum and push it to que
 	for i := 0; i < g.vexnum; i++ {
 		for j := 0; j < g.vexnum; j++ {
 			if g.AdjMatrix[i][j] != 0 {
-				fmt.Printf("add Edge:%d %d %d\n", g.AdjMatrix[i][j], i, j)
-				egQue.Push(NewEdge(g.AdjMatrix[i][j], i, j))
+				edgeQue.Push(NewEdge(g.AdjMatrix[i][j], i, j))
 			}
 		}
 	}
 
 	for {
-		if egQue.empty() {
+		if edgeQue.empty() || eDgeAccepted >= g.vexnum-1 {
 			break
 		}
-		fmt.Printf("min Edge:%v\n", egQue.Pop())
+		e := edgeQue.Pop()
+		//fmt.Printf("min Edge:%v\n", e)
+
+		if Find(dj, e.Src) != Find(dj, e.Dst) {
+			//fmt.Printf("DisjSet :%v,find(%d)=>%d,find(%d)=>%d\n", dj, e.Src, Find(dj, e.Src), e.Dst, Find(dj, e.Dst))
+			eDgeAccepted++
+			UnionSet(dj, e.Src, e.Dst)
+			dist = append(dist, [3]int{e.Src, e.Dst, e.Weigth})
+		}
 	}
+	return dist
 }

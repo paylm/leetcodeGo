@@ -12,6 +12,15 @@ func NewDisjSet(size int) DisjSet {
 
 //union by height
 func UnionSet(dj DisjSet, root1 int, root2 int) {
+	r1 := Find(dj, root1)
+	r2 := Find(dj, root2)
+	if r1 != r2 {
+		unionSet(dj, r1, r2)
+	}
+}
+
+func unionSet(dj DisjSet, root1 int, root2 int) {
+
 	if dj[root1] > dj[root2] {
 		dj[root1] = root2
 	} else {
@@ -23,7 +32,7 @@ func UnionSet(dj DisjSet, root1 int, root2 int) {
 }
 
 func Find(dj DisjSet, x int) int {
-	if dj[x] <= 0 {
+	if dj[x] < 0 {
 		return x
 	} else {
 		return Find(dj, dj[x])

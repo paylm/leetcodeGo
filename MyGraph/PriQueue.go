@@ -214,8 +214,8 @@ func gtEdge(e1 *Edge, e2 *Edge) bool {
 
 func swapEdge(e1 *Edge, e2 *Edge) {
 	tmp := *e1
-	*e2 = *e1
-	*e1 = tmp
+	*e1 = *e2
+	*e2 = tmp
 }
 
 func (mh *MaxEdegHeap) Push(e *Edge) {
@@ -235,8 +235,9 @@ func (mh *MaxEdegHeap) Pop() *Edge {
 
 	e := mh.eharr[0]
 	mh.eharr[0] = mh.eharr[mh.heap_size-1]
-	mh.shiftDown(0)
+	mh.eharr[mh.heap_size-1] = nil
 	mh.heap_size--
+	mh.shiftDown(0)
 	return e
 }
 
