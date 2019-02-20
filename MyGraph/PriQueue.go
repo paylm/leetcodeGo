@@ -32,6 +32,19 @@ func NewMinHeap(capacity int) *MinHeap {
 	return mp
 }
 
+//边
+type Edge struct {
+	Weigth int
+	Src    int
+	Dst    int
+}
+
+type MaxEdegHeap struct {
+	eharr     []*Edge
+	capacity  int
+	heap_size int
+}
+
 func parentId(i int) int {
 	return (i - 1) / 2
 }
@@ -169,7 +182,98 @@ func NewElement(w int) *Element {
   return  e1 > e1
 **/
 func ltElement(e1, e2 *Element) bool {
-	if e1.Weigth < e2.Weigth {
+	if e1.Weigth <= e2.Weigth {
+		return true
+	}
+	return false
+}
+
+func NewEdge(weight int, src int, dst int) *Edge {
+	e := new(Edge)
+	e.Weigth = weight
+	e.Src = src
+	e.Dst = dst
+	return e
+}
+
+func NewMinEdgeHeap(size int) *MaxEdegHeap {
+	eheap := new(MaxEdegHeap)
+	eheap.eharr = make([]*Edge, size)
+	eheap.capacity = size
+	eheap.heap_size = 0
+	return eheap
+}
+
+func gtEdge(e1 *Edge, e2 *Edge) bool {
+	if e1.Weigth > e2.Weigth {
+		return true
+	} else {
+		return false
+	}
+}
+
+func swapEdge(e1 *Edge, e2 *Edge) {
+	tmp := *e1
+	*e1 = *e2
+	*e2 = tmp
+}
+
+func (mh *MaxEdegHeap) Push(e *Edge) {
+	if mh.heap_size >= mh.capacity {
+		fmt.Printf("heap is full")
+		return
+	}
+	mh.eharr[mh.heap_size] = e
+	mh.shiftUp(mh.heap_size)
+	mh.heap_size++
+}
+
+func (mh *MaxEdegHeap) Pop() *Edge {
+	if mh.heap_size == 0 {
+		return nil
+	}
+
+	e := mh.eharr[0]
+	mh.eharr[0] = mh.eharr[mh.heap_size-1]
+	mh.eharr[mh.heap_size-1] = nil
+	mh.heap_size--
+	mh.shiftDown(0)
+	return e
+}
+
+func (mh *MaxEdegHeap) shiftUp(i int) {
+
+	if i == 0 {
+		return
+	}
+	parent := parentId(i)
+	if gtEdge(mh.eharr[parent], mh.eharr[i]) {
+		swapEdge(mh.eharr[i], mh.eharr[parent])
+		mh.shiftUp(parent)
+	}
+}
+
+func (mh *MaxEdegHeap) shiftDown(i int) {
+
+	left := leftId(i)
+	right := rightId(i)
+	min := i //ex 为待交换点index
+
+	if left < mh.heap_size && gtEdge(mh.eharr[i], mh.eharr[left]) {
+		min = left
+	}
+	if right < mh.heap_size && gtEdge(mh.eharr[min], mh.eharr[right]) {
+		min = right
+	}
+	//fmt.Printf("i:%d,min:%d,left:%d,right:%d\n",i,min,left,right)
+	if i != min {
+		swapEdge(mh.eharr[i], mh.eharr[min])
+		mh.shiftDown(min)
+	}
+}
+
+func (mh *MaxEdegHeap) empty() bool {
+	if mh.heap_size == 0 {
 		return true
 	}
 	return false
