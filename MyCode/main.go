@@ -278,4 +278,8 @@ func main() {
 	fmt.Println("test for MergeSort")
 	arr := []int{5, 1, 9, 6, 11, 3, 30, 0, -1}
 	MergeSort(arr)
+
+	fmt.Println("------fib-------")
+	fmt.Println(fib(7))
+	fmt.Println(fib(15))
 }

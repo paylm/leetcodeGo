@@ -23,9 +23,7 @@ func Test_TopKFrequent_1(t *testing.T) {
 			t.Fail()
 		}
 
-		if compareArr(res, data.ans) {
-			t.Logf("test pass at %d, input:%v,output:%v,corret:%v\n", ti, data.arr, res, data.ans)
-		} else {
+		if compareArr(res, data.ans) == false {
 			t.Errorf("test fail at %d, input:%v,output:%v,corret:%v\n", ti, data.arr, res, data.ans)
 		}
 	}
