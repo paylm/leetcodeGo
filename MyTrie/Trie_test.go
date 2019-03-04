@@ -188,3 +188,15 @@ func Test_SuffixWord(t *testing.T) {
 		}
 	}
 }
+
+func Test_SortWord(t *testing.T) {
+	var tt string
+	tt = "bdacz"
+	tres := []string{"a", "b", "c", "d", "z"}
+	res := sortApl(tt)
+	for i, w := range res {
+		if tres[i] != w {
+			t.Errorf("test fail, %d => %s not eq %s\n", i, tres[i], w)
+		}
+	}
+}

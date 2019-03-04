@@ -305,4 +305,6 @@ func main() {
 		g2.addCyEdge(p[0], p[1], p[2])
 	}
 	g2.show()
+	fmt.Printf("prime res:%v\n", g1.primQue())
+	fmt.Printf("kruskal res:%v\n", g1.kruskal())
 }

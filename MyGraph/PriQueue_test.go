@@ -63,7 +63,7 @@ func TestMinHeap_Pop(t *testing.T) {
 			t.Errorf("test fail , pop out nil ,err:%v\n", err)
 		}
 		if e.Weigth > i {
-			t.Logf("test pass , pop min:%v\n", e)
+			//		t.Logf("test pass , pop min:%v\n", e)
 			i = e.Weigth
 		} else {
 			t.Errorf("test fail , pop min(%v) is great than last,", e)
@@ -91,5 +91,38 @@ func TestMinHeap_DecreseKey(t *testing.T) {
 		t.Logf("test pass ,min head %v\n", res)
 	} else {
 		t.Errorf("test fail, min pop (%v) is not corret\n", res)
+	}
+}
+
+func Test_SwapEdge(t *testing.T) {
+	e1 := NewEdge(6, 4, 2)
+	e2 := NewEdge(5, 2, 1)
+	swapEdge(e1, e2)
+	if e1.Weigth == 6 {
+		t.Errorf("test fail e1:%v\n", e1)
+	}
+	if e2.Weigth == 5 {
+		t.Errorf("test fail e2:%v\n", e2)
+	}
+}
+
+func TestMinEdge_Push(t *testing.T) {
+	mhp := NewMinEdgeHeap(6)
+	for i := 6; i > 0; i-- {
+		mhp.Push(NewEdge(i, 1, i+1))
+	}
+
+	k := 0
+	for {
+		if mhp.empty() {
+			break
+		}
+		e := mhp.Pop()
+		//t.Logf("e:%v,%p\n", e, e)
+		if e.Weigth >= k {
+			k = e.Weigth
+		} else {
+			t.Errorf("test fail, %v < %d\n", e, k)
+		}
 	}
 }
