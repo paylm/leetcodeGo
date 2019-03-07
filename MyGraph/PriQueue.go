@@ -57,7 +57,7 @@ func rightId(i int) int {
 	return i*2 + 2
 }
 
-//todo ... update i
+//todo ... update i testInput
 func Swap(a *Element, b *Element) {
 	//fmt.Printf("swap %v %v\n", a, b)
 	temp := *b
