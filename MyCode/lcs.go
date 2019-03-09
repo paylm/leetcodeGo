@@ -165,3 +165,53 @@ func fib(i int) []int {
 	}
 	return arr
 }
+
+/**
+给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+candidates 中的数字可以无限制重复被选取。
+
+说明：
+
+所有数字（包括 target）都是正整数。
+解集不能包含重复的组合。
+**/
+func combinationSum(candidates []int, target int) [][]int {
+	//fmt.Printf("candidates:%v,target:%d\n", candidates, target)
+	res := [][]int{}
+	sort3Parttion(candidates, 0, len(candidates)-1)
+	for i := 0; i < len(candidates); i++ {
+		if target == candidates[i] {
+			//fmt.Printf("found a soution: %v i:%d target:%d\n", candidates, i, target)
+			res = append(res, []int{candidates[i]})
+			continue
+		}
+		if target < candidates[i] {
+			break
+		}
+		//fmt.Printf("i:%d\n", i)
+		res = append(res, combinationx(candidates, target-candidates[i], i, []int{candidates[i]})...)
+	}
+	//fmt.Println(res)
+	return res
+}
+
+func combinationx(candidates []int, target int, idx int, temp []int) [][]int {
+
+	res := [][]int{}
+	for i := idx; i < len(candidates); i++ {
+		if target == candidates[i] {
+			//	fmt.Printf("found a soution: %v i:%d target:%d ,idx:%d,temp:%v\n", candidates, i, target, idx, append(temp, candidates[i]))
+			//改用copy复制形式，以防后面引用对象修改原始答案
+			tgarr := make([]int, len(temp)+1)
+			copy(tgarr, temp)
+			tgarr[len(temp)] = candidates[i]
+			res = append(res, tgarr)
+			continue
+		}
+		if target < candidates[i] {
+			break
+		}
+		res = append(res, combinationx(candidates, target-candidates[i], i, append(temp, candidates[i]))...)
+	}
+	return res
+}

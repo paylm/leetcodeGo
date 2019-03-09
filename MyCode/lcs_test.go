@@ -46,6 +46,7 @@ func Test_CommonSubArr(t *testing.T) {
 	}
 }
 
+/**
 func Test_CommonSubArr1(t *testing.T) {
 	data := []struct {
 		w1  string
@@ -70,6 +71,7 @@ func Test_CommonSubArr1(t *testing.T) {
 		}
 	}
 }
+**/
 
 func Test_OptArr(t *testing.T) {
 	data := []struct {
@@ -89,4 +91,33 @@ func Test_OptArr(t *testing.T) {
 		}
 	}
 
+}
+
+func Test_CombinationSum(t *testing.T) {
+	data := []struct {
+		arr    []int
+		target int
+		res    [][]int
+	}{
+		{arr: []int{2, 3, 6, 7}, target: 7, res: [][]int{{7}, {2, 2, 3}}},
+		{arr: []int{2, 3, 5}, target: 8, res: [][]int{{2, 2, 2, 2}, {2, 3, 3}, {3, 5}}},
+		{arr: []int{7, 8, 3, 4}, target: 11, res: [][]int{{3, 4, 4}, {3, 8}, {4, 7}}},
+		{arr: []int{7, 3, 2}, target: 18, res: [][]int{{2, 2, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 3, 3}, {2, 2, 2, 2, 3, 7}, {2, 2, 2, 3, 3, 3, 3}, {2, 2, 7, 7}, {2, 3, 3, 3, 7}, {3, 3, 3, 3, 3, 3}}},
+	}
+	for _, d := range data {
+		testres := combinationSum(d.arr, d.target)
+		if len(testres) != len(d.res) {
+			t.Errorf("test fail ,return %v\n", testres)
+		}
+		for _, ires := range testres {
+
+			k := 0
+			for _, v := range ires {
+				k = k + v
+			}
+			if k != d.target {
+				t.Errorf("test fail @ %v, target :%d , return :%v\n", d.arr, d.target, ires)
+			}
+		}
+	}
 }
