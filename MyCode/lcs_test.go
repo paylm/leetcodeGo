@@ -166,3 +166,20 @@ func Test_DominantIndex(t *testing.T) {
 		}
 	}
 }
+
+func Test_MaxSubArray(t *testing.T) {
+
+	data := []struct {
+		nums   []int
+		target int
+	}{
+		{nums: []int{-2, 1, -3, 4, -1, 2, 1, -5, 4}, target: 6},
+		{nums: []int{2, -3}, target: 2},
+	}
+	for _, d := range data {
+		ret := maxSubArray(d.nums)
+		if ret != d.target {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d.nums, d.target, ret)
+		}
+	}
+}
