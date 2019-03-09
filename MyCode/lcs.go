@@ -215,3 +215,135 @@ func combinationx(candidates []int, target int, idx int, temp []int) [][]int {
 	}
 	return res
 }
+
+/***
+给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+candidates 中的每个数字在每个组合中只能使用一次。
+
+说明：
+
+所有数字（包括目标数）都是正整数。
+解集不能包含重复的组合。
+示例 1:
+
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+所求解集为:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+示例 2:
+
+输入: candidates = [2,5,2,1,2], target = 5,
+所求解集为:
+[
+  [1,2,2],
+  [5]
+]
+**/
+
+func combinationSum2(candidates []int, target int) [][]int {
+	res := [][]int{}
+	sort3Parttion(candidates, 0, len(candidates)-1)
+	for i := 0; i < len(candidates); i++ {
+		if target == candidates[i] {
+			res = append(res, []int{candidates[i]})
+		}
+		if candidates[i] > target {
+			break
+		}
+
+		res = append(res, combinationx2(candidates, target-candidates[i], i+1, []int{candidates[i]})...)
+	}
+	//fmt.Printf("res:%v\n", res)
+	return uniqueArr(res)
+}
+
+func combinationx2(candidates []int, target int, idx int, temp []int) [][]int {
+	res := [][]int{}
+	for i := idx; i < len(candidates); i++ {
+		if target == candidates[i] {
+			//fmt.Printf("found a sultion:%v\n", append(temp, candidates[i]))
+			tgarr := make([]int, len(temp)+1)
+			copy(tgarr, temp)
+			tgarr[len(temp)] = candidates[i]
+			res = append(res, tgarr)
+			continue
+		}
+		if target < candidates[i] {
+			break
+		}
+		res = append(res, combinationx2(candidates, target-candidates[i], i+1, append(temp, candidates[i]))...)
+	}
+	return res
+}
+
+func uniqueArr(src [][]int) [][]int {
+	uqMap := make(map[string]int)
+	res := [][]int{}
+	for _, iarr := range src {
+		key := ""
+		for _, k := range iarr {
+			key = fmt.Sprintf("%s%d", key, k)
+		}
+		_, ok := uqMap[key]
+		if !ok {
+			uqMap[key] = 1
+			res = append(res, iarr)
+		}
+	}
+	return res
+}
+
+/**
+https://leetcode-cn.com/problems/largest-number-at-least-twice-of-others/
+在一个给定的数组nums中，总是存在一个最大元素 。
+
+查找数组中的最大元素是否至少是数组中每个其他数字的两倍。
+
+如果是，则返回最大元素的索引，否则返回-1。
+
+示例 1:
+
+输入: nums = [3, 6, 1, 0]
+输出: 1
+解释: 6是最大的整数, 对于数组中的其他整数,
+6大于数组中其他元素的两倍。6的索引是1, 所以我们返回1.
+
+
+示例 2:
+
+输入: nums = [1, 2, 3, 4]
+输出: -1
+解释: 4没有超过3的两倍大, 所以我们返回 -1.
+
+**/
+func dominantIndex(nums []int) int {
+	if len(nums) == 1 {
+		return 0
+	}
+	res := 1
+	max := nums[0]
+	max_i := 0
+	for i := 1; i < len(nums); i++ {
+		if max < nums[i] {
+			if max*2 <= nums[i] {
+				res = 1
+			} else {
+				res = -1
+			}
+			max = nums[i]
+			max_i = i
+		} else if max < nums[i]*2 {
+			res = -1
+		}
+	}
+	if res == -1 {
+		return res
+	}
+
+	return max_i
+}

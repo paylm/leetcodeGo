@@ -121,3 +121,48 @@ func Test_CombinationSum(t *testing.T) {
 		}
 	}
 }
+
+func Test_CombinationSum2(t *testing.T) {
+	data := []struct {
+		arr    []int
+		target int
+		res    [][]int
+	}{
+		{arr: []int{10, 1, 2, 7, 6, 1, 5}, target: 8, res: [][]int{{1, 7}, {1, 2, 5}, {2, 6}, {1, 1, 6}}},
+		{arr: []int{2, 5, 2, 1, 2}, target: 5, res: [][]int{{1, 2, 2}, {5}}},
+	}
+	for _, d := range data {
+		testres := combinationSum2(d.arr, d.target)
+		if len(testres) != len(d.res) {
+			t.Errorf("test fail ,return %v\n", testres)
+		}
+		for _, ires := range testres {
+
+			k := 0
+			for _, v := range ires {
+				k = k + v
+			}
+			if k != d.target {
+				t.Errorf("test fail @ %v, target :%d , return :%v\n", d.arr, d.target, ires)
+			}
+		}
+	}
+}
+
+func Test_DominantIndex(t *testing.T) {
+	data := []struct {
+		nums   []int
+		target int
+	}{
+		{nums: []int{3, 6, 1, 0}, target: 1},
+		{nums: []int{1, 2, 3, 4}, target: -1},
+		{nums: []int{1, 0}, target: 0},
+		{nums: []int{0, 0, 3, 2}, target: -1},
+	}
+	for _, d := range data {
+		ret := dominantIndex(d.nums)
+		if ret != d.target {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d.nums, d.target, ret)
+		}
+	}
+}
