@@ -46,6 +46,7 @@ func Test_CommonSubArr(t *testing.T) {
 	}
 }
 
+/**
 func Test_CommonSubArr1(t *testing.T) {
 	data := []struct {
 		w1  string
@@ -70,6 +71,7 @@ func Test_CommonSubArr1(t *testing.T) {
 		}
 	}
 }
+**/
 
 func Test_OptArr(t *testing.T) {
 	data := []struct {
@@ -89,4 +91,95 @@ func Test_OptArr(t *testing.T) {
 		}
 	}
 
+}
+
+func Test_CombinationSum(t *testing.T) {
+	data := []struct {
+		arr    []int
+		target int
+		res    [][]int
+	}{
+		{arr: []int{2, 3, 6, 7}, target: 7, res: [][]int{{7}, {2, 2, 3}}},
+		{arr: []int{2, 3, 5}, target: 8, res: [][]int{{2, 2, 2, 2}, {2, 3, 3}, {3, 5}}},
+		{arr: []int{7, 8, 3, 4}, target: 11, res: [][]int{{3, 4, 4}, {3, 8}, {4, 7}}},
+		{arr: []int{7, 3, 2}, target: 18, res: [][]int{{2, 2, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 3, 3}, {2, 2, 2, 2, 3, 7}, {2, 2, 2, 3, 3, 3, 3}, {2, 2, 7, 7}, {2, 3, 3, 3, 7}, {3, 3, 3, 3, 3, 3}}},
+	}
+	for _, d := range data {
+		testres := combinationSum(d.arr, d.target)
+		if len(testres) != len(d.res) {
+			t.Errorf("test fail ,return %v\n", testres)
+		}
+		for _, ires := range testres {
+
+			k := 0
+			for _, v := range ires {
+				k = k + v
+			}
+			if k != d.target {
+				t.Errorf("test fail @ %v, target :%d , return :%v\n", d.arr, d.target, ires)
+			}
+		}
+	}
+}
+
+func Test_CombinationSum2(t *testing.T) {
+	data := []struct {
+		arr    []int
+		target int
+		res    [][]int
+	}{
+		{arr: []int{10, 1, 2, 7, 6, 1, 5}, target: 8, res: [][]int{{1, 7}, {1, 2, 5}, {2, 6}, {1, 1, 6}}},
+		{arr: []int{2, 5, 2, 1, 2}, target: 5, res: [][]int{{1, 2, 2}, {5}}},
+	}
+	for _, d := range data {
+		testres := combinationSum2(d.arr, d.target)
+		if len(testres) != len(d.res) {
+			t.Errorf("test fail ,return %v\n", testres)
+		}
+		for _, ires := range testres {
+
+			k := 0
+			for _, v := range ires {
+				k = k + v
+			}
+			if k != d.target {
+				t.Errorf("test fail @ %v, target :%d , return :%v\n", d.arr, d.target, ires)
+			}
+		}
+	}
+}
+
+func Test_DominantIndex(t *testing.T) {
+	data := []struct {
+		nums   []int
+		target int
+	}{
+		{nums: []int{3, 6, 1, 0}, target: 1},
+		{nums: []int{1, 2, 3, 4}, target: -1},
+		{nums: []int{1, 0}, target: 0},
+		{nums: []int{0, 0, 3, 2}, target: -1},
+	}
+	for _, d := range data {
+		ret := dominantIndex(d.nums)
+		if ret != d.target {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d.nums, d.target, ret)
+		}
+	}
+}
+
+func Test_MaxSubArray(t *testing.T) {
+
+	data := []struct {
+		nums   []int
+		target int
+	}{
+		{nums: []int{-2, 1, -3, 4, -1, 2, 1, -5, 4}, target: 6},
+		{nums: []int{2, -3}, target: 2},
+	}
+	for _, d := range data {
+		ret := maxSubArray(d.nums)
+		if ret != d.target {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d.nums, d.target, ret)
+		}
+	}
 }
