@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -371,6 +372,155 @@ func maxSubArray(nums []int) int {
 		maxVal = max(maxVal, res[i])
 	}
 
-	fmt.Printf("res:%v\n", res)
+	//fmt.Printf("res:%v\n", res)
 	return maxVal
+}
+
+/**
+https://leetcode-cn.com/problems/3sum/
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+
+注意：答案中不可以包含重复的三元组。
+
+例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+满足要求的三元组集合为：
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+**/
+
+func threeSum(nums []int) [][]int {
+	sort.Ints(nums)
+	res := [][]int{}
+	visit := make(map[string]bool)
+	//fmt.Printf("after sort:%v\n", nums)
+	for i := 0; i < len(nums); i++ {
+		//防止重复计算
+		if i > 1 && nums[i] == nums[i-1] {
+			continue
+		}
+
+		s, l := i+1, len(nums)-1
+		for ; s < l; s++ {
+			k := nums[i] + nums[s]
+			_, ok := visit[fmt.Sprintf("%d|%d", nums[i], nums[s])]
+			if !ok {
+				visit[fmt.Sprintf("%d|%d", nums[i], nums[s])] = true
+			} else {
+				continue
+			}
+			il := l
+			for {
+				if il <= s {
+					break
+				}
+				if -k == nums[il] {
+					res = append(res, []int{nums[i], nums[s], nums[il]})
+					l = il
+					break
+				}
+				il--
+			}
+		}
+	}
+	//fmt.Printf("res:%v,visit:%v\n", res, visit)
+	return uniqueArr(res)
+}
+
+func threeSum1(nums []int) [][]int {
+	res := [][]int{}
+	visit := make(map[string]bool)
+	sort.Ints(nums)
+	//fmt.Println("nums:", nums)
+	for i := 0; i < len(nums); i++ {
+		//防止重复计算
+		if i > 1 && nums[i] == nums[i-1] {
+			continue
+		}
+		for j := i + 1; j < len(nums); j++ {
+			_, ok := visit[fmt.Sprintf("%d|%d", nums[i], nums[j])]
+			if !ok {
+				visit[fmt.Sprintf("%d|%d", nums[i], nums[j])] = true
+			} else {
+				continue
+			}
+			e := res_threeSum(nums, j+1, nums[i]+nums[j], []int{nums[i], nums[j]})
+			if e != nil {
+				res = append(res, e)
+			}
+		}
+	}
+	//fmt.Printf("res:%v,visit:%v\n", res, visit)
+	//return uniqueArr(res)
+	fmt.Printf("res:%v\n", res)
+	return res
+}
+
+func res_threeSum(nums []int, idx int, target int, temp []int) []int {
+	for i := len(nums) - 1; i >= idx; i-- {
+		if nums[i]+target == 0 {
+			//fmt.Printf("found a result:%v\n", target)
+			return append(temp, nums[i])
+		}
+	}
+	return nil
+}
+
+/**
+https://leetcode-cn.com/problems/longest-common-prefix/
+编写一个函数来查找字符串数组中的最长公共前缀。
+
+如果不存在公共前缀，返回空字符串 ""。
+
+示例 1:
+
+输入: ["flower","flow","flight"]
+输出: "fl"
+示例 2:
+
+输入: ["dog","racecar","car"]
+输出: ""
+解释: 输入不存在公共前缀。
+说明:
+
+所有输入只包含小写字母 a-z 。
+**/
+func longestCommonPrefix(strs []string) string {
+
+	if len(strs) < 1 {
+		return ""
+	}
+	if len(strs) < 2 {
+		return strs[0]
+	}
+	res := strings.Split(strs[0], "")
+	for i := 1; i < len(strs); i++ {
+		res = comStr(res, strings.Split(strs[i], ""))
+		if len(res) == 0 {
+			return ""
+		}
+	}
+	return strings.Join(res, "")
+}
+
+//str1
+func comStr(str1 []string, str2 []string) []string {
+	var ks1, ks2 []string
+	if len(str1) < len(str2) {
+		ks1 = str1
+		ks2 = str2
+	} else {
+		ks1 = str2
+		ks2 = str1
+	}
+	for i := 0; i < len(ks1); i++ {
+		//fmt.Printf("compare %s <=>%s \n", ks1[i], ks2[i])
+		if strings.Compare(ks1[i], ks2[i]) != 0 {
+			//fmt.Printf("ks1:%v,i:%d\n", ks1[:i], i)
+			return ks1[:i]
+		}
+	}
+	return ks1
 }
