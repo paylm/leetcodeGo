@@ -235,3 +235,39 @@ func Test_LongestCommonPrefix(t *testing.T) {
 		}
 	}
 }
+
+func Test_IntegerBreak(t *testing.T) {
+
+	data := []struct {
+		input  int
+		output int
+	}{
+		{input: 2, output: 1},
+		{input: 10, output: 36},
+		{input: 5, output: 6},
+		{input: 6, output: 9},
+	}
+	for _, d := range data {
+		ret := integerBreak(d.input)
+		if ret != d.output {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d, d.output, ret)
+		}
+	}
+}
+
+func Test_ClimbStairs(t *testing.T) {
+
+	data := []struct {
+		input  int
+		output int
+	}{
+		{input: 2, output: 2},
+		{input: 3, output: 3},
+	}
+	for _, d := range data {
+		ret := climbStairs(d.input)
+		if ret != d.output {
+			t.Errorf("test fail , %v should be %d , but return %d\n", d, d.output, ret)
+		}
+	}
+}

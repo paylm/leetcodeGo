@@ -524,3 +524,83 @@ func comStr(str1 []string, str2 []string) []string {
 	}
 	return ks1
 }
+
+/***
+https://leetcode-cn.com/problems/climbing-stairs/
+假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
+每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+注意：给定 n 是一个正整数。
+**/
+func climbStairs1(n int) int {
+	//此方法递归入stack 太低率，有重复计算的情况
+	if n == 0 {
+		//fmt.Printf("found a path\n")
+		return 1
+	}
+
+	k := 0
+
+	if n >= 1 {
+		k = k + climbStairs1(n-1)
+	}
+
+	if n >= 2 {
+		k = k + climbStairs1(n-2)
+	}
+	return k
+}
+
+func climbStairs(n int) int {
+	if n == 1 {
+		return 1
+	}
+	if n == 2 {
+		return 2
+	}
+	arr := make([]int, n)
+	arr[0] = 1
+	arr[1] = 2
+	for i := 2; i < n; i++ {
+		arr[i] = arr[i-2] + arr[i-1]
+	}
+	return arr[n-1]
+}
+
+/**
+https://leetcode-cn.com/problems/integer-break/
+给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+
+示例 1:
+
+输入: 2
+输出: 1
+解释: 2 = 1 + 1, 1 × 1 = 1。
+示例 2:
+
+输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36。
+说明: 你可以假设 n 不小于 2 且不大于 58。
+**/
+func integerBreak(n int) int {
+	//由数学计算公式推度出,拆分为 3  4  2  这些数值时乘积最大，优先获分为3 ， 不能拆分出1
+	if n == 2 {
+		return 1
+	}
+	if n == 3 {
+		return 2
+	}
+
+	ret := 1
+	for {
+		if n > 4 {
+			ret = ret * 3
+			n = n - 3
+		} else {
+			ret = ret * n
+			break
+		}
+	}
+
+	return ret
+}
