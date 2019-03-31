@@ -94,3 +94,64 @@ func FindRoot(r []int, i int) int {
 		return FindRoot(r, r[i])
 	}
 }
+
+/**
+https://leetcode-cn.com/problems/surrounded-regions/
+给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
+
+找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+
+示例:
+
+X X X X
+X O O X
+X X O X
+X O X X
+运行你的函数后，矩阵变为：
+
+X X X X
+X X X X
+X X X X
+X O X X
+
+**/
+func solve(board [][]byte) {
+	bvisit := make([][]bool, len(board))
+	for i := 0; i < len(board); i++ {
+		bvisit[i] = make([]bool, len(board[i]))
+	}
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[i]); j++ {
+			if i == 0 || i == len(board)-1 || j == 0 || j == len(board[0])-1 {
+				//first and last line
+				if bvisit[i][j] == false {
+					search(board, bvisit, i, j)
+				}
+			}
+		}
+	}
+	// set default value
+	for i := 0; i < len(board); i++ {
+		for j := 0; j < len(board[i]); j++ {
+			if bvisit[i][j] == false {
+				board[i][j] = 'X'
+			}
+		}
+	}
+}
+
+func search(board [][]byte, bvisit [][]bool, i int, j int) {
+	if i < 0 || i >= len(board) || j < 0 || j >= len(board[0]) {
+		return
+	}
+	if bvisit[i][j] {
+		return
+	}
+	if board[i][j] == 'O' {
+		bvisit[i][j] = true
+		search(board, bvisit, i-1, j)
+		search(board, bvisit, i+1, j)
+		search(board, bvisit, i, j-1)
+		search(board, bvisit, i, j+1)
+	}
+}
