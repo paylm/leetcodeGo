@@ -25,6 +25,7 @@ func Test_MajorityElement(t *testing.T) {
 		{input: []int{3, 2, 3}, output: []int{3}},
 		{input: []int{1, 1, 1, 3, 3, 2, 2, 2}, output: []int{1, 2}},
 		{input: []int{1, 1}, output: []int{1}},
+		{input: []int{0, 0, 0}, output: []int{0}},
 	}
 	for _, v := range data {
 		ret := majorityElement(v.input)

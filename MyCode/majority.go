@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 /**
 求众数
 数组出现次数大于为 n/2
@@ -50,34 +48,38 @@ func majorityElement(nums []int) []int {
 	ret := []int{}
 	var majority1, majority2 int
 	count1, count2 := 0, 0
+	//投票处理后剩下的数字majority1 majority2
 	for i := 0; i < len(nums); i++ {
-		if count1 == 0 {
-			majority1 = nums[i]
-			count1++
-			continue
-		} else if count2 == 0 && nums[i] != majority1 {
-			majority2 = nums[i]
-			count2++
-			continue
-		}
 		if nums[i] == majority1 {
 			count1++
-			continue
-		} else {
-			count1--
-		}
-
-		if nums[i] == majority2 {
+		} else if nums[i] == majority2 {
+			count2++
+		} else if count1 == 0 {
+			majority1 = nums[i]
+			count1++
+		} else if count2 == 0 {
+			majority2 = nums[i]
 			count2++
 		} else {
+			count1--
 			count2--
 		}
 	}
-	fmt.Printf("majority1:%d,count1:%d,majority2:%d,count2:%d\n", majority1, count1, majority2, count2)
-	if count1 > 0 {
+	//fmt.Printf("majority1:%d,count1:%d,majority2:%d,count2:%d\n", majority1, count1, majority2, count2)
+	count1 = 0
+	count2 = 0
+	//重新计数拿出元素的出现次数
+	for i := 0; i < len(nums); i++ {
+		if nums[i] == majority1 {
+			count1++
+		} else if nums[i] == majority2 {
+			count2++
+		}
+	}
+	if count1 > len(nums)/3 {
 		ret = append(ret, majority1)
 	}
-	if count2 > 0 {
+	if count2 > len(nums)/3 {
 		ret = append(ret, majority2)
 	}
 	return ret
