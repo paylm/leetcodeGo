@@ -48,3 +48,76 @@ func setZeroes(matrix [][]int) {
 		}
 	}
 }
+
+/**
+https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+在排序数组中查找元素的第一个和最后一个位置
+给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+
+你的算法时间复杂度必须是 O(log n) 级别。
+
+如果数组中不存在目标值，返回 [-1, -1]。
+
+示例 1:
+
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: [3,4]
+**/
+func searchRange(nums []int, target int) []int {
+	if len(nums) == 0 {
+		return []int{-1, -1}
+	}
+	s, e := 0, len(nums)
+	var m int
+	for {
+		if s >= e {
+			m = s
+			break
+		}
+		if nums[s] == target {
+			m = s
+			break
+		}
+		m = (s + e) / 2
+		if nums[m] == target {
+			break
+		}
+		if nums[m] > target {
+			e = m - 1
+		} else if nums[m] < target {
+			s = m + 1
+		}
+
+	}
+
+	//fmt.Printf("s:%d,e:%dm = %d =>%d ,data =  %v\n", s, e, m, nums[m], nums)
+	if m == len(nums) || nums[m] != target {
+		return []int{-1, -1}
+	}
+
+	i, j, k := m, m, m
+	res := []int{}
+	for {
+		if i-1 < 0 {
+			break
+		}
+		if nums[i] != target {
+			break
+		}
+		j = i
+		i--
+	}
+	res = append(res, j)
+
+	for {
+		if k+1 > len(nums) {
+			break
+		}
+		if nums[k] != target {
+			break
+		}
+		k++
+	}
+	res = append(res, k-1)
+	return res
+}
