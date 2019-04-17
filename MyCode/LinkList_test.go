@@ -24,10 +24,10 @@ func Test_SortList(t *testing.T) {
 		c = c.Next
 	}
 
-	tdata2 := NewListNode(1)
-	tdata2.Next = NewListNode(2)
-	tdata2.Next.Next = NewListNode(3)
-	tdata2.Next.Next.Next = NewListNode(4)
+	tdata2 := NewListNode(6)
+	tdata2.Next = NewListNode(7)
+	tdata2.Next.Next = NewListNode(8)
+	tdata2.Next.Next.Next = NewListNode(9)
 
 	res2 := sortList(tdata2)
 	v2 := res2.Val

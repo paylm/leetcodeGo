@@ -42,8 +42,8 @@ func sortList(head *ListNode) *ListNode {
 	tls := make([]*ListNode, len(ls))
 	mergerSortList(ls, tls, 0, len(ls)-1)
 
-	fmt.Printf("sortList\n")
-	showLinkArr(ls)
+	//fmt.Printf("sortList\n")
+	//showLinkArr(ls)
 	for i := 1; i < len(ls); i++ {
 		ls[i-1].Next = ls[i]
 	}
@@ -62,14 +62,21 @@ func mergerSortList(ls []*ListNode, tls []*ListNode, start int, end int) {
 }
 
 func sortMerge(ls []*ListNode, tls []*ListNode, start int, mid int, end int) {
+	i, j, k := start, start, mid
+	/**
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Printf("i:%d,j:%d,k:%d\nerr:%v\n", i, j, k, err)
+		}
+	}()
+	**/
 	//fmt.Printf("sortMerge ls:%v,start:%d,mid:%d,end:%d\n", ls, start, mid, end)
 	//showLinkArr(ls)
 	if start >= end {
 		return
 	}
-	i, j, k := start, start, mid
 	for {
-		if j > mid || k > end {
+		if j >= mid || k > end {
 			break
 		}
 		//fmt.Printf("j:%d,ls[j]:%v,k:%d,ls[k]:%v\n", j, ls[j], k, ls[k])
@@ -89,8 +96,8 @@ func sortMerge(ls []*ListNode, tls []*ListNode, start int, mid int, end int) {
 			i++
 		}
 	}
-	if i > mid {
-		for ; k < end; k++ {
+	if i >= mid {
+		for ; k <= end; k++ {
 			tls[i] = ls[k]
 			i++
 		}
