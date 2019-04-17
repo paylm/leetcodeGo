@@ -13,6 +13,70 @@ func NewListNode(val int) *ListNode {
 	return n
 }
 
+func ArrToLinkList(arr []int) *ListNode {
+	if len(arr) == 0 {
+		return nil
+	}
+	head := NewListNode(arr[0])
+	last := head
+	for i := 1; i < len(arr); i++ {
+		last.Next = NewListNode(arr[i])
+		last = last.Next
+	}
+
+	return head
+}
+
+func insertionSortList(head *ListNode) *ListNode {
+	c := head
+	for {
+		if c == nil {
+			break
+		}
+		temp := c
+		c = c.Next
+		if c != nil {
+			head = insertSortList(head, c, temp)
+		}
+	}
+	return head
+}
+
+/**
+插入某节点
+返回新的head 节点
+**/
+func insertSortList(head *ListNode, insertNode *ListNode, lastNode *ListNode) *ListNode {
+	if head == insertNode {
+		return head
+	}
+
+	if head.Val > insertNode.Val {
+		lastNode.Next = insertNode.Next
+		insertNode.Next = head
+		return insertNode
+	} else {
+		c := head
+		for {
+			if c == nil || c == insertNode {
+				break
+			}
+
+			temp := c //当前节点的上一个
+			c = c.Next
+
+			if c != nil && c.Val > insertNode.Val {
+				lastNode.Next = insertNode.Next
+				temp.Next = insertNode
+				insertNode.Next = c
+				break
+			}
+
+		}
+	}
+	return head
+}
+
 /**
 https://leetcode-cn.com/problems/sort-list/
  * Definition for singly-linked list.
@@ -114,4 +178,16 @@ func showLinkArr(ls []*ListNode) {
 	for i := 0; i < len(ls); i++ {
 		fmt.Printf("%v\n", ls[i])
 	}
+}
+
+func showList(head *ListNode) {
+	c := head
+	for {
+		if c == nil {
+			break
+		}
+		fmt.Printf("%d->", c.Val)
+		c = c.Next
+	}
+	fmt.Println()
 }
