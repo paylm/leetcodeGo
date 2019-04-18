@@ -179,7 +179,8 @@ candidates 中的数字可以无限制重复被选取。
 func combinationSum(candidates []int, target int) [][]int {
 	//fmt.Printf("candidates:%v,target:%d\n", candidates, target)
 	res := [][]int{}
-	sort3Parttion(candidates, 0, len(candidates)-1)
+	//sort3Parttion(candidates, 0, len(candidates)-1)
+	sort.Ints(candidates)
 	for i := 0; i < len(candidates); i++ {
 		if target == candidates[i] {
 			//fmt.Printf("found a soution: %v i:%d target:%d\n", candidates, i, target)
@@ -248,7 +249,8 @@ candidates 中的每个数字在每个组合中只能使用一次。
 
 func combinationSum2(candidates []int, target int) [][]int {
 	res := [][]int{}
-	sort3Parttion(candidates, 0, len(candidates)-1)
+	//sort3Parttion(candidates, 0, len(candidates)-1)
+	sort.Ints(candidates)
 	for i := 0; i < len(candidates); i++ {
 		if target == candidates[i] {
 			res = append(res, []int{candidates[i]})
@@ -603,4 +605,26 @@ func integerBreak(n int) int {
 	}
 
 	return ret
+}
+
+func arrX(nums []int) [][]int {
+	res := [][]int{}
+	for i := 0; i < len(nums); i++ {
+		fmt.Printf("%d ", nums[i])
+		combinArr(nums, 0, i)
+	}
+	return res
+}
+
+func combinArr(nums []int, start int, skip int) []int {
+	if start >= len(nums) {
+		fmt.Println()
+		return nil
+	}
+	if start != skip {
+		fmt.Printf("%d ", nums[start])
+	}
+	start++
+	combinArr(nums, start, skip)
+	return nil
 }
