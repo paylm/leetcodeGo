@@ -628,3 +628,36 @@ func combinArr(nums []int, start int, skip int) []int {
 	combinArr(nums, start, skip)
 	return nil
 }
+
+/**
+https://leetcode-cn.com/problems/permutations-ii/
+给定一个可包含重复数字的序列，返回所有不重复的全排列。
+
+示例:
+
+输入: [1,1,2]
+输出:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+**/
+func permuteUnique(nums []int) [][]int {
+	ret := [][]int{}
+	for i := 0; i < len(nums); i++ {
+		xpert(nums, i+1, i+1)
+	}
+	return ret
+}
+
+func xpert(nums []int, start int, skip int) []int {
+
+	for i := start; i < len(nums); i++ {
+		if i == skip {
+			continue
+		}
+		//xpert(nums, i)
+	}
+	return nil
+}
