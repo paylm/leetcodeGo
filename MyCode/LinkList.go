@@ -28,38 +28,47 @@ func ArrToLinkList(arr []int) *ListNode {
 }
 
 func insertionSortList(head *ListNode) *ListNode {
-	c := head
+	if head == nil {
+		return nil
+	}
+	PreN := head
+	c := head.Next
 	for {
 		if c == nil {
 			break
 		}
 		temp := c
 		c = c.Next
-		if c != nil {
-			head = insertSortList(head, c, temp)
-		}
+		head, PreN = insertSortList(head, temp, PreN)
+
 	}
 	return head
 }
 
 /**
 插入某节点
-返回新的head 节点
+返回新的head和lastNode
 **/
-func insertSortList(head *ListNode, insertNode *ListNode, lastNode *ListNode) *ListNode {
+func insertSortList(head *ListNode, insertNode *ListNode, lastNode *ListNode) (*ListNode, *ListNode) {
+	fmt.Printf("insertionSortList ===== %v =====\n", insertNode)
 	if head == insertNode {
-		return head
+		return head, head
 	}
 
+	i := 0
+	//defer func() {
+	//	fmt.Printf("insertSortList %v i:%d\n", insertNode, i)
+	//}()
+	c := head
 	if head.Val > insertNode.Val {
 		lastNode.Next = insertNode.Next
 		insertNode.Next = head
-		return insertNode
+		return insertNode, lastNode
 	} else {
-		c := head
 		for {
-			if c == nil || c == insertNode {
-				break
+			i++
+			if c == nil || c == lastNode {
+				return head, insertNode
 			}
 
 			temp := c //当前节点的上一个
@@ -69,12 +78,11 @@ func insertSortList(head *ListNode, insertNode *ListNode, lastNode *ListNode) *L
 				lastNode.Next = insertNode.Next
 				temp.Next = insertNode
 				insertNode.Next = c
-				break
+				return head, lastNode
 			}
 
 		}
 	}
-	return head
 }
 
 /**
