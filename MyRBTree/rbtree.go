@@ -1,5 +1,7 @@
 package MyRBTree
 
+import "fmt"
+
 //https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 
 type Colortype int
@@ -80,29 +82,30 @@ func sibling(n *RBNode) *RBNode {
 **/
 func rotate_right(n *RBNode) {
 	g := parent(n)
-	if g == nil {
-		return
-	}
+
 	k1 := n.left
 	k1r := k1.right
+
+	//rotate_right subtree
+	k1.right = n
+	n.parent = k1
 	n.left = k1r
-	if g.left == n {
 
-		g.left = k1
-		k1.parent = g
-		k1.right = n
-		n.parent = k1
-		if k1r != nil {
-			k1r.parent = n
-		}
+	if g != nil {
+		if g.left == n {
 
-	} else if g.right == n {
-		g.right = k1
-		k1.parent = g
-		k1.right = n
-		n.parent = k1
-		if k1r != nil {
-			k1r.parent = n
+			g.left = k1
+			k1.parent = g
+			if k1r != nil {
+				k1r.parent = n
+			}
+
+		} else if g.right == n {
+			g.right = k1
+			k1.parent = g
+			if k1r != nil {
+				k1r.parent = n
+			}
 		}
 	}
 }
@@ -128,30 +131,27 @@ func rotate_right(n *RBNode) {
 **/
 func rotate_left(n *RBNode) {
 	g := parent(n)
-	if g == nil {
-		return
-	}
 	k2 := n.right
 	k2l := k2.left
-	if g.right == n {
-		//case 1
-		g.right = k2
-		k2.parent = g
-		k2.left = n
-		n.parent = k2
-		n.right = k2l
-		if k2l != nil {
-			k2l.parent = n
-		}
-	} else {
-		//case 2
-		g.left = k2
-		k2.parent = g
-		k2.left = n
-		n.parent = k2
-		n.right = k2l
-		if k2l != nil {
-			k2l.parent = n
+
+	//rotate_left subtree
+	k2.left = n
+	n.parent = k2
+	n.right = k2l
+	if k2l != nil {
+		k2l.parent = n
+	}
+
+	//reset the root
+	if g != nil {
+		if g.right == n {
+			//case 1
+			g.right = k2
+			k2.parent = g
+		} else {
+			//case 2
+			g.left = k2
+			k2.parent = g
 		}
 	}
 }
@@ -165,6 +165,7 @@ func NewRBNode(v int) *RBNode {
 }
 
 func insert(root *RBNode, v int) *RBNode {
+	fmt.Printf("root:%v,v:%d\n", root, v)
 	n := NewRBNode(v)
 	// insert new node into the current tree
 	insert_recurse(root, n)
@@ -180,6 +181,7 @@ func insert(root *RBNode, v int) *RBNode {
 		}
 		root = root.parent
 	}
+	//fmt.Printf("insert %d, root:%d\n", v, root.val)
 	return root
 }
 
@@ -193,23 +195,26 @@ func insert_recurse(root *RBNode, n *RBNode) {
 			break
 		}
 		if c.val > n.val {
-			// n is right of c
-			if c.leaf {
-				c.right = n
-				c.leaf = false
-				break
-			}
-			c = c.right
-		} else {
-			// n is left of c
-			if c.leaf {
+			// c is right of n
+			if c.left == nil {
 				c.left = n
 				c.leaf = false
+				n.parent = c
 				break
 			}
 			c = c.left
+		} else {
+			// n is left of c
+			if c.right == nil {
+				c.right = n
+				c.leaf = false
+				n.parent = c
+				break
+			}
+			c = c.right
 		}
 	}
+	//print_tree(root)
 }
 
 //aussme , new node n must be red node
@@ -234,21 +239,24 @@ func insert_repair_tree(n *RBNode) {
 	}
 
 	//case 4 , The parent P is red but the uncle U is black.
-	if p.color == red && u != nil && u.color == black {
+	if p.color == red {
 		insert_repair_case4(n)
 	}
 }
 
 func insert_repair_case1(n *RBNode) {
+	fmt.Printf("insert_repair_case1 \n")
 	n.leaf = true
 	n.color = black
 }
 
 func insert_repair_case2(n *RBNode) {
+	fmt.Printf("insert_repair_case2 \n")
 	return // don't do anything
 }
 
 func insert_repair_case3(n *RBNode) {
+	fmt.Printf("insert_repair_case3\n")
 	p := parent(n)
 	u := sibling(p)
 	p.color = black
@@ -259,6 +267,7 @@ func insert_repair_case3(n *RBNode) {
 
 //insert_case4 , repaire color
 func insert_repair_case4(n *RBNode) {
+	fmt.Printf("insert_repair_case4\n")
 	g := grandparent(n)
 	p := parent(n)
 	//N is the left child of the right child of the grandparent or the right child of the left child of the grandparent
@@ -277,16 +286,46 @@ func insert_repair_case4(n *RBNode) {
 
 func insert_repair_case4step2(n *RBNode) {
 	//The current node N is now certain to be on the "outside" of the subtree under G (left of left child or right of right child).
+	fmt.Printf("insert_repair_case4step2\n")
 	g := grandparent(n)
 	p := parent(n)
 
 	if n == p.left {
-		rotate_right(p)
+		fmt.Printf("rotate_left n:%v\n", g)
+		rotate_right(g) //todo
 	} else if n == p.right {
-		rotate_left(p)
+		fmt.Printf("rotate_right n:%v\n", g)
+		rotate_left(g) //todo
 	}
 
 	p.color = black
 	g.color = red
 
+}
+
+/**
+ 中序遍历
+**/
+func print_tree(root *RBNode) {
+	if root == nil {
+		return
+	}
+	fmt.Printf("%d color:(%d)\n", root.val, root.color)
+	print_tree(root.left)
+	print_tree(root.right)
+}
+
+func search(n *RBNode, v int) *RBNode {
+	if n == nil {
+		return nil
+	}
+
+	if n.val == v {
+		return n
+	}
+	if n.val > v {
+		return search(n.right, v)
+	} else {
+		return search(n.left, v)
+	}
 }
