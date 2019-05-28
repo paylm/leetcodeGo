@@ -1,4 +1,4 @@
-package MyRBTree
+package main
 
 import "fmt"
 
@@ -107,6 +107,9 @@ func rotate_right(n *RBNode) {
 				k1r.parent = n
 			}
 		}
+	} else {
+		//if G is nil
+		k1.parent = nil
 	}
 }
 
@@ -153,6 +156,9 @@ func rotate_left(n *RBNode) {
 			g.left = k2
 			k2.parent = g
 		}
+	} else {
+		//if G is nil
+		k2.parent = nil
 	}
 }
 
@@ -165,7 +171,7 @@ func NewRBNode(v int) *RBNode {
 }
 
 func insert(root *RBNode, v int) *RBNode {
-	fmt.Printf("root:%v,v:%d\n", root, v)
+	//fmt.Printf("root:%v,v:%d\n", root, v)
 	n := NewRBNode(v)
 	// insert new node into the current tree
 	insert_recurse(root, n)
@@ -245,18 +251,18 @@ func insert_repair_tree(n *RBNode) {
 }
 
 func insert_repair_case1(n *RBNode) {
-	fmt.Printf("insert_repair_case1 \n")
+	//fmt.Printf("insert_repair_case1 \n")
 	n.leaf = true
 	n.color = black
 }
 
 func insert_repair_case2(n *RBNode) {
-	fmt.Printf("insert_repair_case2 \n")
+	//fmt.Printf("insert_repair_case2 \n")
 	return // don't do anything
 }
 
 func insert_repair_case3(n *RBNode) {
-	fmt.Printf("insert_repair_case3\n")
+	//fmt.Printf("insert_repair_case3\n")
 	p := parent(n)
 	u := sibling(p)
 	p.color = black
@@ -267,7 +273,7 @@ func insert_repair_case3(n *RBNode) {
 
 //insert_case4 , repaire color
 func insert_repair_case4(n *RBNode) {
-	fmt.Printf("insert_repair_case4\n")
+	//fmt.Printf("insert_repair_case4\n")
 	g := grandparent(n)
 	p := parent(n)
 	//N is the left child of the right child of the grandparent or the right child of the left child of the grandparent
@@ -286,15 +292,15 @@ func insert_repair_case4(n *RBNode) {
 
 func insert_repair_case4step2(n *RBNode) {
 	//The current node N is now certain to be on the "outside" of the subtree under G (left of left child or right of right child).
-	fmt.Printf("insert_repair_case4step2\n")
+	//fmt.Printf("insert_repair_case4step2\n")
 	g := grandparent(n)
 	p := parent(n)
 
 	if n == p.left {
-		fmt.Printf("rotate_left n:%v\n", g)
+		//fmt.Printf("pattern / rotate_right n:%v\n", g)
 		rotate_right(g) //todo
 	} else if n == p.right {
-		fmt.Printf("rotate_right n:%v\n", g)
+		//fmt.Printf("pattern \\ rotate_left n:%v\n", g)
 		rotate_left(g) //todo
 	}
 
@@ -323,7 +329,7 @@ func search(n *RBNode, v int) *RBNode {
 	if n.val == v {
 		return n
 	}
-	if n.val > v {
+	if n.val < v {
 		return search(n.right, v)
 	} else {
 		return search(n.left, v)
