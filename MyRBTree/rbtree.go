@@ -17,7 +17,6 @@ type RBNode struct {
 	right  *RBNode
 	color  Colortype
 	parent *RBNode
-	leaf   bool
 }
 
 //p node
@@ -90,8 +89,8 @@ func rotate_right(n *RBNode) {
 	k1.right = n
 	n.parent = k1
 	n.left = k1r
-
 	if g != nil {
+
 		if g.left == n {
 
 			g.left = k1
@@ -165,9 +164,15 @@ func rotate_left(n *RBNode) {
 func NewRBNode(v int) *RBNode {
 	n := new(RBNode)
 	n.val = v
-	n.leaf = true
 	n.color = red
 	return n
+}
+
+func (n *RBNode) is_leaf() bool {
+	if n != nil && (n.left != nil || n.right != nil) {
+		return false
+	}
+	return true
 }
 
 func insert(root *RBNode, v int) *RBNode {
@@ -204,7 +209,6 @@ func insert_recurse(root *RBNode, n *RBNode) {
 			// c is right of n
 			if c.left == nil {
 				c.left = n
-				c.leaf = false
 				n.parent = c
 				break
 			}
@@ -213,7 +217,6 @@ func insert_recurse(root *RBNode, n *RBNode) {
 			// n is left of c
 			if c.right == nil {
 				c.right = n
-				c.leaf = false
 				n.parent = c
 				break
 			}
@@ -252,7 +255,7 @@ func insert_repair_tree(n *RBNode) {
 
 func insert_repair_case1(n *RBNode) {
 	//fmt.Printf("insert_repair_case1 \n")
-	n.leaf = true
+	//n.leaf = false
 	n.color = black
 }
 
@@ -310,13 +313,82 @@ func insert_repair_case4step2(n *RBNode) {
 }
 
 /**
+ find the max node
+**/
+func findMaxNode(n *RBNode) *RBNode {
+	if n == nil {
+		return nil
+	}
+	c := n
+	for {
+		if c.right == nil {
+			break
+		}
+		c = c.right
+	}
+
+	return c
+}
+
+/**
+标准二叉树节点删除，red-black 比这个复杂
+**/
+
+func delete_recurse(n *RBNode, v int) *RBNode {
+	if n == nil {
+		return nil
+	}
+	root := n
+	if n.val > v {
+		n.left = delete_recurse(n.left, v)
+	} else if n.val < v {
+		n.right = delete_recurse(n.right, v)
+	} else {
+		//当前节点值 == v
+		//case 1 , n is leaf
+		if n.left == nil && n.right == nil {
+			return nil
+		}
+
+		if n.left == nil && n.right != nil {
+			return n.right
+		}
+
+		if n.right == nil && n.left != nil {
+			return n.left
+		}
+
+		//左右节占都不为空时
+		temp := findMaxNode(n.left)
+		n.val = temp.val
+		n.left = delete_recurse(n.left, n.val)
+		return n
+	}
+
+	return root
+}
+
+/**
+ 删除节点根下的某个节点,返回最后的根节点
+ todo
+**/
+func delete_one_child(n *RBNode, v int) *RBNode {
+	if n == nil {
+		return nil
+	}
+	root := n
+
+	return root
+}
+
+/**
  中序遍历
 **/
 func print_tree(root *RBNode) {
 	if root == nil {
 		return
 	}
-	fmt.Printf("%d color:(%d)\n", root.val, root.color)
+	fmt.Printf("%d color:(%d) leaf:(%v)\n", root.val, root.color, root.is_leaf())
 	print_tree(root.left)
 	print_tree(root.right)
 }
