@@ -371,14 +371,97 @@ func delete_recurse(n *RBNode, v int) *RBNode {
 /**
  删除节点根下的某个节点,返回最后的根节点
  todo
+ RB - DELETE(T, z)
+ if left[z] = nil[T] or right[z] = nil[T]
+    then y ← z                                  // 若“z的左孩子” 或 “z的右孩子”为空，则将“z”赋值给 “y”；
+    else y ← TREE - SUCCESSOR(z)                  // 否则，将“z的后继节点”赋值给 “y”。
+ if left[y] ≠ nil[T]
+    then x ← left[y]                            // 若“y的左孩子” 不为空，则将“y的左孩子” 赋值给 “x”；
+    else x ← right[y]                           // 否则，“y的右孩子” 赋值给 “x”。
+ p[x] ← p[y]                                    // 将“y的父节点” 设置为 “x的父节点”
+ if p[y] = nil[T]
+    then root[T] ← x                            // 情况1：若“y的父节点” 为空，则设置“x” 为 “根节点”。
+    else if y = left[p[y]]
+            then left[p[y]] ← x                 // 情况2：若“y是它父节点的左孩子”，则设置“x” 为 “y的父节点的左孩子”
+            else right[p[y]] ← x                // 情况3：若“y是它父节点的右孩子”，则设置“x” 为 “y的父节点的右孩子”
+ if y ≠ z
+    then key[z] ← key[y]                        // 若“y的值” 赋值给 “z”。注意：这里只拷贝z的值给y，而没有拷贝z的颜色！！！
+         copy y's satellite data into z
+ if color[y] = BLACK
+    then RB - DELETE - FIXUP(T, x)                  // 若“y为黑节点”，则调用
+ return y
 **/
-func delete_one_child(n *RBNode, v int) *RBNode {
+func delete_one(n *RBNode, v int) *RBNode {
 	if n == nil {
 		return nil
 	}
 	root := n
+	z := search(n, v)
+	if z == nil {
+		return root
+	}
+	var y *RBNode // y is leaf or y has one child
+	if z.left != nil || z.right != nil {
+		y = z
+	} else {
+		y = findMaxNode(z.left)
+	}
 
+	if y == root {
+		return nil
+	}
+
+	p := y.parent
+
+	if y.left != nil {
+		y.val = y.left.val
+		y.left = nil
+	} else if y.right != nil {
+		y.val = y.right.val
+		y.right = nil
+	} else {
+		// y is leaf
+		if y.color == black {
+			delete_fixup(y) //可能改变
+		} else {
+			if p.left == y {
+				p.left = nil
+			} else {
+				p.right = nil
+			}
+		}
+	}
 	return root
+}
+
+/*对节点重新着色并旋转，以此来保证删除节点后的树仍然是一颗红黑树
+RB - DELETE - FIXUP(T, x)
+ while x ≠ root[T] and color[x] = BLACK
+     do if x = left[p[x]]
+           then w ← right[p[x]]                                             // 若 “x”是“它父节点的左孩子”，则设置 “w”为“x的叔叔”(即x为它父节点的右孩子)
+                if color[w] = RED                                           // Case 1: x是“黑+黑”节点，x的兄弟节点是红色。(此时x的父节点和x的兄弟节点的子节点都是黑节点)。
+                   then color[w] ← BLACK ? Case 1   //   (01) 将x的兄弟节点设为“黑色”。
+                        color[p[x]] ← RED ? Case 1   //   (02) 将x的父节点设为“红色”。
+                        LEFT - ROTATE(T, p[x]) ? Case 1   //   (03) 对x的父节点进行左旋。
+                        w ← right[p[x]] ? Case 1   //   (04) 左旋后，重新设置x的兄弟节点。
+                if color[left[w]] = BLACK and color[right[w]] = BLACK       // Case 2: x是“黑+黑”节点，x的兄弟节点是黑色，x的兄弟节点的两个孩子都是黑色。
+                   then color[w] ← RED ? Case 2   //   (01) 将x的兄弟节点设为“红色”。
+                        x ←  p[x] ? Case 2   //   (02) 设置“x的父节点”为“新的x节点”。
+                   else if color[right[w]] = BLACK                          // Case 3: x是“黑+黑”节点，x的兄弟节点是黑色；x的兄弟节点的左孩子是红色，右孩子是黑色的。
+                           then color[left[w]] ← BLACK ? Case 3   //   (01) 将x兄弟节点的左孩子设为“黑色”。
+                                color[w] ← RED ? Case 3   //   (02) 将x兄弟节点设为“红色”。
+                                RIGHT - ROTATE(T, w) ? Case 3   //   (03) 对x的兄弟节点进行右旋。
+                                w ← right[p[x]] ? Case 3   //   (04) 右旋后，重新设置x的兄弟节点。
+                         color[w] ← color[p[x]] ? Case 4   // Case 4: x是“黑+黑”节点，x的兄弟节点是黑色；x的兄弟节点的右孩子是红色的。(01) 将x父节点颜色 赋值给 x的兄弟节点。
+                         color[p[x]] ← BLACK ? Case 4   //   (02) 将x父节点设为“黑色”。
+                         color[right[w]] ← BLACK ? Case 4   //   (03) 将x兄弟节点的右子节设为“黑色”。
+                         LEFT - ROTATE(T, p[x]) ? Case 4   //   (04) 对x的父节点进行左旋。
+                         x ← root[T] ? Case 4   //   (05) 设置“x”为“根节点”。
+        else (same as then clause with "right" and "left" exchanged)        // 若 “x”是“它父节点的右孩子”，将上面的操作中“right”和“left”交换位置，然后依次执行。
+ color[x] ← BLACK
+**/
+func delete_fixup(n *RBNode) *RBNode {
+	return nil
 }
 
 /**
