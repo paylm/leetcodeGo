@@ -228,6 +228,19 @@ func intXstr(n int, l string, m string, h string) string {
 	}
 }
 
+//冒泡排序
+func simpleSort(arr []int) {
+	for i := 0; i < len(arr); i++ {
+		for j := 1; j < len(arr)-i; j++ {
+			if arr[j] < arr[j-1] {
+				temp := arr[j]
+				arr[j] = arr[j-1]
+				arr[j-1] = temp
+			}
+		}
+	}
+}
+
 func main() {
 	//fmt.Println("vim-go")
 	fmt.Println("quickSort")
@@ -282,4 +295,9 @@ func main() {
 	fmt.Println("------fib-------")
 	fmt.Println(fib(7))
 	fmt.Println(fib(15))
+
+	fmt.Println("test for simpleSort")
+	arr1 := []int{5, 4, 111, 9, 1, 0, 7, 4, 100, 2}
+	simpleSort(arr1)
+	fmt.Println(arr1)
 }
