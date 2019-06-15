@@ -169,7 +169,7 @@ func fib(i int) []int {
 
 /**
 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
-candidates 中的数字可以无限制重复被选取。
+candiates 中的数字可以无限制重复被选取。
 
 说明：
 
@@ -660,4 +660,133 @@ func xpert(nums []int, start int, skip int) []int {
 		//xpert(nums, i)
 	}
 	return nil
+}
+
+/**
+https://leetcode-cn.com/problems/house-robber-iii/
+计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+
+示例 1:
+
+输入: [3,2,3,null,3,null,1]
+
+     3
+    / \
+   2   3
+    \   \
+     3   1
+
+输出: 7
+解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+示例 2:
+
+输入: [3,4,5,1,3,null,1]
+
+     3
+    / \
+   4   5
+  / \   \
+ 1   3   1
+
+输出: 9
+解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+
+链接：https://leetcode-cn.com/problems/house-robber-iii
+**/
+//Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func NewTreeNode(Val int) *TreeNode {
+	n := new(TreeNode)
+	n.Val = Val
+	return n
+}
+
+func buildTreeByArr(arr []int, i int) *TreeNode {
+	//left = 2p+1 ,right = 2p+2
+	if i >= len(arr) || arr[i] < 0 {
+		return nil
+	}
+	r := NewTreeNode(arr[i])
+	r.Left = buildTreeByArr(arr, 2*i+1)
+	r.Right = buildTreeByArr(arr, 2*i+2)
+	return r
+}
+
+func inOrderTree(root *TreeNode) {
+	if root == nil {
+		fmt.Printf("nil\n")
+		return
+	}
+	fmt.Printf("%d\n", root.Val)
+	inOrderTree(root.Left)
+	inOrderTree(root.Right)
+}
+
+func rob(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	var res int
+	res = 0
+	rob_recurse(root, 0, 0, &res)
+	return res
+}
+
+//assume root is not nil
+func maxSub(root *TreeNode) int {
+	if root.Left == nil && root.Right != nil {
+		return root.Right.Val
+	} else if root.Left != nil && root.Right == nil {
+		return root.Left.Val
+	} else if root.Left == nil && root.Right == nil {
+		return 0
+	} else if root.Left.Val > root.Right.Val {
+		return root.Left.Val
+	} else {
+		return root.Right.Val
+	}
+}
+
+func rob_recurse(root *TreeNode, prev1 int, prev2 int, res *int) int {
+	if root == nil {
+		return 0
+	}
+	k := maxSub(root)
+
+	if k+prev2 > root.Val+prev1 {
+		// no select current node
+		//fmt.Printf("no select %v\n", root)
+		return rob_recurse(root.Left, prev2, prev2, res) + rob_recurse(root.Right, prev2, prev2, res)
+	} else {
+		// select current node
+		fmt.Printf("select %v\n", root)
+		*res = *res + root.Val
+		return rob_recurse(root.Left, prev2, prev1+root.Val, res) + rob_recurse(root.Right, prev2, prev1+root.Val, res)
+	}
+
+	//return rob_recurse(root.Left, ) + rob_recurse(root.Right, )
+
+}
+
+func rob_recurse1(root *TreeNode, prev1 int, prev2 int) int {
+	if root == nil {
+		return 0
+	}
+
+	if root.Val+prev1 > prev2 {
+		prev1 = prev2
+		prev2 = root.Val + prev1
+	} else {
+
+	}
+	if root.Left == nil && root.Right == nil {
+		fmt.Printf("prev1:%d,prev2:%d at node %v\n", prev1, prev2, root)
+	}
+
+	return rob_recurse1(root.Left, prev1, prev2) + rob_recurse1(root.Right, prev1, prev2)
 }

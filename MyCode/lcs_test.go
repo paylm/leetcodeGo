@@ -271,3 +271,25 @@ func Test_ClimbStairs(t *testing.T) {
 		}
 	}
 }
+
+func Test_Rob(t *testing.T) {
+	data := []struct {
+		arr    []int //对于-1的值，为生二叉树为空节点
+		result int
+	}{
+		{arr: []int{3, 2, 3, -1, 3, -1, 1}, result: 7},
+		{arr: []int{3, 4, 5, 1, 3, -1, 1}, result: 9},
+	}
+
+	for _, d := range data {
+		//make tree
+		tn := buildTreeByArr(d.arr, 0)
+		inOrderTree(tn)
+		res := rob(tn)
+		if res == d.result {
+
+		} else {
+			t.Errorf("test fail at %v , result:%d , but return %d\n", d.arr, d.result, res)
+		}
+	}
+}
