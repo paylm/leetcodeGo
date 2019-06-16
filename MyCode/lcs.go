@@ -727,6 +727,7 @@ func inOrderTree(root *TreeNode) {
 	inOrderTree(root.Right)
 }
 
+//todo
 func rob(root *TreeNode) int {
 	if root == nil {
 		return 0
@@ -752,21 +753,23 @@ func maxSub(root *TreeNode) int {
 	}
 }
 
-func rob_recurse(root *TreeNode, prev1 int, prev2 int, res *int) int {
+func rob_recurse(root *TreeNode, prev1 int, prev2 int, res *int) {
 	if root == nil {
-		return 0
+		return
 	}
 	k := maxSub(root)
 
 	if k+prev2 > root.Val+prev1 {
 		// no select current node
 		//fmt.Printf("no select %v\n", root)
-		return rob_recurse(root.Left, prev2, prev2, res) + rob_recurse(root.Right, prev2, prev2, res)
+		rob_recurse(root.Left, prev2, prev2, res)
+		rob_recurse(root.Right, prev2, prev2, res)
 	} else {
 		// select current node
 		fmt.Printf("select %v\n", root)
 		*res = *res + root.Val
-		return rob_recurse(root.Left, prev2, prev1+root.Val, res) + rob_recurse(root.Right, prev2, prev1+root.Val, res)
+		rob_recurse(root.Left, prev2, prev1+root.Val, res)
+		rob_recurse(root.Right, prev2, prev1+root.Val, res)
 	}
 
 	//return rob_recurse(root.Left, ) + rob_recurse(root.Right, )
@@ -789,4 +792,63 @@ func rob_recurse1(root *TreeNode, prev1 int, prev2 int) int {
 	}
 
 	return rob_recurse1(root.Left, prev1, prev2) + rob_recurse1(root.Right, prev1, prev2)
+}
+
+/**
+https://leetcode-cn.com/problems/video-stitching/
+你将会获得一系列视频片段，这些片段来自于一项持续时长为 T 秒的体育赛事。这些片段可能有所重叠，也可能长度不一。
+
+视频片段 clips[i] 都用区间进行表示：开始于 clips[i][0] 并于 clips[i][1] 结束。我们甚至可以对这些片段自由地再剪辑，例如片段 [0, 7] 可以剪切成 [0, 1] + [1, 3] + [3, 7] 三部分。
+
+我们需要将这些片段进行再剪辑，并将剪辑后的内容拼接成覆盖整个运动过程的片段（[0, T]）。返回所需片段的最小数目，如果无法完成该任务，则返回 -1 。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/video-stitching
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+示例 1：
+
+输入：clips = [[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]], T = 10
+输出：3
+解释：
+我们选中 [0,2], [8,10], [1,9] 这三个片段。
+然后，按下面的方案重制比赛片段：
+将 [1,9] 再剪辑为 [1,2] + [2,8] + [8,9] 。
+现在我们手上有 [0,2] + [2,8] + [8,10]，而这些涵盖了整场比赛 [0, 10]。
+
+提示：
+
+1 <= clips.length <= 100
+0 <= clips[i][0], clips[i][1] <= 100
+0 <= T <= 100
+**/
+func videoStitching(clips [][]int, T int) int {
+	// 从0->n -> T 的区间里找最找长区域
+	start := 0
+	count := 0 // 寻找次数
+	for {
+		zone := findMaxZone(clips, start)
+		count += 1
+		if zone == nil {
+			return -1
+		}
+		//fmt.Printf("zone is %v\n", zone)
+		if zone[1] >= T {
+			return count
+		}
+		start = zone[1]
+	}
+}
+
+//寻找以<=n 以开头的最大区间
+func findMaxZone(clips [][]int, start int) []int {
+	end := start
+	for i := 0; i < len(clips); i++ {
+		if clips[i][0] <= start && clips[i][1] > end {
+			end = clips[i][1]
+		}
+	}
+	if end == start {
+		return nil
+	}
+	return []int{start, end}
 }

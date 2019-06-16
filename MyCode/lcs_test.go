@@ -279,17 +279,36 @@ func Test_Rob(t *testing.T) {
 	}{
 		{arr: []int{3, 2, 3, -1, 3, -1, 1}, result: 7},
 		{arr: []int{3, 4, 5, 1, 3, -1, 1}, result: 9},
+		//	{arr: []int{2, -1, 3, 4, -1, 1}, result: 6},
 	}
 
 	for _, d := range data {
 		//make tree
 		tn := buildTreeByArr(d.arr, 0)
-		inOrderTree(tn)
+		//	inOrderTree(tn)
 		res := rob(tn)
 		if res == d.result {
 
 		} else {
 			t.Errorf("test fail at %v , result:%d , but return %d\n", d.arr, d.result, res)
+		}
+	}
+}
+
+func Test_VideoStitching(t *testing.T) {
+	data := []struct {
+		clips [][]int
+		T     int
+		res   int
+	}{
+		{clips: [][]int{{0, 2}, {4, 6}, {8, 10}, {1, 9}, {1, 5}, {5, 9}}, T: 10, res: 3},
+		{clips: [][]int{{0, 1}, {1, 2}}, T: 5, res: -1},
+		{clips: [][]int{{0, 4}, {2, 8}}, T: 5, res: 2},
+	}
+	for _, d := range data {
+		rs := videoStitching(d.clips, d.T)
+		if rs != d.res {
+			t.Errorf("test fail at %v  , return %d\n", d, rs)
 		}
 	}
 }
