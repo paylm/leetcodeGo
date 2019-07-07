@@ -49,6 +49,7 @@ func NewZskiplist() *Zskiplist {
 	for i := 0; i < MAX_LEVEL; i++ {
 		zkl.head.zkLevel[i] = zkl.tail
 	}
+	zkl.level = 1
 	zkl.tail.backward = zkl.head
 	return zkl
 }
@@ -70,9 +71,8 @@ func randLevel() int {
 
 func (zkl *Zskiplist) zslInsert(obj string, score int) error {
 	n := zkl.head
-	iLevel := randLevel()
-	update := make([]*ZskiplistNode, iLevel) //侍插入点的前指针
-	i := iLevel - 1
+	update := make([]*ZskiplistNode, zkl.level) //侍插入点的前指针
+	i := zkl.level - 1
 	for {
 		if i < 0 {
 			break
@@ -92,10 +92,16 @@ func (zkl *Zskiplist) zslInsert(obj string, score int) error {
 
 	}
 	//fmt.Printf("update:%v\n", update)
+	iLevel := randLevel()
 	iN := NewZskiplistNode(obj, score, iLevel)
 	for j := iLevel - 1; j >= 0; j-- {
-		iN.zkLevel[j] = update[j].zkLevel[j]
-		update[j].zkLevel[j] = iN
+		if len(update) > j {
+			iN.zkLevel[j] = update[j].zkLevel[j]
+			update[j].zkLevel[j] = iN
+		} else {
+			iN.zkLevel[j] = zkl.head.zkLevel[j]
+			zkl.head.zkLevel[j] = iN
+		}
 	}
 	//fix backward
 	iN.zkLevel[0].backward = iN
@@ -164,6 +170,15 @@ func (zsk *Zskiplist) zslFind(score int) *ZskiplistNode {
 		}
 	}
 	return nil
+}
+
+func (zsl *Zskiplist) zslUpdate(obj string, score int) bool {
+	n := zsl.zslFind(score)
+	if n == nil {
+		return false
+	}
+	n.obj = obj
+	return true
 }
 
 func (zsk *Zskiplist) show() {
