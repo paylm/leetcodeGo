@@ -96,8 +96,11 @@ func (zkl *Zskiplist) zslInsert(obj string, score int) error {
 	for j := iLevel - 1; j >= 0; j-- {
 		iN.zkLevel[j] = update[j].zkLevel[j]
 		update[j].zkLevel[j] = iN
-		iN.backward = update[j]
 	}
+	//fix backward
+	iN.zkLevel[0].backward = iN
+	iN.backward = update[0]
+
 	if iLevel > zkl.level {
 		zkl.level = iLevel
 	}
@@ -171,7 +174,11 @@ func (zsk *Zskiplist) show() {
 			break
 		}
 		//fmt.Printf("%d => %v\n", &(c), c)
-		fmt.Printf("%d \t %s\t", c.score, c.obj)
+		if c != zsk.head {
+			fmt.Printf("%d(%d) \t %s\t", c.score, c.backward.score, c.obj)
+		} else {
+			fmt.Printf("%d(nil) \t %s\t", c.score, c.obj)
+		}
 		for i := 0; i < len(c.zkLevel); i++ {
 			if c.zkLevel[i] != nil && i <= zsk.level {
 				fmt.Printf(" %d\t", c.zkLevel[i].score)
