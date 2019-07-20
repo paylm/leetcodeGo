@@ -51,3 +51,36 @@ func recurseIPAdrr(z int, s int, data []string, src []string) []string {
 	}
 	return res
 }
+
+/**
+https://leetcode-cn.com/problems/summary-ranges/<Paste>
+
+给定一个无重复元素的有序整数数组，返回数组区间范围的汇总。
+
+示例 1:
+
+输入: [0,1,2,4,5,7]
+输出: ["0->2","4->5","7"]
+解释: 0,1,2 可组成一个连续的区间; 4,5 可组成一个连续的区间。
+**/
+func summaryRanges(nums []int) []string {
+	if len(nums) < 1 {
+		return nil
+	}
+	s1, s2 := 0, 1
+	res := []string{fmt.Sprintf("%d", nums[s1])}
+	for i := s2; i < len(nums); i++ {
+		if nums[i]-nums[i-1] == 1 {
+			//连续区间
+			s2 = i
+			res[len(res)-1] = fmt.Sprintf("%d->%d", nums[s1], nums[s2])
+		} else {
+			//fmt.Printf("other s1:%d,s2:%d,zone:%d->%d\n", s1, s2, nums[s1], nums[i-1])
+			s1 = i
+			s2 = s1
+			res = append(res, fmt.Sprintf("%d", nums[i]))
+		}
+	}
+	fmt.Printf("res :%v,nums:%v\n", res, nums)
+	return res
+}
