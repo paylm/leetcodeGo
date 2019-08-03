@@ -97,3 +97,24 @@ func Test_InttoIP(t *testing.T) {
 		}
 	}
 }
+
+func Test_ValidUtf8(t *testing.T) {
+	data := []struct {
+		arr   []int
+		legal bool
+		size  int
+	}{
+		{arr: []int{197, 130, 1}, legal: true, size: 2},
+		{arr: []int{235, 140, 4}, legal: false, size: 0},
+		{arr: []int{255}, legal: false, size: 0},
+		{arr: []int{145}, legal: false, size: 1},
+		{arr: []int{240, 162, 138, 147}, legal: true, size: 1},
+		{arr: []int{248, 130, 130, 130}, legal: false, size: 0},
+	}
+	for _, d := range data {
+		res := validUtf8(d.arr)
+		if res != d.legal {
+			t.Errorf("test fail , %v should be %v , but return %v\n", d, d.legal, res)
+		}
+	}
+}
