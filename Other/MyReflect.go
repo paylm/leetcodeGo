@@ -53,4 +53,9 @@ func main() {
 
 	u := User{Name: "ppl", Age: 26}
 	ReflectFunc(u)
+
+	fmt.Println("=========== test ===========")
+	var i int = 0
+	max := ^i
+	fmt.Printf("int min:%d,max:%d\n", i, max<<1)
 }

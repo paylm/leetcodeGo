@@ -53,7 +53,7 @@ func recurseIPAdrr(z int, s int, data []string, src []string) []string {
 }
 
 /**
-https://leetcode-cn.com/problems/summary-ranges/<Paste>
+https://leetcode-cn.com/problems/summary-ranges/
 
 给定一个无重复元素的有序整数数组，返回数组区间范围的汇总。
 
@@ -83,4 +83,46 @@ func summaryRanges(nums []int) []string {
 	}
 	fmt.Printf("res :%v,nums:%v\n", res, nums)
 	return res
+}
+
+/*
+把ip 地址转化为int , format like xxx.xx.xx.xx
+利用位运算处理
+*/
+func ipToInt(ip string) int {
+	ips := strings.Split(ip, ".")
+	if len(ips) != 4 {
+		fmt.Printf("%v is not legal ip addr\n", ip)
+		return -1
+	}
+	fmt.Printf("ips :%v\n", ips)
+	intIp := 0
+	for _, i := range ips {
+		intI, err := strconv.Atoi(i)
+		if err != nil {
+			fmt.Printf("convert %v throw err:%v\n", i, err)
+			return -1
+		} else if intI > 255 {
+			fmt.Printf("convert %v throw err , mask should less than 257\n", i)
+			return -1
+		}
+
+		intIp = (intIp << 8) + intI
+	}
+	fmt.Printf("ip :%v convert to %d\n", ip, intIp)
+	return intIp
+}
+
+/*
+把int 反转为化为ip addr , format like xxx.xx.xx.xx
+利用位运算处理
+*/
+func intToIP(ip int) string {
+	ips := []string{"", "", "", ""}
+	mask := 2<<7 - 1
+	for i := len(ips) - 1; i >= 0; i-- {
+		ips[i] = fmt.Sprintf("%d", (ip & mask))
+		ip >>= 8
+	}
+	return strings.Join(ips, ".")
 }

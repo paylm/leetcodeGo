@@ -46,3 +46,54 @@ func Test_SummaryRanges(t *testing.T) {
 		}
 	}
 }
+
+func Test_IptoInt(t *testing.T) {
+	data := []struct {
+		ip    string
+		legal bool
+		intIp int
+	}{
+		{ip: "127.0.0.1", legal: true, intIp: 2130706433},
+		{ip: "0.0.0.1", legal: true, intIp: 1},
+		{ip: "255.255.255.255", legal: true, intIp: 4294967295},
+		{ip: "198.255.255", legal: false, intIp: 0},
+		{ip: "192.168.1.1", legal: true, intIp: 3232235777},
+	}
+	for _, d := range data {
+		res := ipToInt(d.ip)
+		if d.legal {
+			if res < 0 {
+				t.Errorf("test fail at parse %v\n", d)
+			}
+			if res != d.intIp {
+				t.Errorf("test fail at parse %v ,return %d\n", d, res)
+			}
+		} else {
+			if res > 0 {
+				t.Errorf("test fail at parse %v\n", d)
+			}
+		}
+	}
+}
+
+func Test_InttoIP(t *testing.T) {
+	data := []struct {
+		ip    string
+		legal bool
+		intIp int
+	}{
+		{ip: "127.0.0.1", legal: true, intIp: 2130706433},
+		{ip: "0.0.0.1", legal: true, intIp: 1},
+		{ip: "255.255.255.255", legal: true, intIp: 4294967295},
+		{ip: "198.255.255", legal: false, intIp: 0},
+		{ip: "192.168.1.1", legal: true, intIp: 3232235777},
+	}
+	for _, d := range data {
+		res := intToIP(d.intIp)
+		if d.legal && strings.Compare(res, d.ip) != 0 {
+			t.Errorf("test fail , %v be trans to %s\n", d, res)
+		} else {
+			t.Logf("%v parse to %v\n", d, res)
+		}
+	}
+}
