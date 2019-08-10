@@ -16,11 +16,11 @@ func Test_Insert(t *testing.T) {
 		}
 	}
 	zsl.show()
-	//if zsl.len != 11 {
-	//	t.Errorf("test fail , %v\n", zsl)
-	//} else {
-	//	t.Logf("test pass, zsl %v\n", zsl)
-	//}
+	if zsl.len != 11 {
+		t.Errorf("test fail , %v\n", zsl)
+	} else {
+		t.Logf("test pass, zsl %v\n", zsl)
+	}
 }
 
 func Test_Find(t *testing.T) {

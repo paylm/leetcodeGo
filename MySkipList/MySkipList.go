@@ -19,12 +19,7 @@ type ZskiplistNode struct {
 	obj      string
 	score    int
 	backward *ZskiplistNode
-	/**level     []struct {
-		forward *ZskiplistNode
-		span    int
-	}
-	**/
-	zkLevel []*ZskiplistNode //
+	zkLevel  []*ZskiplistNode //
 }
 
 type Zskiplist struct {
